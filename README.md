@@ -2,6 +2,60 @@
 
 **BTC3** is an independent cryptocurrency built on Bitcoin Core technology, designed for accessibility and modern blockchain features. It provides a fully functional, production-ready blockchain with instant mining accessibility, making cryptocurrency participation available to everyone.
 
+## 💡 Why BTC3 Exists
+
+**Cryptocurrency was meant to empower ordinary people, not enrich the wealthy.**
+
+When Bitcoin launched in 2009, anyone could mine it on a laptop. It was truly decentralized and accessible. But over the years, Bitcoin and other cryptocurrencies have become dominated by:
+
+- 🏦 **Wealthy investors** who bought early and hold massive positions
+- 🏭 **Mining corporations** with industrial-scale operations
+- 🐋 **Whales** who manipulate markets for profit
+- 💰 **Venture capitalists** who control ICOs and premines
+- 🎰 **Speculators** who treat crypto as a casino
+
+**The original vision has been lost.** Ordinary people are priced out, squeezed by whales, and left watching from the sidelines while the rich get richer.
+
+### BTC3 Changes This
+
+BTC3 returns to cryptocurrency's roots with a simple principle: **Everyone should have an equal opportunity to participate.**
+
+**How we're different:**
+
+✊ **No Premine** – Not a single coin was created before public launch  
+✊ **No ICO** – No wealthy investors got early access  
+✊ **No Whales** – Everyone starts from zero  
+✊ **CPU Mining** – Anyone with a computer can mine  
+✊ **Fair Launch** – No insider advantages  
+✊ **For the People** – Built to benefit ordinary users, not elites  
+
+### The Problem We're Solving
+
+**Bitcoin today:**
+- Requires $10,000+ ASIC miners to participate
+- Dominated by mining pools controlled by corporations
+- Early adopters hold massive positions
+- Ordinary people can only buy at inflated prices
+
+**BTC3 today:**
+- Mine on any laptop or desktop
+- No specialized hardware needed
+- Everyone starts equal
+- Earn by participating, not by being wealthy
+
+### Our Mission
+
+**BTC3 exists to give power back to the people.**
+
+We believe:
+- 🌍 Cryptocurrency should be accessible to everyone, everywhere
+- ⚖️ Fair distribution is more important than enriching early investors
+- 💪 Ordinary people deserve the same opportunities as the wealthy
+- 🔓 Financial freedom shouldn't require massive capital
+- 🤝 Community matters more than profit
+
+**This is cryptocurrency for the 99%, not the 1%.**
+
 ## 🚀 Key Features
 
 - **Accessible Mining** – CPU-mineable with optimized difficulty; anyone can participate in securing the network
@@ -112,6 +166,21 @@ BTC3 uses the same cryptographic security as Bitcoin Core, including:
 
 The accessible mining difficulty is a feature designed to enable broad participation in network security, not a weakness. As the network grows, the community can propose difficulty adjustments through consensus.
 
+## ⚖️ Legal Disclaimer
+
+**IMPORTANT**: BTC3 is experimental open-source software with no warranties or guarantees. Cryptocurrency involves significant risk, and you may lose everything. 
+
+**Before using BTC3, please read [LEGAL.md](LEGAL.md) carefully.**
+
+Key points:
+- No intrinsic value - BTC3 may be worth nothing
+- Use at your own risk - no liability for losses
+- Comply with your local laws - you are responsible
+- Not financial advice - consult professionals
+- Irreversible transactions - mistakes are permanent
+
+By using BTC3, you acknowledge and accept all risks.
+
 ## 📄 License
 
 BTC3 is released under the MIT License, the same as Bitcoin Core. See [COPYING](COPYING) for details.
@@ -131,5 +200,7 @@ BTC3 is built on the foundation of [Bitcoin Core](https://github.com/bitcoin/bit
 
 ---
 
-**Join the BTC3 network today – mine, transact, and be part of the next generation of cryptocurrency!**
+**BTC3: Cryptocurrency for the people, by the people. Join us in taking back financial freedom from the elites.**
+
+**Mine, transact, and be part of a fairer financial future. Everyone is welcome. Everyone starts equal.**
 
