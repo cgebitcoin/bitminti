@@ -1,5 +1,7 @@
 # BTC3 – The Next Generation Cryptocurrency
 
+FIRST READ OUR MANIFESTO [MANIFESTO.md](MANIFESTO.md)
+
 **BTC3** is an independent cryptocurrency built on Bitcoin Core technology, designed for accessibility and modern blockchain features. It provides a fully functional, production-ready blockchain with instant mining accessibility, making cryptocurrency participation available to everyone.
 
 ## 💡 Why BTC3 Exists
