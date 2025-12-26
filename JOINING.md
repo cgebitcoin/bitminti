@@ -46,8 +46,7 @@ port=13337
 listen=1
 
 # Add seed nodes (replace with actual IPs)
-addnode=<SEED_NODE_IP_1>:13337
-addnode=<SEED_NODE_IP_2>:13337
+addnode=seed.btc3.mrio.xyz:13337
 
 # Optional: allow external RPC (be careful!)
 # rpcallowip=0.0.0.0/0
@@ -314,7 +313,7 @@ netstat -an | grep 13337
 ```bash
 ./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin stop
 ./bin/btc3d -datadir=./btc3-data -daemon
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin addnode "<SEED_IP>:13337" "add"
+./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin addnode "seed.btc3.mrio.xyz:13337" "add"
 ```
 
 ### Connection Refused
