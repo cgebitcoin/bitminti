@@ -135,7 +135,7 @@ Mining BTC3 is instant and requires no special hardware. See [MINING.md](MINING.
 To connect to existing BTC3 nodes:
 
 ```bash
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin addnode "<SEED_NODE_IP>:13337" "add"
+./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin addnode "seed.btc3.mrio.xyz:13337" "add"
 ```
 
 For complete network participation guide, see [JOINING.md](JOINING.md).
