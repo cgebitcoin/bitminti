@@ -25,7 +25,7 @@ BTC3 operates as a peer-to-peer network where nodes:
 ./bin/btc3d -datadir=./btc3-data -server -rpcuser=admin -rpcpassword=admin -daemon
 
 # Add a seed node (replace with actual IP)
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin addnode "<SEED_NODE_IP>:13337" "add"
+./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin addnode "seed.btc3.mrio.xyz:13337" "add"
 
 # Verify connection
 ./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getpeerinfo
