@@ -104,6 +104,13 @@ make -j$(nproc)
 
 For detailed platform-specific instructions, see [BUILDING.md](BUILDING.md).
 
+## Install BTC3 (Linux x86_64)
+
+Download the prebuilt binaries:
+
+```bash
+wget https://github.com/cgebitcoin/btc3/releases/download/v30.99.0-4126e133f947/btc3-linux-x86_64.tar.gz
+
 ### Run Your First Node
 
 ```bash
