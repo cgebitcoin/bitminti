@@ -21,6 +21,7 @@
 #include <util/strencodings.h>
 
 #include <algorithm>
+#include <arith_uint256.h>
 #include <cassert>
 #include <cstdint>
 #include <cstring>
@@ -118,12 +119,12 @@ public:
     consensus.SegwitHeight = 1;
     consensus.MinBIP9WarningHeight = 0;
     consensus.powLimit = uint256{
-        "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
+        "00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
     consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
     consensus.nPowTargetSpacing = 10 * 60;
-    consensus.fPowAllowMinDifficultyBlocks = true;
+    consensus.fPowAllowMinDifficultyBlocks = false;
     consensus.enforce_BIP94 = false;
-    consensus.fPowNoRetargeting = true;
+    consensus.fPowNoRetargeting = false;
     consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
     consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime =
         Consensus::BIP9Deployment::NEVER_ACTIVE;
@@ -164,17 +165,13 @@ public:
     m_assumed_blockchain_size = 810;
     m_assumed_chain_state_size = 14;
 
-    genesis = CreateGenesisBlock(1766511140, 0, 0x207fffff, 1, 50 * COIN);
+    genesis =
+        CreateGenesisBlock(1766971600, 1897862476, 0x1d00ffff, 1, 50 * COIN);
     consensus.hashGenesisBlock = genesis.GetHash();
 
-    // std::cout << "GENESIS_DEBUG: Calculated Hash: " <<
-    // consensus.hashGenesisBlock.ToString() << std::endl; std::cout <<
-    // "GENESIS_DEBUG: Calculated Merkle: " << genesis.hashMerkleRoot.ToString()
-    // << std::endl;
-
     assert(consensus.hashGenesisBlock ==
-           uint256{"434a893e75eda7725c9ff1e08aa3e670cafeaf6c50dfd23036d06a1cddc"
-                   "9d459"});
+           uint256{"00000000f83ead17d3e775fb2cd5558a2108401e0c0a026c616d0b01dfa"
+                   "40ddf"});
     assert(genesis.hashMerkleRoot ==
            uint256{"d086f74285d50bb21873d47b675d88a5886c1535f7650b1803bb5ad3b0a"
                    "bbe67"});
