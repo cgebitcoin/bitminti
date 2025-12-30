@@ -4,7 +4,7 @@ FIRST READ OUR MANIFESTO [MANIFESTO.md](MANIFESTO.md)
 
 SECOND READ OUR CONSENSUS [consensus.md](consensus.md)
 
-**BTC3** is an independent cryptocurrency built on Bitcoin Core technology, designed for accessibility and modern blockchain features. It provides a fully functional, production-ready blockchain with instant mining accessibility, making cryptocurrency participation available to everyone.
+**BTC3** is an independent cryptocurrency built on Bitcoin Core technology, designed for accessibility and modern blockchain features. It utilizes the **RandomX** Proof-of-Work algorithm to ensure long-term CPU mining viability and strong ASIC resistance.
 
 ## 💡 Why BTC3 Exists
 
@@ -62,12 +62,12 @@ We believe:
 
 ## 🚀 Key Features
 
-- **Accessible Mining** – CPU-mineable with optimized difficulty; anyone can participate in securing the network
-- **Modern from Day 1** – SegWit, CSV, and all major soft forks active from block 1
-- **Independent Network** – Runs on port 13337 with unique magic bytes (`0xfc,0xc1,0xb7,0xdc`)
-- **Full Bitcoin Compatibility** – All RPC commands work exactly as in Bitcoin Core
-- **Fair Distribution** – No premine, no ICO, pure proof-of-work from genesis
-- **Recognizable Addresses** – Uses `btc3` prefix for Bech32 addresses
+- **ASIC Resistance** – Utilizes the RandomX PoW algorithm, designed specifically for commodity CPUs and memory-hard validation.
+- **Fair Distribution** – No premine, no ICO, pure proof-of-work from a hardened production genesis.
+- **Modern from Day 1** – SegWit, CSV, and all major soft forks active from block 1.
+- **Independent Network** – Runs on port 13337 with unique magic bytes (`0xfc,0xc1,0xb7,0xdc`).
+- **Full Bitcoin Compatibility** – All RPC commands work exactly as in Bitcoin Core.
+- **Recognizable Addresses** – Uses `btc3` prefix for Bech32 addresses.
 
 ## 📋 Network Parameters
 
@@ -76,10 +76,11 @@ We believe:
 | **Network Port** | 13337 |
 | **RPC Port** | 8332 (default) |
 | **Magic Bytes** | `0xfc, 0xc1, 0xb7, 0xdc` |
-| **Genesis Hash** | `434a893e75eda7725c9ff1e08aa3e670cafeaf6c50dfd23036d06a1cddc9d459` |
+| **Genesis Hash** | `0d2c382326321b1004eb676d1a8ff1a93e92bb0da7be6043a058a6edb361b89e` |
+| **PoW Algorithm**| **RandomX** |
+| **Genesis nBits**| `0x1f00ffff` (Hardened) |
 | **Address Prefix** | `btc3` (Bech32) |
 | **Block Reward** | 50 BTC3 |
-| **Difficulty** | Minimal (instant mining) |
 
 ## 🔧 Quick Start
 
@@ -136,10 +137,10 @@ wget https://github.com/cgebitcoin/btc3/releases/download/v30.99.0-4126e133f947/
 
 ## ⛏️ Mining
 
-Mining BTC3 is instant and requires no special hardware. See [MINING.md](MINING.md) for:
+Mining BTC3 utilizes RandomX, meaning it is most efficient on modern CPUs. No specialized ASIC hardware is required. See [MINING.md](MINING.md) for:
 - Continuous mining scripts
-- Mining pool setup
-- Automated mining strategies
+- Solo and Pool mining setup
+- RandomX performance tuning
 
 ## 🌐 Join the Network
 
@@ -153,6 +154,8 @@ For complete network participation guide, see [JOINING.md](JOINING.md).
 
 ## 📚 Documentation
 
+- [Consensus Specification](consensus.md) – Authoritative technical rules and parameters
+- [RandomX Guide](RANDOMX.md) – Details on the PoW implementation
 - [Building Guide](BUILDING.md) – Platform-specific build instructions
 - [Mining Guide](MINING.md) – How to mine BTC3
 - [Network Guide](JOINING.md) – Join and participate in the network
@@ -169,13 +172,14 @@ For complete network participation guide, see [JOINING.md](JOINING.md).
 
 ## 🔐 Security
 
-BTC3 uses the same cryptographic security as Bitcoin Core, including:
-- SHA-256 proof-of-work
+BTC3 uses the same cryptographic security as Bitcoin Core, enhanced with ASIC-resistant PoW:
+- **RandomX** proof-of-work (ASIC-resistant, CPU-hard)
+- **LWMA** Per-block difficulty adjustment
 - ECDSA signatures
 - SegWit transaction format
 - Full blockchain validation
 
-The accessible mining difficulty is a feature designed to enable broad participation in network security, not a weakness. As the network grows, the community can propose difficulty adjustments through consensus.
+The production difficulty baseline is hardened to prevent "instamine" attacks while ensuring individual miners can contribute to network security from day one.
 
 ## ⚖️ Legal Disclaimer
 
