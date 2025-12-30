@@ -47,7 +47,7 @@ public:
   bool IsNull() const { return (nBits == 0); }
 
   uint256 GetHash() const;
-  uint256 GetPoWHash() const;
+  uint256 GetPoWHash(const uint256 &seed) const;
 
   NodeSeconds Time() const { return NodeSeconds{std::chrono::seconds{nTime}}; }
 

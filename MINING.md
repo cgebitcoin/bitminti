@@ -1,6 +1,6 @@
 # Mining BTC3
 
-BTC3 uses a trivial proof-of-work difficulty, making it instantly mineable on any modern CPU. This guide covers everything from basic mining to automated strategies.
+BTC3 uses RandomX, a CPU-optimized Proof-of-Work algorithm, making it efficiently mineable on any modern CPU and resistant to ASICs. This guide covers everything from basic mining to automated strategies.
 
 ## Quick Start Mining
 

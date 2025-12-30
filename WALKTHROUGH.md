@@ -6,6 +6,23 @@ This release fixes the critical difficulty adjustment bug where miners could min
 - **Behavior**: Difficulty adjusts *every block* based on the last 45 blocks.
 - **Params**: Standard Bitcoin Proof-of-Work limit (Difficulty 1.0).
 
+### Next Steps
+- Verify mining of new blocks using `bitcoin-cli generateblock`.
+- Adjust `powLimit` and difficulty parameters for production readiness if needed (currently relaxed for development).
+
+## Troubleshooting
+
+### CMake Error: "imported target references file that does not exist"
+If you see errors complaining that libraries in `depends` (like `libevent`) reference paths that do not exist (e.g. referencing `btc3/depends` when the folder is actually outside), it means the hardcoded paths in the `depends` configuration are stale.
+
+**Fix:**
+Regenerate the depends configuration by running `make` in the depends directory:
+```bash
+cd /path/to/depends
+make HOST=x86_64-pc-linux-gnu
+```
+Then re-run `cmake` in your build directory.
+
 ## 2. Official Genesis Block
 You must use this specific Genesis Block to be on the valid chain:
 - **Nonce**: `1897862476`

@@ -151,8 +151,26 @@ static bool GenerateBlock(ChainstateManager &chainman, CBlock &&block,
   block_out.reset();
   block.hashMerkleRoot = BlockMerkleRoot(block);
 
+  // Calculate RandomX seed
+  uint256 seed;
+  CBlockIndex *pindexPrev =
+      chainman.m_blockman.LookupBlockIndex(block.hashPrevBlock);
+  if (pindexPrev) {
+    int64_t nHeight = pindexPrev->nHeight + 1;
+    int64_t nSeedHeight = (nHeight / 2048) * 2048;
+    if (nSeedHeight == 0) {
+      seed = uint256{};
+    } else {
+      const CBlockIndex *pindexSeed = pindexPrev->GetAncestor(nSeedHeight);
+      if (pindexSeed)
+        seed = pindexSeed->GetBlockHash();
+    }
+  } else {
+    seed = uint256{};
+  }
+
   while (max_tries > 0 && block.nNonce < std::numeric_limits<uint32_t>::max() &&
-         !CheckProofOfWork(block.GetPoWHash(), block.nBits,
+         !CheckProofOfWork(block.GetPoWHash(seed), block.nBits,
                            chainman.GetConsensus()) &&
          !chainman.m_interrupt) {
     ++block.nNonce;

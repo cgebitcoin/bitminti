@@ -4459,10 +4459,14 @@ static bool CheckBlockHeader(const CBlockHeader &block,
                              const Consensus::Params &consensusParams,
                              bool fCheckPOW = true) {
   // Check proof of work matches claimed amount
+  // RandomX requires seed from parent, so we moved this to
+  // ContextualCheckBlockHeader
+  /*
   if (fCheckPOW &&
       !CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
     return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER,
                          "high-hash", "proof of work failed");
+  */
 
   return true;
 }
@@ -4680,10 +4684,109 @@ std::vector<unsigned char> ChainstateManager::GenerateCoinbaseCommitment(
 }
 
 bool HasValidProofOfWork(const std::vector<CBlockHeader> &headers,
-                         const Consensus::Params &consensusParams) {
-  return std::all_of(headers.cbegin(), headers.cend(), [&](const auto &header) {
-    return CheckProofOfWork(header.GetPoWHash(), header.nBits, consensusParams);
-  });
+                         const Consensus::Params &consensusParams,
+                         const ChainstateManager &chainman) {
+  if (headers.empty())
+    return true;
+
+  const CBlockIndex *pindexPrev = nullptr;
+  uint256 hashPrevBlock = headers[0].hashPrevBlock;
+
+  // Initial lookup
+  pindexPrev = chainman.m_blockman.LookupBlockIndex(hashPrevBlock);
+  if (!pindexPrev && !hashPrevBlock.IsNull() &&
+      hashPrevBlock != consensusParams.hashGenesisBlock) {
+    // Orphan or unknown parent. Cannot validate RandomX PoW contextually.
+    // For safety, we treat this as invalid PoW until parent is known.
+    // This enforces that we only accept headers that connect to something we
+    // know (or genesis).
+    return false;
+  }
+
+  uint256 prevHash = hashPrevBlock;
+  int64_t currentHeight = pindexPrev ? pindexPrev->nHeight + 1 : 0;
+
+  // Track hashes in the batch for RandomX seed lookup if crossing epoch
+  // We strictly require batch to be continuous for efficient validation,
+  // or we re-lookup context on gaps.
+
+  for (size_t i = 0; i < headers.size(); ++i) {
+    const auto &header = headers[i];
+    if (header.hashPrevBlock != prevHash) {
+      // Gap detected. Re-lookup context.
+      pindexPrev = chainman.m_blockman.LookupBlockIndex(header.hashPrevBlock);
+      if (!pindexPrev &&
+          header.hashPrevBlock != consensusParams.hashGenesisBlock)
+        return false;
+      currentHeight = pindexPrev ? pindexPrev->nHeight + 1 : 0;
+    }
+
+    // Calculate Seed
+    uint256 seed;
+    int64_t prevHeight = currentHeight - 1;
+    int64_t nSeedHeight = (prevHeight / 2048) * 2048;
+
+    if (nSeedHeight == 0) {
+      seed = uint256{};
+    } else {
+      // Locate seed block
+      // Case 1: Seed is deep in history (in pindexPrev chain)
+      if (pindexPrev && nSeedHeight <= pindexPrev->nHeight) {
+        const CBlockIndex *pindexSeed = pindexPrev->GetAncestor(nSeedHeight);
+        if (!pindexSeed)
+          return false; // Should not happen if chain is valid
+        seed = pindexSeed->GetBlockHash();
+      }
+      // Case 2: Seed is within this batch (we passed the epoch boundary
+      // recently)
+      else {
+        // We need to find the block at nSeedHeight in the 'headers' vector.
+        // We know headers are continuous in this segment.
+        // nSeedHeight is somewhere between pindexPrev->nHeight + 1 and
+        // currentHeight - 1. The index in 'headers' can be calculated. We reset
+        // simple tracking for this: We need absolute index in chain. This
+        // relies on the batch being continuous from pindexPrev. If we had a
+        // gap, we reset pindexPrev, so this math holds regarding the current
+        // segment.
+
+        // However, calculating the exact index in 'headers' vector is tricky if
+        // we had gaps. Simpler approach: If nSeedHeight > pindexPrev->nHeight,
+        // then the seed block MUST be in the current continuous segment of
+        // headers. Distance from current header 'i' to seed height:
+        // currentHeight (of headers[i]) - nSeedHeight.
+        // headers[i] is at index 'i'.
+        // seed header is at index 'i - (currentHeight - nSeedHeight)'.
+
+        int64_t offset = currentHeight - nSeedHeight;
+        if (offset <= 0 || (size_t)offset > i)
+          return false; // Logic error or gap handling failure
+
+        // Check if the gap logic messed us up.
+        // If we had a gap, 'i' increased but currentHeight reset.
+        // We need to ensure we are looking at the *valid* previous headers in
+        // this segment. Actually, if we hit a gap, we might not have the seed
+        // in 'headers' if the seed was *before* the gap but *after* pindexPrev?
+        // Impossible, if it's after pindexPrev it must be in headers.
+        // So we just need to be careful about not crossing a gap backwards.
+        // For simplicity, if we hit a gap, we can treat it as a new start.
+        // If seed is missing, fail.
+
+        // Let's assume strict continuity for simplicity in this implementation
+        // step? Or just verify:
+        size_t seedIndex = i - (size_t)offset;
+        if (headers[seedIndex].GetHash() != uint256{}) // Just accessing it
+          seed = headers[seedIndex].GetHash();
+      }
+    }
+
+    if (!CheckProofOfWork(header.GetPoWHash(seed), header.nBits,
+                          consensusParams))
+      return false;
+
+    prevHash = header.GetHash();
+    currentHeight++;
+  }
+  return true;
 }
 
 bool IsBlockMutated(const CBlock &block, bool check_witness_root) {
@@ -4741,11 +4844,11 @@ CalculateClaimedHeadersWork(std::span<const CBlockHeader> headers) {
  * was in place) whereby an attacker could unboundedly grow our in-memory block
  * index. See https://bitcoincore.org/en/2024/07/03/disclose-header-spam.
  */
-static bool ContextualCheckBlockHeader(const CBlockHeader &block,
-                                       BlockValidationState &state,
-                                       BlockManager &blockman,
-                                       const ChainstateManager &chainman,
-                                       const CBlockIndex *pindexPrev)
+static bool
+ContextualCheckBlockHeader(const CBlockHeader &block,
+                           BlockValidationState &state, BlockManager &blockman,
+                           const ChainstateManager &chainman,
+                           const CBlockIndex *pindexPrev, bool fCheckPoW)
     EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
   AssertLockHeld(::cs_main);
   assert(pindexPrev != nullptr);
@@ -4756,6 +4859,26 @@ static bool ContextualCheckBlockHeader(const CBlockHeader &block,
   if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
     return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER,
                          "bad-diffbits", "incorrect proof of work");
+
+  // RandomX PoW Check with Seed Rotation
+  // RandomX PoW Check with Seed Rotation
+  int64_t nSeedHeight = (nHeight / 2048) * 2048;
+  uint256 seed;
+  if (nSeedHeight == 0) {
+    seed = uint256{};
+  } else {
+    const CBlockIndex *pindexSeed = pindexPrev->GetAncestor(nSeedHeight);
+    if (!pindexSeed) {
+      return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER,
+                           "randomx-seed-unknown");
+    }
+    seed = pindexSeed->GetBlockHash();
+  }
+
+  if (fCheckPoW &&
+      !CheckProofOfWork(block.GetPoWHash(seed), block.nBits, consensusParams))
+    return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER,
+                         "high-hash", "proof of work failed");
 
   // Check timestamp against prev
   if (block.GetBlockTime() <= pindexPrev->GetMedianTimePast())
@@ -4932,8 +5055,8 @@ bool ChainstateManager::AcceptBlockHeader(const CBlockHeader &block,
       return state.Invalid(BlockValidationResult::BLOCK_INVALID_PREV,
                            "bad-prevblk");
     }
-    if (!ContextualCheckBlockHeader(block, state, m_blockman, *this,
-                                    pindexPrev)) {
+    if (!ContextualCheckBlockHeader(block, state, m_blockman, *this, pindexPrev,
+                                    true)) {
       LogDebug(BCLog::VALIDATION,
                "%s: Consensus::ContextualCheckBlockHeader: %s, %s\n", __func__,
                hash.ToString(), state.ToString());
@@ -5268,7 +5391,7 @@ BlockValidationState TestBlockValidity(Chainstate &chainstate,
    */
 
   if (!ContextualCheckBlockHeader(block, state, chainstate.m_blockman,
-                                  chainstate.m_chainman, tip)) {
+                                  chainstate.m_chainman, tip, check_pow)) {
     if (state.IsValid())
       NONFATAL_UNREACHABLE();
     return state;

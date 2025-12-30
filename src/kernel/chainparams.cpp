@@ -22,6 +22,7 @@
 
 #include <algorithm>
 #include <arith_uint256.h>
+#include <atomic>
 #include <cassert>
 #include <cstdint>
 #include <cstring>
@@ -119,7 +120,7 @@ public:
     consensus.SegwitHeight = 1;
     consensus.MinBIP9WarningHeight = 0;
     consensus.powLimit = uint256{
-        "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
+        "000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
     consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
     consensus.nPowTargetSpacing = 10 * 60;
     consensus.fPowAllowMinDifficultyBlocks = false;
@@ -165,34 +166,13 @@ public:
     m_assumed_blockchain_size = 810;
     m_assumed_chain_state_size = 14;
 
-    genesis = CreateGenesisBlock(1766971600, 0, 0x207fffff, 1, 50 * COIN);
-    // Mining loop for RandomX Genesis Block (Disabled)
-    /*
-    arith_uint256 bnTarget;
-    bnTarget.SetCompact(genesis.nBits);
-
-    // Uncomment to mine
-    std::cout << "Mining genesis block with RandomX..." << std::endl;
-    // Reset nonce to 0 to start fresh
-    genesis.nNonce = 0;
-    while (UintToArith256(genesis.GetPoWHash()) > bnTarget) {
-      genesis.nNonce++;
-      if (genesis.nNonce % 100 == 0)
-        std::cout << "Nonce: " << genesis.nNonce << "\r";
-    }
-    std::cout << "Genesis mined!" << std::endl;
-    std::cout << "Nonce: " << genesis.nNonce << std::endl;
-    std::cout << "Time: " << genesis.nTime << std::endl;
-    std::cout << "Hash: " << genesis.GetHash().ToString() << std::endl;
-    std::cout << "Merkle: " << genesis.hashMerkleRoot.ToString() << std::endl;
-    assert(false); // Stop here to capture values
-    */
-
+    genesis =
+        CreateGenesisBlock(1766971600, 805306957, 0x1f00ffff, 1, 50 * COIN);
     consensus.hashGenesisBlock = genesis.GetHash();
     // Update these after mining
     assert(consensus.hashGenesisBlock ==
-           uint256{"d087346dab70b4a35852253310842a4d741b2d3c8afb140118b3430f188"
-                   "43ef7"});
+           uint256{"0d2c382326321b1004eb676d1a8ff1a93e92bb0da7be6043a058a6edb36"
+                   "1b89e"});
     assert(genesis.hashMerkleRoot ==
            uint256{"d086f74285d50bb21873d47b675d88a5886c1535f7650b1803bb5ad3b0a"
                    "bbe67"});
@@ -278,8 +258,8 @@ public:
     consensus.signet_challenge.clear();
     consensus.nSubsidyHalvingInterval = 210000;
     consensus.script_flag_exceptions.emplace( // BIP16 exception
-        uint256{
-            "00000000dd30457c001f4095d208cc1296b0eed002427aa599874af7a432b105"},
+        uint256{"00000000dd30457c001f4095d208cc1296b0eed002427aa599874af7a4"
+                "32b105"},
         SCRIPT_VERIFY_NONE);
     consensus.BIP34Height = 21111;
     consensus.BIP34Hash = uint256{
@@ -356,12 +336,13 @@ public:
     vSeeds.emplace_back("seed.tbtc.petertodd.net.");
     vSeeds.emplace_back("seed.testnet.bitcoin.sprovoost.nl.");
     vSeeds.emplace_back(
-        "testnet-seed.bluematt.me."); // Just a static list of stable node(s),
-                                      // only supports x9
+        "testnet-seed.bluematt.me."); // Just a static list of stable
+                                      // node(s), only supports x9
     vSeeds.emplace_back(
-        "seed.testnet.achownodes.xyz."); // Ava Chow, only supports x1, x5, x9,
-                                         // x49, x809, x849, xd, x400, x404,
-                                         // x408, x448, xc08, xc48, x40c
+        "seed.testnet.achownodes.xyz."); // Ava Chow, only supports x1, x5,
+                                         // x9, x49, x809, x849, xd, x400,
+                                         // x404, x408, x448, xc08, xc48,
+                                         // x40c
 
     base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 111);
     base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 196);
@@ -548,12 +529,14 @@ public:
                                          std::end(chainparams_seed_signet));
       vSeeds.emplace_back("seed.signet.bitcoin.sprovoost.nl.");
       vSeeds.emplace_back(
-          "seed.signet.achownodes.xyz."); // Ava Chow, only supports x1, x5, x9,
-                                          // x49, x809, x849, xd, x400, x404,
-                                          // x408, x448, xc08, xc48, x40c
+          "seed.signet.achownodes.xyz."); // Ava Chow, only supports x1, x5,
+                                          // x9, x49, x809, x849, xd, x400,
+                                          // x404, x408, x448, xc08, xc48,
+                                          // x40c
 
-      consensus.nMinimumChainWork = uint256{
-          "0000000000000000000000000000000000000000000000000000067d328e681a"};
+      consensus.nMinimumChainWork =
+          uint256{"0000000000000000000000000000000000000000000000000000067d"
+                  "328e681a"};
       consensus.defaultAssumeValid =
           uint256{"000000128586e26813922680309f04e1de713c7542fee86ed908f56368ae"
                   "fe2e"}; // 267665
@@ -625,8 +608,8 @@ public:
         1815; // 90%
     consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].period = 2016;
 
-    // message start is defined as the first 4 bytes of the sha256d of the block
-    // script
+    // message start is defined as the first 4 bytes of the sha256d of the
+    // block script
     HashWriter h{};
     h << consensus.signet_challenge;
     uint256 hash = h.GetHash();
@@ -675,8 +658,8 @@ public:
 };
 
 /**
- * Regression test: intended for private networks only. Has minimal difficulty
- * to ensure that blocks can be found instantly.
+ * Regression test: intended for private networks only. Has minimal
+ * difficulty to ensure that blocks can be found instantly.
  */
 class CRegTestParams : public CChainParams {
 public:
