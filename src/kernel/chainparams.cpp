@@ -119,7 +119,7 @@ public:
     consensus.SegwitHeight = 1;
     consensus.MinBIP9WarningHeight = 0;
     consensus.powLimit = uint256{
-        "00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
+        "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
     consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
     consensus.nPowTargetSpacing = 10 * 60;
     consensus.fPowAllowMinDifficultyBlocks = false;
@@ -165,13 +165,34 @@ public:
     m_assumed_blockchain_size = 810;
     m_assumed_chain_state_size = 14;
 
-    genesis =
-        CreateGenesisBlock(1766971600, 1897862476, 0x1d00ffff, 1, 50 * COIN);
-    consensus.hashGenesisBlock = genesis.GetHash();
+    genesis = CreateGenesisBlock(1766971600, 0, 0x207fffff, 1, 50 * COIN);
+    // Mining loop for RandomX Genesis Block (Disabled)
+    /*
+    arith_uint256 bnTarget;
+    bnTarget.SetCompact(genesis.nBits);
 
+    // Uncomment to mine
+    std::cout << "Mining genesis block with RandomX..." << std::endl;
+    // Reset nonce to 0 to start fresh
+    genesis.nNonce = 0;
+    while (UintToArith256(genesis.GetPoWHash()) > bnTarget) {
+      genesis.nNonce++;
+      if (genesis.nNonce % 100 == 0)
+        std::cout << "Nonce: " << genesis.nNonce << "\r";
+    }
+    std::cout << "Genesis mined!" << std::endl;
+    std::cout << "Nonce: " << genesis.nNonce << std::endl;
+    std::cout << "Time: " << genesis.nTime << std::endl;
+    std::cout << "Hash: " << genesis.GetHash().ToString() << std::endl;
+    std::cout << "Merkle: " << genesis.hashMerkleRoot.ToString() << std::endl;
+    assert(false); // Stop here to capture values
+    */
+
+    consensus.hashGenesisBlock = genesis.GetHash();
+    // Update these after mining
     assert(consensus.hashGenesisBlock ==
-           uint256{"00000000f83ead17d3e775fb2cd5558a2108401e0c0a026c616d0b01dfa"
-                   "40ddf"});
+           uint256{"d087346dab70b4a35852253310842a4d741b2d3c8afb140118b3430f188"
+                   "43ef7"});
     assert(genesis.hashMerkleRoot ==
            uint256{"d086f74285d50bb21873d47b675d88a5886c1535f7650b1803bb5ad3b0a"
                    "bbe67"});

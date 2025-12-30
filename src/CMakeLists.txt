@@ -26,6 +26,8 @@ endif()
 include(../cmake/secp256k1.cmake)
 add_secp256k1(secp256k1)
 
+add_subdirectory(randomx)
+
 # Set top-level target output locations.
 if(NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
@@ -76,7 +78,9 @@ target_link_libraries(bitcoin_consensus
     core_interface
     bitcoin_crypto
     secp256k1
+    randomx
 )
+target_include_directories(bitcoin_consensus PUBLIC randomx/src)
 
 if(WITH_ZMQ)
   add_subdirectory(zmq)
