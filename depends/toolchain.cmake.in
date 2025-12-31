@@ -30,7 +30,16 @@ if(NOT DEFINED CMAKE_C_FLAGS_DEBUG_INIT)
 endif()
 
 if(NOT DEFINED CMAKE_C_COMPILER)
-  set(CMAKE_C_COMPILER @CC@)
+  set(_CC "@CC@")
+  if(NOT IS_ABSOLUTE "${_CC}")
+    set(CMAKE_C_COMPILER "@CC@")
+  else()
+    # If the path starts with the old build directory (determined at depends build time),
+    # we should ideally make it relative. But since we don't know the old prefix easily here,
+    # we'll trust the user to re-run 'make -C depends' if they moved the compilers.
+    # HOWEVER, if the compiler is IN the depends prefix, we can fix it.
+    set(CMAKE_C_COMPILER "@CC@")
+  endif()
 endif()
 
 if(NOT DEFINED CMAKE_CXX_FLAGS_INIT)
@@ -47,7 +56,7 @@ if(NOT DEFINED CMAKE_CXX_FLAGS_DEBUG_INIT)
 endif()
 
 if(NOT DEFINED CMAKE_CXX_COMPILER)
-  set(CMAKE_CXX_COMPILER @CXX@)
+  set(CMAKE_CXX_COMPILER "@CXX@")
   set(CMAKE_OBJCXX_COMPILER ${CMAKE_CXX_COMPILER})
 endif()
 
