@@ -1,8 +1,11 @@
 FROM ubuntu:18.04
 
 # Install build dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y software-properties-common && \
+    add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
+    apt-get update && apt-get install -y \
     build-essential \
+    gcc-10 g++-10 \
     libtool \
     autotools-dev \
     automake \
@@ -15,6 +18,9 @@ RUN apt-get update && apt-get install -y \
     wget \
     cmake \
     vim
+
+# Set GCC 10 as default
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 --slave /usr/bin/g++ g++ /usr/bin/g++-10
 
 # Create work directory
 WORKDIR /btc5
