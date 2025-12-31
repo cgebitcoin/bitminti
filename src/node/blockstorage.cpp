@@ -137,11 +137,26 @@ bool BlockTreeDB::LoadBlockIndexGuts(
         pindexNew->nStatus = diskindex.nStatus;
         pindexNew->nTx = diskindex.nTx;
 
-        if (!CheckProofOfWork(pindexNew->GetBlockHash(), pindexNew->nBits,
-                              consensusParams)) {
-          LogError("%s: CheckProofOfWork failed: %s\n", __func__,
-                   pindexNew->ToString());
-          return false;
+        // BTC3: Reconstruct header to calculate RandomX PoW hash
+        // For RandomX, we only check PoW for Genesis here to ensure database
+        // integrity without slowing down startup for the entire chain. Full
+        // validation happens during block connection.
+        if (pindexNew->nHeight == 0) {
+          CBlockHeader header;
+          header.nVersion = pindexNew->nVersion;
+          header.hashPrevBlock =
+              pindexNew->pprev ? pindexNew->pprev->GetBlockHash() : uint256{};
+          header.hashMerkleRoot = pindexNew->hashMerkleRoot;
+          header.nTime = pindexNew->nTime;
+          header.nBits = pindexNew->nBits;
+          header.nNonce = pindexNew->nNonce;
+
+          if (!CheckProofOfWork(header.GetPoWHash(uint256{}), pindexNew->nBits,
+                                consensusParams)) {
+            LogError("%s: CheckProofOfWork failed for genesis: %s\n", __func__,
+                     pindexNew->ToString());
+            return false;
+          }
         }
 
         pcursor->Next();
@@ -1109,7 +1124,8 @@ bool BlockManager::ReadBlock(
 
   const auto block_hash{block.GetHash()};
 
-  // Check the header
+  // BTC3: Header validation happens in validation.cpp using contextual RandomX
+  // seeds. Legacy SHA256 CheckProofOfWork is invalid here.
   /*
   if (!CheckProofOfWork(block_hash, block.nBits, GetConsensus())) {
       LogError("Errors in block header at %s while reading block",

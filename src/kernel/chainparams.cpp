@@ -167,9 +167,14 @@ public:
     m_assumed_chain_state_size = 14;
 
     genesis =
-        CreateGenesisBlock(1766971600, 805306957, 0x1f00ffff, 1, 50 * COIN);
+        CreateGenesisBlock(1766511140, 805306957, 0x1f00ffff, 1, 50 * COIN);
     consensus.hashGenesisBlock = genesis.GetHash();
-    // Update these after mining
+
+    // std::cout << "GENESIS_DEBUG: Calculated Hash: " <<
+    // consensus.hashGenesisBlock.ToString() << std::endl; std::cout <<
+    // "GENESIS_DEBUG: Calculated Merkle: " << genesis.hashMerkleRoot.ToString()
+    // << std::endl;
+
     assert(consensus.hashGenesisBlock ==
            uint256{"0d2c382326321b1004eb676d1a8ff1a93e92bb0da7be6043a058a6edb36"
                    "1b89e"});
@@ -676,7 +681,7 @@ public:
     consensus.SegwitHeight = 0; // Always active unless overridden
     consensus.MinBIP9WarningHeight = 0;
     consensus.powLimit = uint256{
-        "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
+        "000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
     consensus.nPowTargetTimespan = 24 * 60 * 60; // one day
     consensus.nPowTargetSpacing = 10 * 60;
     consensus.fPowAllowMinDifficultyBlocks = true;
