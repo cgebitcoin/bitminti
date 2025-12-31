@@ -47,9 +47,9 @@ If you already have hosting:
 Before uploading, update `index.html`:
 
 **Find and replace:**
-- `YOUR-USERNAME` → Your actual GitHub username
+- `cgebitcoin` → Your actual GitHub organization/username
 - `YOUR-HANDLE` → Your actual Twitter handle
-- `https://reddit.com/r/btc3` → Your actual Reddit community (if you have one)
+- `https://discord.gg/ShhRfE9D` → Your actual Discord invite link
 
 ### Step 5: Test Your Website
 
@@ -66,7 +66,7 @@ This option is **FREE** and easier to maintain!
 ### Step 1: Push Website to GitHub
 
 ```bash
-cd /Users/gurkanerdogdu/tmp/bitcoin
+cd /Users/gurkanerdogdu/tmp/btc5
 
 # Add website files to git
 git add website/
@@ -83,7 +83,7 @@ git push origin main
    - Branch: `main`
    - Folder: `/website`
 5. Click **Save**
-6. Wait 1-2 minutes, your site will be live at `https://YOUR-USERNAME.github.io/btc3/`
+6. Wait 1-2 minutes, your site will be live at `https://cgebitcoin.github.io/btc3/`
 
 ### Step 3: Connect Your GoDaddy Domain to GitHub Pages
 
@@ -122,7 +122,7 @@ git push origin main
    **Record 5 (CNAME for www):**
    - Type: `CNAME`
    - Name: `www`
-   - Value: `YOUR-USERNAME.github.io`
+   - Value: `cgebitcoin.github.io`
    - TTL: `600`
 
 6. **Delete** any existing `A` records pointing to GoDaddy parking page
