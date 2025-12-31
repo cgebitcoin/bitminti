@@ -1,6 +1,7 @@
 packages:=
 
 boost_packages = boost
+randomx_packages = randomx
 
 libevent_packages = libevent
 

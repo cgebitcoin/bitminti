@@ -78,6 +78,7 @@ target_link_libraries(bitcoin_consensus
     core_interface
     bitcoin_crypto
     secp256k1
+  PUBLIC
     randomx
 )
 target_include_directories(bitcoin_consensus PUBLIC randomx/src)
