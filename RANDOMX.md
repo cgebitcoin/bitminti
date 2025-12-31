@@ -32,7 +32,7 @@ In our RandomX implementation, we separate these:
 RandomX is not stateless. To verify a header, you generally need the **Seed** corresponding to its height (Epoch).
 -   **Old Flow**: `CheckBlockHeader(header)` -> `CheckProofOfWork(header.GetHash())`.
 -   **New Flow**: `ContextualCheckBlockHeader(header, ...)` -> `Calculate Seed for Height` -> `CheckProofOfWork(header.GetPoWHash(seed))`.
--   **Optimization**: We removed stateless PoW checks in `ReadBlock` (disk load) because the seed isn't available without the index context. Security is maintained by strictly checking the PoW hash when the block is attached to the active chain.
+-   **Optimization**: We removed redundant PoW sanity checks in `LoadBlockIndexGuts` (startup) because RandomX verification is contextual and performance-intensive. Security is fully maintained as every block is strictly validated upon its first arrival and when connecting to the active chain.
 
 ### C. Thread-Local Optimizations
 RandomX VMs are heavy objects (not thread-safe). Global locking is a bottleneck.
@@ -62,9 +62,9 @@ The `librandomx` library is vendored in `src/randomx`.
   3. Calculates the RandomX hash of the serialized header.
   - *Note*: The standard `GetHash()` method (SHA256) is preserved as the Block ID for linking blocks.
 
-### Validation (`src/validation.cpp` & `src/rpc/mining.cpp`)
+### Validation (`src/validation.cpp`)
 - **`ContextualCheckBlockHeader`**: Implemented strict RandomX PoW check using height-based Seed.
-- **`ReadBlock` (blockstorage.cpp)**: Removed legacy stateless PoW checks. RandomX is contextual (requires Seed), so stateless validation from disk is impossible/insecure. Validation is deferred to `ContextualCheckBlockHeader`.
+- **`LoadBlockIndexGuts` (blockstorage.cpp)**: Removed legacy PoW sanity checks during startup. Since all blocks are validated before being written to disk, this startup check is redundant and poorly suited for RandomX context.
 
 ## 4. Seed Rotation
     - RandomX requires a seed (key) to initialize the VM.
@@ -77,7 +77,7 @@ The `librandomx` library is vendored in `src/randomx`.
 
 ## 5. Genesis Block
     - Re-mined using RandomX with the **genesis epoch seed**.
-    - **Difficulty**: Tuned for development (`0x207fffff`) to allow CPU mining on testnet.
+    - **Difficulty**: Hardened for production (`0x1f00ffff`) to ensure a fair launch and prevent instamine.
 
 A new genesis block was mined to satisfy the### Genesis Block Configuration
 

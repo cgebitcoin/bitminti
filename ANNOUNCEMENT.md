@@ -42,7 +42,7 @@ BTC3 is a new cryptocurrency that combines Bitcoin's battle-tested codebase with
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-username>/btc3.git
+git clone https://github.com/cgebitcoin/btc3.git
 cd btc3
 
 # Build (or download pre-built binaries)
@@ -58,11 +58,11 @@ make -j$(nproc)
 
 ### 📚 Documentation
 
-- [README](https://github.com/<your-username>/btc3/blob/main/README.md) – Quick start guide
-- [Building Guide](https://github.com/<your-username>/btc3/blob/main/BUILDING.md) – Platform-specific instructions
-- [Mining Guide](https://github.com/<your-username>/btc3/blob/main/MINING.md) – How to mine BTC3
-- [Network Guide](https://github.com/<your-username>/btc3/blob/main/JOINING.md) – Join the network
-- [RPC Reference](https://github.com/<your-username>/btc3/blob/main/RPC.md) – Command reference
+- [README](https://github.com/cgebitcoin/btc3/blob/main/README.md) – Quick start guide
+- [Building Guide](https://github.com/cgebitcoin/btc3/blob/main/BUILDING.md) – Platform-specific instructions
+- [Mining Guide](https://github.com/cgebitcoin/btc3/blob/main/MINING.md) – How to mine BTC3
+- [Network Guide](https://github.com/cgebitcoin/btc3/blob/main/JOINING.md) – Join the network
+- [RPC Reference](https://github.com/cgebitcoin/btc3/blob/main/RPC.md) – Command reference
 
 ### 🌐 Network Parameters
 
@@ -72,7 +72,7 @@ make -j$(nproc)
 | Magic Bytes | 0xfc, 0xc1, 0xb7, 0xdc |
 | Address Prefix | btc3 (Bech32) |
 | Block Reward | 50 BTC3 |
-| Difficulty | Minimal (instant mining) |
+| Difficulty | Hardened (RandomX Production) |
 
 ### 🤝 Join the Network
 
@@ -93,9 +93,9 @@ BTC3 is built on the foundation of Bitcoin Core. Special thanks to all Bitcoin C
 ---
 
 **Links:**
-- GitHub: https://github.com/<your-username>/btc3
-- Releases: https://github.com/<your-username>/btc3/releases
-- Issues: https://github.com/<your-username>/btc3/issues
+- GitHub: https://github.com/cgebitcoin/btc3
+- Releases: https://github.com/cgebitcoin/btc3/releases
+- Issues: https://github.com/cgebitcoin/btc3/issues
 
 **Start mining BTC3 today and experience Bitcoin development without limits!**
 
@@ -114,9 +114,11 @@ Tired of whales and elites dominating crypto? BTC3 is different:
 ⚖️ Everyone starts equal
 🌍 Built for ordinary people, not the 1%
 
-Take back financial freedom: https://github.com/<your-username>/btc3
+Take back financial freedom: https://github.com/cgebitcoin/btc3
 
 #BTC3 #CryptoForThePeople #FairLaunch #Decentralization
+
+Join us on Discord: https://discord.gg/ShhRfE9D
 
 ### Reddit (r/CryptoCurrency, r/Bitcoin)
 
@@ -141,23 +143,23 @@ Bitcoin started as something anyone could mine on a laptop. Now it's dominated b
 - SegWit and modern features active from block 1
 - Independent network (port 13337, unique protocol)
 - Full RPC compatibility
-- Accessible mining difficulty
+- Hardened Production Difficulty
 
 **This is cryptocurrency for the 99%, not the 1%.**
 
 If you're tired of whales manipulating markets and corporations controlling mining, BTC3 is for you. Everyone is welcome. Everyone starts equal.
 
-Check it out: https://github.com/<your-username>/btc3
+Check it out: https://github.com/cgebitcoin/btc3
 
 Let's take back financial freedom together.
 
 ### Hacker News
 
-**Title**: BTC3 – A Fast, Self-Contained Bitcoin Testnet
+**Title**:## BTC3 – ASIC-Resistant CPU Mining for the People
 
 **Description**: BTC3 is a lightweight Bitcoin Core fork with trivial mining difficulty, making it perfect for development, testing, and education. All modern Bitcoin features (SegWit, CSV, etc.) are active from block 1, and it runs on an isolated network with full RPC compatibility.
 
-Link: https://github.com/<your-username>/btc3
+Link: https://github.com/cgebitcoin/btc3
 
 ---
 
@@ -188,7 +190,7 @@ All modern consensus rules (SegWit, CSV, BIP34/65/66) are active from the genesi
 - MIT licensed
 
 **Getting started:**
-https://github.com/<your-username>/btc3
+https://github.com/cgebitcoin/btc3
 
 Documentation includes building guides, mining instructions, and network participation details.
 
@@ -228,9 +230,9 @@ BTC3 is a Bitcoin Core fork designed for developers, educators, and researchers.
 • Block Reward: 50 BTC3
 
 **Links:**
-GitHub: https://github.com/<your-username>/btc3
-Documentation: https://github.com/<your-username>/btc3#readme
-Releases: https://github.com/<your-username>/btc3/releases
+GitHub: https://github.com/cgebitcoin/btc3
+Documentation: https://github.com/cgebitcoin/btc3#readme
+Releases: https://github.com/cgebitcoin/btc3/releases
 
 **Seed Node:**
 Connect to: <YOUR_IP>:13337

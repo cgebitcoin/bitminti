@@ -95,6 +95,7 @@ The BTC3 genesis block is the immutable foundation of the chain.
 | :--- | :--- |
 | **nBits** | `0x1f00ffff` (Hardened Production Target) |
 | **nNonce** | `805306957` |
+| **nTime**  | `1766971600` (Unix Epoch) |
 | **Block ID (SHA256)** | `0d2c382326321b1004eb676d1a8ff1a93e92bb0da7be6043a058a6edb361b89e` |
 | **PoW Hash** | `0000a3a63f6b7d31796254299257f86a4b4231916ec239b3a700ab2c85b55764` |
 

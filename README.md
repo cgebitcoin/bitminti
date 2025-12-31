@@ -95,8 +95,11 @@ We believe:
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-username>/btc3.git
+git clone https://github.com/cgebitcoin/btc3.git
 cd btc3
+
+# Update submodules (Required for RandomX)
+git submodule update --init --recursive
 
 # Install dependencies (macOS)
 brew install cmake boost openssl automake libtool
@@ -207,7 +210,7 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 ## 📞 Support
 
 - GitHub Issues: Report bugs or request features
-- Discord: Join our community
+- Discord: [Join our community](https://discord.gg/ShhRfE9D)
 
 ## 🙏 Acknowledgments
 
