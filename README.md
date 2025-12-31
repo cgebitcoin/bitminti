@@ -207,7 +207,7 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 ## 📞 Support
 
 - GitHub Issues: Report bugs or request features
-- Discussions: Ask questions and share ideas
+- Discord: Join our community
 
 ## 🙏 Acknowledgments
 

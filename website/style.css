@@ -57,6 +57,31 @@ body {
     padding: 40px 0;
 }
 
+.hero-logo {
+    margin-bottom: 30px;
+}
+
+.logo-image {
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.3));
+    animation: pulse 4s infinite ease-in-out;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.3));
+    }
+
+    50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.5));
+    }
+}
+
 .hero-title {
     font-size: clamp(2.5rem, 8vw, 5rem);
     font-weight: 800;
@@ -330,7 +355,8 @@ body {
     margin-bottom: 15px;
 }
 
-.step code {
+.step code,
+.step-link {
     display: block;
     background: var(--dark);
     padding: 15px;
@@ -340,6 +366,14 @@ body {
     color: var(--primary);
     overflow-x: auto;
     line-height: 1.8;
+    text-decoration: none;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.step-link:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: var(--primary);
 }
 
 .cta-buttons {
@@ -405,9 +439,21 @@ body {
     margin-bottom: 40px;
 }
 
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.footer-logo {
+    width: 32px;
+    height: auto;
+}
+
 .footer-section h4 {
     color: var(--primary);
-    margin-bottom: 15px;
+    margin-bottom: 0;
     font-size: 1.2rem;
 }
 
@@ -451,19 +497,19 @@ body {
     .hero-stats {
         gap: 30px;
     }
-    
+
     .stat-value {
         font-size: 2rem;
     }
-    
+
     .mission-content {
         grid-template-columns: 1fr;
     }
-    
+
     .features-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .steps {
         grid-template-columns: 1fr;
     }
@@ -480,6 +526,7 @@ html {
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
