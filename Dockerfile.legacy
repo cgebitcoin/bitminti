@@ -1,0 +1,27 @@
+FROM ubuntu:18.04
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libtool \
+    autotools-dev \
+    automake \
+    pkg-config \
+    bsdmainutils \
+    python3 \
+    rsync \
+    git \
+    curl \
+    wget \
+    cmake \
+    vim
+
+# Create work directory
+WORKDIR /btc5
+
+# Instructions (to be run when mounting source):
+# 1. cd depends
+# 2. make HOST=x86_64-pc-linux-gnu NO_QT=1 -j$(nproc)
+# 3. cd ..
+# 4. cmake -B build-legacy -DCMAKE_TOOLCHAIN_FILE=depends/x86_64-pc-linux-gnu/toolchain.cmake
+# 5. cmake --build build-legacy -j$(nproc) --target btc3d btc3-cli
