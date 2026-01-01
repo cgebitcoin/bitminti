@@ -66,7 +66,7 @@ This option is **FREE** and easier to maintain!
 ### Step 1: Push Website to GitHub
 
 ```bash
-cd /Users/gurkanerdogdu/tmp/btc5
+cd /path/to/btc3
 
 # Add website files to git
 git add website/

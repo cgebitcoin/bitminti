@@ -61,5 +61,38 @@ To prove the chain is not broken/instant:
 - **Observation**: It will take minutes/hours on a CPU. This confirms the difficulty is working.
 
 ## 4. Connectivity
-- **P2P Port**: 13337
 - **RPC Port**: 8332
+
+## 5. Mining (Fast Mode & Multi-Threaded)
+To achieve maximum CPU mining performance (~100x faster than default), follow these steps:
+
+### Step 1: Start Daemon in Fast Mode
+Enable the RandomX "Full Memory" dataset (requires ~2.5GB RAM) at startup.
+```bash
+./build/bin/btc3d -daemon -miningfastmode=1
+```
+
+### Step 2: Start Multi-Threaded Mining
+Use the CLI to mine blocks using all available CPU cores.
+```bash
+# Calculate number of cores
+THREADS=$(nproc)
+
+# Mine 1000 blocks to your address with all cores
+./build/bin/btc3-cli generatetoaddress 1000 "$(./build/bin/btc3-cli getnewaddress)" 10000000 $THREADS
+```
+
+## 6. Deployment / Release Instructions
+
+### ⚠️ IMPORTANT: Legacy Linux Support (Ubuntu 14.04/16.04/18.04)
+If you are deploying to an older Linux server, you **MUST** use the `legacy` binary release (`btc3-linux-legacy.tar.gz`).
+
+**Why?**
+The standard binaries are compiled with a modern GLIBC (2.35+). Older systems use older GLIBC versions (e.g., Ubuntu 18.04 uses 2.27). Running the standard binary on them will cause this error:
+```
+./btc3d: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.34' not found
+```
+
+**Files:**
+- `btc3-linux-x86_64.tar.gz` → For Ubuntu 22.04 / 24.04 (Modern)
+- `btc3-linux-legacy.tar.gz` → For Ubuntu 14.04 - 20.04 (Legacy / Universal)

@@ -10,6 +10,13 @@
 
 This document is the **authoritative specification** of the BTC3 mainnet consensus rules. Any change to the rules described here **requires a hard fork**.
 
+## 0. Network Identity
+- **Network Name:** BTC3 Mainnet
+- **Network Port:** 13337 (Default P2P)
+- **RPC Port:** 8332 (Default JSON-RPC)
+- **message_start (Magic Bytes):** `0xfc, 0xc1, 0xb7, 0xdc`
+- **Address Prefix (Bech32):** `btc3`
+
 BTC3 is a Bitcoin-Core–derived blockchain designed for:
 - Long-term **CPU mining viability** via RandomX.
 - Strong **ASIC resistance**.
