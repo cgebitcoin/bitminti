@@ -16,13 +16,12 @@
 //! or passed unchanged as a string, or a combination of both.
 enum ParamFormat { JSON, STRING, JSON_OR_STRING };
 
-class CRPCConvertParam
-{
+class CRPCConvertParam {
 public:
-    std::string methodName; //!< method whose params want conversion
-    int paramIdx;           //!< 0-based idx of param to convert
-    std::string paramName;  //!< parameter name
-    ParamFormat format{ParamFormat::JSON}; //!< parameter format
+  std::string methodName; //!< method whose params want conversion
+  int paramIdx;           //!< 0-based idx of param to convert
+  std::string paramName;  //!< parameter name
+  ParamFormat format{ParamFormat::JSON}; //!< parameter format
 };
 
 // clang-format off
@@ -62,6 +61,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "utxoupdatepsbt", 1, "descriptors" },
     { "generatetoaddress", 0, "nblocks" },
     { "generatetoaddress", 2, "maxtries" },
+    { "generatetoaddress", 3, "nthreads" },
     { "generatetodescriptor", 0, "num_blocks" },
     { "generatetodescriptor", 2, "maxtries" },
     { "generateblock", 1, "transactions" },
@@ -389,56 +389,61 @@ static const CRPCConvertParam vRPCConvertParams[] =
 };
 // clang-format on
 
-/** Parse string to UniValue or throw runtime_error if string contains invalid JSON */
-static UniValue Parse(std::string_view raw, ParamFormat format = ParamFormat::JSON)
-{
-    UniValue parsed;
-    if (!parsed.read(raw)) {
-        if (format != ParamFormat::JSON_OR_STRING) throw std::runtime_error(tfm::format("Error parsing JSON: %s", raw));
-        return UniValue(std::string(raw));
-    }
-    return parsed;
+/** Parse string to UniValue or throw runtime_error if string contains invalid
+ * JSON */
+static UniValue Parse(std::string_view raw,
+                      ParamFormat format = ParamFormat::JSON) {
+  UniValue parsed;
+  if (!parsed.read(raw)) {
+    if (format != ParamFormat::JSON_OR_STRING)
+      throw std::runtime_error(tfm::format("Error parsing JSON: %s", raw));
+    return UniValue(std::string(raw));
+  }
+  return parsed;
 }
 
-namespace rpc_convert
-{
-const CRPCConvertParam* FromPosition(std::string_view method, size_t pos)
-{
-    auto it = std::ranges::find_if(vRPCConvertParams, [&](const auto& p) {
-        return p.methodName == method && p.paramIdx == static_cast<int>(pos);
-    });
+namespace rpc_convert {
+const CRPCConvertParam *FromPosition(std::string_view method, size_t pos) {
+  auto it = std::ranges::find_if(vRPCConvertParams, [&](const auto &p) {
+    return p.methodName == method && p.paramIdx == static_cast<int>(pos);
+  });
 
-    return it == std::end(vRPCConvertParams) ? nullptr : &*it;
+  return it == std::end(vRPCConvertParams) ? nullptr : &*it;
 }
 
-const CRPCConvertParam* FromName(std::string_view method, std::string_view name)
-{
-    auto it = std::ranges::find_if(vRPCConvertParams, [&](const auto& p) {
-        return p.methodName == method && p.paramName == name;
-    });
+const CRPCConvertParam *FromName(std::string_view method,
+                                 std::string_view name) {
+  auto it = std::ranges::find_if(vRPCConvertParams, [&](const auto &p) {
+    return p.methodName == method && p.paramName == name;
+  });
 
-    return it == std::end(vRPCConvertParams) ? nullptr : &*it;
+  return it == std::end(vRPCConvertParams) ? nullptr : &*it;
 }
 } // namespace rpc_convert
 
-static UniValue ParseParam(const CRPCConvertParam* param, std::string_view raw)
-{
-    // Only parse parameters which have the JSON or JSON_OR_STRING format; otherwise, treat them as strings.
-    return (param && (param->format == ParamFormat::JSON || param->format == ParamFormat::JSON_OR_STRING)) ? Parse(raw, param->format) : UniValue(std::string(raw));
+static UniValue ParseParam(const CRPCConvertParam *param,
+                           std::string_view raw) {
+  // Only parse parameters which have the JSON or JSON_OR_STRING format;
+  // otherwise, treat them as strings.
+  return (param && (param->format == ParamFormat::JSON ||
+                    param->format == ParamFormat::JSON_OR_STRING))
+             ? Parse(raw, param->format)
+             : UniValue(std::string(raw));
 }
 
 /**
  * Convert command lines arguments to params object when -named is disabled.
  */
-UniValue RPCConvertValues(const std::string &strMethod, const std::vector<std::string> &strParams)
-{
-    UniValue params(UniValue::VARR);
+UniValue RPCConvertValues(const std::string &strMethod,
+                          const std::vector<std::string> &strParams) {
+  UniValue params(UniValue::VARR);
 
-    for (std::string_view s : strParams) {
-        params.push_back(ParseParam(rpc_convert::FromPosition(strMethod, params.size()), s));
-    }
+  for (std::string_view s : strParams) {
+    params.push_back(
+        ParseParam(rpc_convert::FromPosition(strMethod, params.size()), s));
+  }
 
-    return params;
+  return params;
 }
 
 /**
@@ -470,46 +475,50 @@ UniValue RPCConvertValues(const std::string &strMethod, const std::vector<std::s
  * "my=wallet" as a single positional string, successfully creating a
  * wallet with that literal name.
  */
-UniValue RPCConvertNamedValues(const std::string &strMethod, const std::vector<std::string> &strParams)
-{
-    UniValue params(UniValue::VOBJ);
-    UniValue positional_args{UniValue::VARR};
+UniValue RPCConvertNamedValues(const std::string &strMethod,
+                               const std::vector<std::string> &strParams) {
+  UniValue params(UniValue::VOBJ);
+  UniValue positional_args{UniValue::VARR};
 
-    for (std::string_view s: strParams) {
-        size_t pos = s.find('=');
-        if (pos == std::string_view::npos) {
-            positional_args.push_back(ParseParam(rpc_convert::FromPosition(strMethod, positional_args.size()), s));
-            continue;
-        }
-
-        std::string name{s.substr(0, pos)};
-        std::string_view value{s.substr(pos+1)};
-
-        const CRPCConvertParam* named_param{rpc_convert::FromName(strMethod, name)};
-        if (!named_param) {
-            const CRPCConvertParam* positional_param = rpc_convert::FromPosition(strMethod, positional_args.size());
-            UniValue parsed_value;
-            if (positional_param && positional_param->format == ParamFormat::JSON && parsed_value.read(s)) {
-                positional_args.push_back(std::move(parsed_value));
-                continue;
-            } else if (positional_param && positional_param->format == ParamFormat::STRING) {
-                positional_args.push_back(s);
-                continue;
-            }
-        }
-
-        // Intentionally overwrite earlier named values with later ones as a
-        // convenience for scripts and command line users that want to merge
-        // options.
-        params.pushKV(name, ParseParam(named_param, value));
+  for (std::string_view s : strParams) {
+    size_t pos = s.find('=');
+    if (pos == std::string_view::npos) {
+      positional_args.push_back(ParseParam(
+          rpc_convert::FromPosition(strMethod, positional_args.size()), s));
+      continue;
     }
 
-    if (!positional_args.empty()) {
-        // Use pushKVEnd instead of pushKV to avoid overwriting an explicit
-        // "args" value with an implicit one. Let the RPC server handle the
-        // request as given.
-        params.pushKVEnd("args", std::move(positional_args));
+    std::string name{s.substr(0, pos)};
+    std::string_view value{s.substr(pos + 1)};
+
+    const CRPCConvertParam *named_param{rpc_convert::FromName(strMethod, name)};
+    if (!named_param) {
+      const CRPCConvertParam *positional_param =
+          rpc_convert::FromPosition(strMethod, positional_args.size());
+      UniValue parsed_value;
+      if (positional_param && positional_param->format == ParamFormat::JSON &&
+          parsed_value.read(s)) {
+        positional_args.push_back(std::move(parsed_value));
+        continue;
+      } else if (positional_param &&
+                 positional_param->format == ParamFormat::STRING) {
+        positional_args.push_back(s);
+        continue;
+      }
     }
 
-    return params;
+    // Intentionally overwrite earlier named values with later ones as a
+    // convenience for scripts and command line users that want to merge
+    // options.
+    params.pushKV(name, ParseParam(named_param, value));
+  }
+
+  if (!positional_args.empty()) {
+    // Use pushKVEnd instead of pushKV to avoid overwriting an explicit
+    // "args" value with an implicit one. Let the RPC server handle the
+    // request as given.
+    params.pushKVEnd("args", std::move(positional_args));
+  }
+
+  return params;
 }
