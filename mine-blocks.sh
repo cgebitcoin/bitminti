@@ -5,7 +5,7 @@
 BLOCKS=${1:-10}
 BUILD_DIR="$(cd "$(dirname "$0")" && pwd)/build/bin"
 DATADIR="${DATADIR:-$HOME/.btc3}"
-AUTH="${BTC3_AUTH:-}"
+AUTH="${BTC3_AUTH:--rpcuser=test -rpcpassword=test}"
 
 echo "=== BTC3 Mining Script ==="
 echo "Target blocks: $BLOCKS"

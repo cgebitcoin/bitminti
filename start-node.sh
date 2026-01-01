@@ -19,7 +19,7 @@ sleep 2
 
 # Start daemon
 echo "Starting BTC3 daemon..."
-./build/bin/btc3d -datadir="$DATADIR" -daemon
+./build/bin/btc3d -datadir="$DATADIR" -daemon -miningfastmode=1 -dbcache=2048 -par=$(sysctl -n hw.ncpu)
 
 # Wait for start
 echo "Waiting for initialization..."

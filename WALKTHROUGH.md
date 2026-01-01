@@ -60,8 +60,17 @@ To prove the chain is not broken/instant:
 ```
 - **Observation**: It will take minutes/hours on a CPU. This confirms the difficulty is working.
 
-## 4. Connectivity
-- **RPC Port**: 8332
+## 4. Verification Step: Mining Mainnet
+**Success!** The network is live and mining.
+- **Current Height:** Block 60+ (Confirmed by user on EC2)
+- **Algorithm:** RandomX (CPU) + LWMA Difficulty Adjustment.
+- **Peer Connection:** EC2 <-> MacOS verified.
+
+#### How to Check Status
+```bash
+# On EC2 or Mac:
+./build/bin/btc3-cli -rpcuser=test -rpcpassword=test getblockchaininfo
+```
 
 ## 5. Mining (Fast Mode & Multi-Threaded)
 To achieve maximum CPU mining performance (~100x faster than default), follow these steps:
