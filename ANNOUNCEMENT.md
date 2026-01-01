@@ -1,239 +1,52 @@
-# BTC3 Launch Announcement
+[ANN][BTC3] BTC3 - Cryptocurrency for the People - LAUNCHED
+January 01, 2026, 00:00:00 AM
 
-**Subject**: Introducing BTC3 – The Next Generation Cryptocurrency
+# Launch date - NOW
 
----
+**Website:**
+http://mybtc3.com
 
-## 🚀 Announcing BTC3
+**Source Code & Binary:**
+https://github.com/cgebitcoin/btc3
 
-I'm excited to announce the launch of **BTC3**, an independent cryptocurrency built to return power to ordinary people.
+**Whitepaper:**
+https://mybtc3.com/WHITEPAPER.pdf
 
-### Why BTC3?
+Important: This is not another Bitcoin fork for profit. This is a return to Satoshi's vision.
+Bitcoin has been hijacked by industrial mining cartels (ASICs), whales, and institutions.
+We respect Bitcoin's history, but we believe the "One CPU, One Vote" vision is dead on the main chain.
+A fork is the right way to restore this vision.
 
-**Cryptocurrency has been hijacked by the wealthy.** Bitcoin was meant to empower everyone, but today it's dominated by whales, mining corporations, and wealthy investors who squeeze out ordinary people. 
+**Why did I make this fork?**
+Because ordinary people can no longer mine Bitcoin. The system is centralized.
+I want a coin where a student in a dorm room has the same mining chance as a corporation.
 
-**BTC3 changes this.** No premine. No ICO. No whales. Just fair, accessible cryptocurrency that anyone can mine on a regular computer.
+### Here are the details:
 
-**This is cryptocurrency for the 99%, not the 1%.**
+1. **Code Base:** Bitcoin Core (Hardened) + RandomX + LWMA.
+2. **Fair Launch:** Started from scratch (Genesis Block). No Premine. No ICO.
+3. **Consensus:** **RandomX** (CPU-only). ASICs are bricked. GPUs are inefficient.
+4. **Name:** BTC3 (Bitcoin 3.0 / Third Era)
+5. **Block Target:** 10 minutes (Standard).
+6. **Supply:** 21 Million (Standard).
+7. **Difficulty:** LWMA-2 (Linear Weighted Moving Average) for fast response to hashrate changes.
 
-### What is BTC3?
+**Action plan:**
 
-BTC3 is a new cryptocurrency that combines Bitcoin's battle-tested codebase with accessibility-focused design. Unlike Bitcoin, BTC3 is mineable by anyone with a standard computer, making cryptocurrency participation truly democratic. It's a fully functional, production-ready blockchain with all modern features active from day one.
+- **I want to start mining. What can I do just now?**
+  1. Download the binaries from GitHub.
+  2. Run `./bin/btc3d -daemon` (It will sync instantly, it's new).
+  3. Generate an address: `./bin/btc3-cli getnewaddress`.
+  4. Mine: `./bin/btc3-cli generatetoaddress 1 <your_address>`.
 
-### ✨ Key Features
+- **I want to help with development / design / marketing ...**
+  Please check the GitHub issues or join us.
 
-- **Accessible Mining** – CPU-mineable; participate in network security without specialized hardware
-- **Modern from Day 1** – SegWit, CSV, and all major soft forks active from block 1
-- **Independent Network** – Dedicated infrastructure on port 13337 with unique protocol
-- **Full Bitcoin Compatibility** – All RPC commands work exactly as in Bitcoin Core
-- **Fair Launch** – No premine, no ICO, pure proof-of-work from genesis block
-- **Easy Setup** – Docker support, pre-built binaries, comprehensive documentation
+- **I want to integrate new currency in my services**
+  BTC3 is fully RPC-compatible with Bitcoin Core. If you support Bitcoin, you support BTC3.
+  Port: `13337`.
 
-### 🎯 Use Cases
-
-- **Digital Currency** – Fast, secure peer-to-peer cryptocurrency transactions
-- **Mining** – Earn BTC3 by securing the network with your computer
-- **Store of Value** – Decentralized cryptocurrency with proven technology
-- **Development** – Build wallets, explorers, payment systems, and dApps
-- **Community Projects** – Gaming currencies, reward systems, token economies
-- **Education** – Learn blockchain with a real, functioning cryptocurrency network
-
-### 📦 Get Started
-
-```bash
-# Clone the repository
-git clone https://github.com/<your-username>/btc3.git
-cd btc3
-
-# Build (or download pre-built binaries)
-mkdir build && cd build
-cmake -DENABLE_IPC=OFF -DBUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release ..
-make -j$(nproc)
-
-# Run your first node
-./bin/btc3d -datadir=./btc3-data -daemon
-./bin/btc3-cli -datadir=./btc3-data createwallet "miner"
-./bin/btc3-cli -datadir=./btc3-data generatetoaddress 101 $(./bin/btc3-cli -datadir=./btc3-data getnewaddress)
-```
-
-### 📚 Documentation
-
-- [README](https://github.com/<your-username>/btc3/blob/main/README.md) – Quick start guide
-- [Building Guide](https://github.com/<your-username>/btc3/blob/main/BUILDING.md) – Platform-specific instructions
-- [Mining Guide](https://github.com/<your-username>/btc3/blob/main/MINING.md) – How to mine BTC3
-- [Network Guide](https://github.com/<your-username>/btc3/blob/main/JOINING.md) – Join the network
-- [RPC Reference](https://github.com/<your-username>/btc3/blob/main/RPC.md) – Command reference
-
-### 🌐 Network Parameters
-
-| Parameter | Value |
-|-----------|-------|
-| Network Port | 13337 |
-| Magic Bytes | 0xfc, 0xc1, 0xb7, 0xdc |
-| Address Prefix | btc3 (Bech32) |
-| Block Reward | 50 BTC3 |
-| Difficulty | Minimal (instant mining) |
-
-### 🤝 Join the Network
-
-Connect to the seed node at `<YOUR_IP>:13337` to start participating:
-
-```bash
-./bin/btc3-cli addnode "<SEED_IP>:13337" "add"
-```
-
-### 📄 License
-
-BTC3 is released under the MIT License, the same as Bitcoin Core.
-
-### 🙏 Acknowledgments
-
-BTC3 is built on the foundation of Bitcoin Core. Special thanks to all Bitcoin Core contributors.
-
----
-
-**Links:**
-- GitHub: https://github.com/<your-username>/btc3
-- Releases: https://github.com/<your-username>/btc3/releases
-- Issues: https://github.com/<your-username>/btc3/issues
-
-**Start mining BTC3 today and experience Bitcoin development without limits!**
-
----
-
-## Social Media Posts
-
-### Twitter/X
-
-🚀 Introducing BTC3 – Cryptocurrency for the People!
-
-Tired of whales and elites dominating crypto? BTC3 is different:
-
-✊ No premine, no ICO, no whales
-💻 Mine on any computer
-⚖️ Everyone starts equal
-🌍 Built for ordinary people, not the 1%
-
-Take back financial freedom: https://github.com/<your-username>/btc3
-
-#BTC3 #CryptoForThePeople #FairLaunch #Decentralization
-
-### Reddit (r/CryptoCurrency, r/Bitcoin)
-
-**Title**: [Launch] BTC3 – Taking Cryptocurrency Back for the People
-
-**Cryptocurrency was supposed to empower ordinary people, not make the rich richer.**
-
-Bitcoin started as something anyone could mine on a laptop. Now it's dominated by mining corporations, whales, and wealthy investors. Ordinary people are priced out and squeezed by market manipulation.
-
-**I'm launching BTC3 to change this.**
-
-**What makes BTC3 different:**
-
-✊ **No Premine** – Not a single coin existed before launch  
-✊ **No ICO** – No wealthy investors got early access  
-✊ **CPU Mining** – Mine on any computer, no ASICs needed  
-✊ **Fair Launch** – Everyone starts from zero  
-✊ **For the People** – Built to benefit ordinary users, not elites  
-
-**Technical features:**
-- Built on Bitcoin Core (proven, secure codebase)
-- SegWit and modern features active from block 1
-- Independent network (port 13337, unique protocol)
-- Full RPC compatibility
-- Accessible mining difficulty
-
-**This is cryptocurrency for the 99%, not the 1%.**
-
-If you're tired of whales manipulating markets and corporations controlling mining, BTC3 is for you. Everyone is welcome. Everyone starts equal.
-
-Check it out: https://github.com/<your-username>/btc3
-
-Let's take back financial freedom together.
-
-### Hacker News
-
-**Title**: BTC3 – A Fast, Self-Contained Bitcoin Testnet
-
-**Description**: BTC3 is a lightweight Bitcoin Core fork with trivial mining difficulty, making it perfect for development, testing, and education. All modern Bitcoin features (SegWit, CSV, etc.) are active from block 1, and it runs on an isolated network with full RPC compatibility.
-
-Link: https://github.com/<your-username>/btc3
-
----
-
-## Email Template (for Bitcoin mailing lists)
-
-Subject: [ANN] BTC3 – A Developer-Friendly Bitcoin Testnet
-
-Hi everyone,
-
-I'd like to introduce BTC3, a Bitcoin Core fork optimized for development and education.
-
-**What makes BTC3 different:**
-
-BTC3 uses a trivial proof-of-work difficulty, allowing instant block generation on any CPU. This makes it ideal for:
-- Testing Bitcoin-compatible software
-- Teaching blockchain concepts
-- Rapid prototyping
-- Network simulations
-
-All modern consensus rules (SegWit, CSV, BIP34/65/66) are active from the genesis block, providing a fully modern chain from the start.
-
-**Technical details:**
-- Based on Bitcoin Core 0.30.99
-- Custom genesis block
-- Network port: 13337
-- Bech32 address prefix: btc3
-- Full RPC compatibility
-- MIT licensed
-
-**Getting started:**
-https://github.com/<your-username>/btc3
-
-Documentation includes building guides, mining instructions, and network participation details.
-
-I'm looking for feedback and contributions. Feel free to open issues or submit PRs.
-
-Thanks,
-[Your Name]
-
----
-
-## Forum Post Template (BitcoinTalk)
-
-**[ANN] BTC3 – Instant Mining Bitcoin Testnet**
-
-**What is BTC3?**
-
-BTC3 is a Bitcoin Core fork designed for developers, educators, and researchers. It provides a fully functional blockchain with instant mining, making it perfect for testing and experimentation.
-
-**Features:**
-✓ Instant CPU mining (trivial difficulty)
-✓ SegWit active from block 1
-✓ Full Bitcoin Core RPC compatibility
-✓ Isolated network (port 13337)
-✓ Docker support
-✓ Comprehensive documentation
-
-**Use Cases:**
-• Test wallet software and explorers
-• Teach blockchain development
-• Prototype new features
-• Research consensus mechanisms
-
-**Network Parameters:**
-• Port: 13337
-• Magic Bytes: 0xfc, 0xc1, 0xb7, 0xdc
-• Address Prefix: btc3
-• Block Reward: 50 BTC3
-
-**Links:**
-GitHub: https://github.com/<your-username>/btc3
-Documentation: https://github.com/<your-username>/btc3#readme
-Releases: https://github.com/<your-username>/btc3/releases
-
-**Seed Node:**
-Connect to: <YOUR_IP>:13337
-
-Join the network and start mining today!
-
+**References:**
+[1] GitHub: https://github.com/cgebitcoin/btc3
+[2] Whitepaper: https://mybtc3.com/WHITEPAPER.pdf
+[3] Website: http://mybtc3.com
