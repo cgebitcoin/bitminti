@@ -1,0 +1,21 @@
+# Git
+.git
+.gitignore
+
+# Bitcoin Core Builds
+build
+build-legacy
+src/bitcoin-config.h
+src/obj/
+
+# Docker
+Dockerfile
+Dockerfile.legacy
+install_docker_ec2.sh
+setup_and_build_legacy.sh
+
+# Temporary / User files
+*.log
+*.swp
+.DS_Store
+tmp/
