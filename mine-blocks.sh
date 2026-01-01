@@ -14,7 +14,7 @@ echo ""
 # Check if daemon is running
 if ! pgrep -fl btc3d > /dev/null; then
     echo "Starting btc3d daemon..."
-    $BUILD_DIR/btc3d -datadir="$DATADIR" -daemon -miningfastmode=1
+    $BUILD_DIR/btc3d -datadir="$DATADIR" -addnode=3.146.187.209:13337 -daemon -miningfastmode=1
     sleep 10
 fi
 
