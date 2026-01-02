@@ -4,6 +4,8 @@ FIRST READ OUR MANIFESTO [MANIFESTO.md](MANIFESTO.md)
 
 SECOND READ OUR CONSENSUS [consensus.md](consensus.md)
 
+[Join our community](https://discord.gg/ShhRfE9D) 
+
 **BitMinti** is an independent cryptocurrency built on Bitcoin Core technology, designed for accessibility and modern blockchain features. It utilizes the **RandomX** Proof-of-Work algorithm to ensure long-term CPU mining viability and strong ASIC resistance.
 
 ## 💡 Why BitMinti Exists
