@@ -1,67 +1,69 @@
 #!/bin/bash
-# BitMinti Mining Script
-# Usage: ./mine-blocks.sh [number_of_blocks]
+# BitMinti Mining Script with Performance Timer
 
+# 1. Setup Variables
 BLOCKS=${1:-10}
 BUILD_DIR="$(cd "$(dirname "$0")" && pwd)/build/bin"
 DATADIR="${DATADIR:-$HOME/.bitminti}"
 AUTH="${BitMinti_AUTH:--rpcuser=test -rpcpassword=test}"
+WALLET_NAME="miner"
 
 echo "=== BitMinti Mining Script ==="
 echo "Target blocks: $BLOCKS"
-echo ""
+echo "----------------------------------------"
 
-# Check if daemon is running
-if ! pgrep -fl bitmintid > /dev/null; then
+# 2. Start Daemon if not running
+if ! pgrep -x bitmintid > /dev/null; then
     echo "Starting bitmintid daemon..."
-    $BUILD_DIR/bitmintid -datadir="$DATADIR" -addnode=3.146.187.209:13337 -daemon -miningfastmode=1
+    $BUILD_DIR/bitmintid -datadir="$DATADIR" -daemon -miningfastmode=1
     sleep 10
 fi
 
-# Verify daemon is responsive
-if ! $BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH getblockcount &>/dev/null; then
-    echo "ERROR: Daemon not responding."
-    echo "Try running ./start-node.sh first"
-    exit 1
+# 3. Ensure Wallet is Loaded & Address is Valid
+$BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH loadwallet "$WALLET_NAME" >/dev/null 2>&1
+
+ADDR=$($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH -rpcwallet="$WALLET_NAME" getnewaddress "" "bech32" 2>/dev/null)
+
+if [ -z "$ADDR" ] || [[ "$ADDR" == *"error"* ]]; then
+    echo "Creating/Opening wallet: $WALLET_NAME..."
+    $BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH createwallet "$WALLET_NAME" >/dev/null 2>&1
+    sleep 2
+    ADDR=$($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH -rpcwallet="$WALLET_NAME" getnewaddress "" "bech32")
 fi
 
-# Get or create mining address
-# First try to load the wallet, ignore error if it creates a duplicate load error
-$BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH loadwallet "miner" >/dev/null 2>&1
-
-ADDR=$($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH getnewaddress 2>/dev/null)
 if [ -z "$ADDR" ]; then
-    echo "Creating wallet..."
-    $BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH createwallet "miner" >/dev/null 2>&1
-    ADDR=$($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH getnewaddress)
+    echo " ✗ FATAL ERROR: Could not generate mining address."
+    exit 1
 fi
 
 echo "Mining address: $ADDR"
 echo "Starting height: $($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH getblockcount)"
-echo ""
+echo "----------------------------------------"
 
-# Mine blocks
-# Mine blocks with chunking to prevent RPC timeouts
+# 4. Mining Loop
 for i in $(seq 1 $BLOCKS); do
-    echo -n "Mining block $i/$BLOCKS"
-    
+    START_TIME=$(date +%s)
+    echo -n "[$i/$BLOCKS] Mining... "
+
     while true; do
-        # Try 10000 hashes at a time (keep RPC responsive)
-        RESULT=$($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH generatetoaddress 1 "$ADDR" 10000 2>&1)
+        # 100k tries per call
+        RESULT=$($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH -rpcwallet="$WALLET_NAME" generatetoaddress 1 "$ADDR" 10000 2>&1)
         
-        # Check if we found a block (result is a JSON array with a hash)
-        if [[ "$RESULT" == *"["* && "$RESULT" != "[]" ]]; then
+        CLEAN_RESULT=$(echo "$RESULT" | tr -d '[:space:]')
+
+        if [[ "$CLEAN_RESULT" != "[]" && "$CLEAN_RESULT" == \[* ]]; then
+            END_TIME=$(date +%s)
+            DURATION=$((END_TIME - START_TIME))
             HEIGHT=$($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH getblockcount)
-            echo " ✓ (height: $HEIGHT)"
-            break
-        elif [[ "$RESULT" == "[]" ]]; then
-            # No block found in this chunk, retry
-            echo -n "."
+            
+            echo " ✓ FOUND! Height: $HEIGHT (Time: ${DURATION}s)"
+            break 
+        elif [[ "$CLEAN_RESULT" == "[]" ]]; then
+            echo -n "." 
         else
-            # Error occurred
-            echo " ✗ FAILED"
-            echo "Error: $RESULT"
-            echo "Check logs: tail $DATADIR/debug.log"
+            echo ""
+            echo " ✗ FAILED - RPC Error detected"
+            echo "Detail: $RESULT"
             exit 1
         fi
     done
@@ -69,5 +71,5 @@ done
 
 echo ""
 echo "=== Mining Complete ==="
-echo "Final height: $($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH getblockcount)"
-echo "Balance: $($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH getbalance) BitMinti"
+FINAL_BAL=$($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH -rpcwallet="$WALLET_NAME" getbalance)
+echo "Final Balance: $FINAL_BAL BTC3"
