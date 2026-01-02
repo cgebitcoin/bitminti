@@ -1,26 +1,26 @@
 version: '3.8'
 
 services:
-  btc3:
+  bitminti:
     build: .
-    container_name: btc3-node
+    container_name: bitminti-node
     ports:
       - "13337:13337"  # P2P
       - "8332:8332"    # RPC
     volumes:
-      - btc3-data:/btc3-data
+      - bitminti-data:/bitminti-data
     restart: unless-stopped
     environment:
       - RPC_USER=admin
       - RPC_PASSWORD=admin
     networks:
-      - btc3-network
+      - bitminti-network
 
 volumes:
-  btc3-data:
+  bitminti-data:
     driver: local
 
 networks:
-  btc3-network:
+  bitminti-network:
     driver: bridge
 

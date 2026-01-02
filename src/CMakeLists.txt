@@ -160,21 +160,21 @@ if(ENABLE_WALLET)
   add_subdirectory(wallet)
 
   if(BUILD_WALLET_TOOL)
-    add_executable(btc3-wallet
+    add_executable(bitminti-wallet
       bitcoin-wallet.cpp
       init/bitcoin-wallet.cpp
       wallet/wallettool.cpp
     )
-    add_windows_resources(btc3-wallet bitcoin-wallet-res.rc)
-    add_windows_application_manifest(btc3-wallet)
-    target_link_libraries(btc3-wallet
+    add_windows_resources(bitminti-wallet bitcoin-wallet-res.rc)
+    add_windows_application_manifest(bitminti-wallet)
+    target_link_libraries(bitminti-wallet
       core_interface
       bitcoin_wallet
       bitcoin_common
       bitcoin_util
       Boost::headers
     )
-    install_binary_component(btc3-wallet HAS_MANPAGE)
+    install_binary_component(bitminti-wallet HAS_MANPAGE)
   endif()
 endif()
 
@@ -294,27 +294,27 @@ target_link_libraries(bitcoin_node
 
 # Bitcoin wrapper executable that can call other executables.
 if(BUILD_BITCOIN_BIN)
-  add_executable(btc3 bitcoin.cpp)
-  add_windows_resources(btc3 bitcoin-res.rc)
-  add_windows_application_manifest(btc3)
-  target_link_libraries(btc3 core_interface bitcoin_common bitcoin_util)
-  install_binary_component(btc3 HAS_MANPAGE)
+  add_executable(bitminti bitcoin.cpp)
+  add_windows_resources(bitminti bitcoin-res.rc)
+  add_windows_application_manifest(bitminti)
+  target_link_libraries(bitminti core_interface bitcoin_common bitcoin_util)
+  install_binary_component(bitminti HAS_MANPAGE)
 endif()
 
 # Bitcoin Core bitcoind.
 if(BUILD_DAEMON)
-  add_executable(btc3d
+  add_executable(bitmintid
     bitcoind.cpp
     init/bitcoind.cpp
   )
-  add_windows_resources(btc3d bitcoind-res.rc)
-  add_windows_application_manifest(btc3d)
-  target_link_libraries(btc3d
+  add_windows_resources(bitmintid bitcoind-res.rc)
+  add_windows_application_manifest(bitmintid)
+  target_link_libraries(bitmintid
     core_interface
     bitcoin_node
     $<TARGET_NAME_IF_EXISTS:bitcoin_wallet>
   )
-  install_binary_component(btc3d HAS_MANPAGE)
+  install_binary_component(bitmintid HAS_MANPAGE)
 endif()
 if(ENABLE_IPC AND BUILD_DAEMON)
   add_executable(bitcoin-node
@@ -344,10 +344,10 @@ target_link_libraries(bitcoin_cli
 
 # Bitcoin Core RPC client
 if(BUILD_CLI)
-  add_executable(btc3-cli bitcoin-cli.cpp)
-  add_windows_resources(btc3-cli bitcoin-cli-res.rc)
-  add_windows_application_manifest(btc3-cli)
-  target_link_libraries(btc3-cli
+  add_executable(bitminti-cli bitcoin-cli.cpp)
+  add_windows_resources(bitminti-cli bitcoin-cli-res.rc)
+  add_windows_application_manifest(bitminti-cli)
+  target_link_libraries(bitminti-cli
     core_interface
     bitcoin_cli
     bitcoin_common
@@ -355,34 +355,34 @@ if(BUILD_CLI)
     libevent::core
     libevent::extra
   )
-  install_binary_component(btc3-cli HAS_MANPAGE)
+  install_binary_component(bitminti-cli HAS_MANPAGE)
 endif()
 
 
 if(BUILD_TX)
-  add_executable(btc3-tx bitcoin-tx.cpp)
-  add_windows_resources(btc3-tx bitcoin-tx-res.rc)
-  add_windows_application_manifest(btc3-tx)
-  target_link_libraries(btc3-tx
+  add_executable(bitminti-tx bitcoin-tx.cpp)
+  add_windows_resources(bitminti-tx bitcoin-tx-res.rc)
+  add_windows_application_manifest(bitminti-tx)
+  target_link_libraries(bitminti-tx
     core_interface
     bitcoin_common
     bitcoin_util
     univalue
   )
-  install_binary_component(btc3-tx HAS_MANPAGE)
+  install_binary_component(bitminti-tx HAS_MANPAGE)
 endif()
 
 
 if(BUILD_UTIL)
-  add_executable(btc3-util bitcoin-util.cpp)
-  add_windows_resources(btc3-util bitcoin-util-res.rc)
-  add_windows_application_manifest(btc3-util)
-  target_link_libraries(btc3-util
+  add_executable(bitminti-util bitcoin-util.cpp)
+  add_windows_resources(bitminti-util bitcoin-util-res.rc)
+  add_windows_application_manifest(bitminti-util)
+  target_link_libraries(bitminti-util
     core_interface
     bitcoin_common
     bitcoin_util
   )
-  install_binary_component(btc3-util HAS_MANPAGE)
+  install_binary_component(bitminti-util HAS_MANPAGE)
 endif()
 
 

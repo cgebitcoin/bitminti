@@ -1,4 +1,4 @@
-# BTC3 Launch & Verification Walkthrough
+# BitMinti Launch & Verification Walkthrough
 
 ## 1. The "Instamine" Fix
 This release fixes the critical difficulty adjustment bug where miners could mine blocks instantly.
@@ -35,14 +35,14 @@ Since the Genesis Block has changed, you must start fresh.
 
 ### Step 1: Clean Data
 ```bash
-rm -rf ~/.btc3
+rm -rf ~/.bitminti
 # OR if on Mac/Default:
 rm -rf "$HOME/Library/Application Support/Bitcoin"
 ```
 
 ### Step 2: Start Node
 ```bash
-./build/bin/btc3d -daemon
+./build/bin/bitmintid -daemon
 ```
 
 ### Verification Step: Mining Mainnet
@@ -65,7 +65,7 @@ To mine on EC2 (Best Performance):
 #### How to Check Status
 ```bash
 # On EC2 or Mac:
-./build/bin/btc3-cli -rpcuser=test -rpcpassword=test getblockchaininfo
+./build/bin/bitminti-cli -rpcuser=test -rpcpassword=test getblockchaininfo
 ```
 
 ## 5. Mining (Fast Mode & Multi-Threaded)
@@ -74,7 +74,7 @@ To achieve maximum CPU mining performance (~100x faster than default), follow th
 ### Step 1: Start Daemon in Fast Mode
 Enable the RandomX "Full Memory" dataset (requires ~2.5GB RAM) at startup.
 ```bash
-./build/bin/btc3d -daemon -miningfastmode=1
+./build/bin/bitmintid -daemon -miningfastmode=1
 ```
 
 ### Step 2: Start Multi-Threaded Mining
@@ -84,7 +84,7 @@ Use the CLI to mine blocks using all available CPU cores.
 THREADS=$(nproc)
 
 # Mine 1000 blocks to your address with all cores
-./build/bin/btc3-cli generatetoaddress 1000 "$(./build/bin/btc3-cli getnewaddress)" 10000000 $THREADS
+./build/bin/bitminti-cli generatetoaddress 1000 "$(./build/bin/bitminti-cli getnewaddress)" 10000000 $THREADS
 ```
 
 ## 6. Deployment / Release Instructions
@@ -95,7 +95,7 @@ If you are deploying to an older Linux server, you **MUST** use the `legacy` bin
 **Why?**
 The standard binaries are compiled with a modern GLIBC (2.35+). Older systems use older GLIBC versions (e.g., Ubuntu 18.04 uses 2.27). Running the standard binary on them will cause this error:
 ```
-./btc3d: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.34' not found
+./bitmintid: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.34' not found
 ```
 
 **Files:**

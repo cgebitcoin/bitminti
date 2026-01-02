@@ -1,5 +1,5 @@
 #!/bin/bash
-# Start BTC3 Node (Safe Mode)
+# Start BitMinti Node (Safe Mode)
 
 # Check for Root (Required for Fast Mode huge pages/memlock)
 if [ "$EUID" -ne 0 ]; then
@@ -9,8 +9,8 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Data directory
-# User confirmed working path: /root/.btc3
-DATADIR="/root/.btc3"
+# User confirmed working path: /root/.bitminti
+DATADIR="/root/.bitminti"
 echo "Running as Root. Data Directory: $DATADIR"
 
 
@@ -24,7 +24,7 @@ if [ ! -f "$DATADIR/bitcoin.conf" ]; then
 fi
 
 # Stop existing
-pkill btc3d
+pkill bitmintid
 sleep 2
 
 # Start daemon
@@ -45,7 +45,7 @@ DETECTED_CORES=$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
 CORES=$(echo "$DETECTED_CORES" | tr -dc '0-9')
 if [ -z "$CORES" ]; then CORES=4; fi
 
-echo "Starting BTC3 daemon (Cores: $CORES)..."
+echo "Starting BitMinti daemon (Cores: $CORES)..."
 echo "Running in FOREGROUND (Exact match to manual command)"
 echo "Do NOT close this terminal!"
 
@@ -53,5 +53,5 @@ echo "Do NOT close this terminal!"
 ulimit -l unlimited
 
 # EXACT MATCH to your manual command:
-# ./btc3d -datadir=/root/.btc3/ -miningfastmode=1 -dbcache=2048 -par=16 -addnode=3.146.187.209:13337 -printtoconsole
-exec ./build/bin/btc3d -datadir="$DATADIR" -miningfastmode=1 -dbcache=2048 -par=$CORES -addnode=3.146.187.209:13337 printtoconsole
+# ./bitmintid -datadir=/root/.bitminti/ -miningfastmode=1 -dbcache=2048 -par=16 -addnode=3.146.187.209:13337 -printtoconsole
+exec ./build/bin/bitmintid -datadir="$DATADIR" -miningfastmode=1 -dbcache=2048 -par=$CORES -addnode=3.146.187.209:13337 printtoconsole

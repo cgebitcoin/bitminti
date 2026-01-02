@@ -1,24 +1,24 @@
-# BTC3 Launch Announcement
+# BitMinti Launch Announcement
 
-**Subject**: Introducing BTC3 – The Next Generation Cryptocurrency
+**Subject**: Introducing BitMinti – The Next Generation Cryptocurrency
 
 ---
 
-## 🚀 Announcing BTC3
+## 🚀 Announcing BitMinti
 
-I'm excited to announce the launch of **BTC3**, an independent cryptocurrency built to return power to ordinary people.
+I'm excited to announce the launch of **BitMinti**, an independent cryptocurrency built to return power to ordinary people.
 
-### Why BTC3?
+### Why BitMinti?
 
 **Cryptocurrency has been hijacked by the wealthy.** Bitcoin was meant to empower everyone, but today it's dominated by whales, mining corporations, and wealthy investors who squeeze out ordinary people. 
 
-**BTC3 changes this.** No premine. No ICO. No whales. Just fair, accessible cryptocurrency that anyone can mine on a regular computer.
+**BitMinti changes this.** No premine. No ICO. No whales. Just fair, accessible cryptocurrency that anyone can mine on a regular computer.
 
 **This is cryptocurrency for the 99%, not the 1%.**
 
-### What is BTC3?
+### What is BitMinti?
 
-BTC3 is a new cryptocurrency that combines Bitcoin's battle-tested codebase with accessibility-focused design. Unlike Bitcoin, BTC3 is mineable by anyone with a standard computer, making cryptocurrency participation truly democratic. It's a fully functional, production-ready blockchain with all modern features active from day one.
+BitMinti is a new cryptocurrency that combines Bitcoin's battle-tested codebase with accessibility-focused design. Unlike Bitcoin, BitMinti is mineable by anyone with a standard computer, making cryptocurrency participation truly democratic. It's a fully functional, production-ready blockchain with all modern features active from day one.
 
 ### ✨ Key Features
 
@@ -32,7 +32,7 @@ BTC3 is a new cryptocurrency that combines Bitcoin's battle-tested codebase with
 ### 🎯 Use Cases
 
 - **Digital Currency** – Fast, secure peer-to-peer cryptocurrency transactions
-- **Mining** – Earn BTC3 by securing the network with your computer
+- **Mining** – Earn BitMinti by securing the network with your computer
 - **Store of Value** – Decentralized cryptocurrency with proven technology
 - **Development** – Build wallets, explorers, payment systems, and dApps
 - **Community Projects** – Gaming currencies, reward systems, token economies
@@ -51,16 +51,16 @@ cmake -DENABLE_IPC=OFF -DBUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release ..
 make -j$(nproc)
 
 # Run your first node
-./bin/btc3d -datadir=./btc3-data -daemon
-./bin/btc3-cli -datadir=./btc3-data createwallet "miner"
-./bin/btc3-cli -datadir=./btc3-data generatetoaddress 101 $(./bin/btc3-cli -datadir=./btc3-data getnewaddress)
+./bin/bitmintid -datadir=./btc3-data -daemon
+./bin/bitminti-cli -datadir=./btc3-data createwallet "miner"
+./bin/bitminti-cli -datadir=./btc3-data generatetoaddress 101 $(./bin/bitminti-cli -datadir=./btc3-data getnewaddress)
 ```
 
 ### 📚 Documentation
 
 - [README](https://github.com/cgebitcoin/btc3/blob/main/README.md) – Quick start guide
 - [Building Guide](https://github.com/cgebitcoin/btc3/blob/main/BUILDING.md) – Platform-specific instructions
-- [Mining Guide](https://github.com/cgebitcoin/btc3/blob/main/MINING.md) – How to mine BTC3
+- [Mining Guide](https://github.com/cgebitcoin/btc3/blob/main/MINING.md) – How to mine BitMinti
 - [Network Guide](https://github.com/cgebitcoin/btc3/blob/main/JOINING.md) – Join the network
 - [RPC Reference](https://github.com/cgebitcoin/btc3/blob/main/RPC.md) – Command reference
 
@@ -71,7 +71,7 @@ make -j$(nproc)
 | Network Port | 13337 |
 | Magic Bytes | 0xfc, 0xc1, 0xb7, 0xdc |
 | Address Prefix | btc3 (Bech32) |
-| Block Reward | 50 BTC3 |
+| Block Reward | 50 BitMinti |
 | Difficulty | Hardened (RandomX Production) |
 
 ### 🤝 Join the Network
@@ -79,16 +79,16 @@ make -j$(nproc)
 Connect to the seed node at `<YOUR_IP>:13337` to start participating:
 
 ```bash
-./bin/btc3-cli addnode "<SEED_IP>:13337" "add"
+./bin/bitminti-cli addnode "<SEED_IP>:13337" "add"
 ```
 
 ### 📄 License
 
-BTC3 is released under the MIT License, the same as Bitcoin Core.
+BitMinti is released under the MIT License, the same as Bitcoin Core.
 
 ### 🙏 Acknowledgments
 
-BTC3 is built on the foundation of Bitcoin Core. Special thanks to all Bitcoin Core contributors.
+BitMinti is built on the foundation of Bitcoin Core. Special thanks to all Bitcoin Core contributors.
 
 ---
 
@@ -97,7 +97,7 @@ BTC3 is built on the foundation of Bitcoin Core. Special thanks to all Bitcoin C
 - Releases: https://github.com/cgebitcoin/btc3/releases
 - Issues: https://github.com/cgebitcoin/btc3/issues
 
-**Start mining BTC3 today and experience Bitcoin development without limits!**
+**Start mining BitMinti today and experience Bitcoin development without limits!**
 
 ---
 
@@ -105,9 +105,9 @@ BTC3 is built on the foundation of Bitcoin Core. Special thanks to all Bitcoin C
 
 ### Twitter/X
 
-🚀 Introducing BTC3 – Cryptocurrency for the People!
+🚀 Introducing BitMinti – Cryptocurrency for the People!
 
-Tired of whales and elites dominating crypto? BTC3 is different:
+Tired of whales and elites dominating crypto? BitMinti is different:
 
 ✊ No premine, no ICO, no whales
 💻 Mine on any computer
@@ -116,21 +116,21 @@ Tired of whales and elites dominating crypto? BTC3 is different:
 
 Take back financial freedom: https://github.com/cgebitcoin/btc3
 
-#BTC3 #CryptoForThePeople #FairLaunch #Decentralization
+#BitMinti #CryptoForThePeople #FairLaunch #Decentralization
 
 Join us on Discord: https://discord.gg/ShhRfE9D
 
 ### Reddit (r/CryptoCurrency, r/Bitcoin)
 
-**Title**: [Launch] BTC3 – Taking Cryptocurrency Back for the People
+**Title**: [Launch] BitMinti – Taking Cryptocurrency Back for the People
 
 **Cryptocurrency was supposed to empower ordinary people, not make the rich richer.**
 
 Bitcoin started as something anyone could mine on a laptop. Now it's dominated by mining corporations, whales, and wealthy investors. Ordinary people are priced out and squeezed by market manipulation.
 
-**I'm launching BTC3 to change this.**
+**I'm launching BitMinti to change this.**
 
-**What makes BTC3 different:**
+**What makes BitMinti different:**
 
 ✊ **No Premine** – Not a single coin existed before launch  
 ✊ **No ICO** – No wealthy investors got early access  
@@ -147,7 +147,7 @@ Bitcoin started as something anyone could mine on a laptop. Now it's dominated b
 
 **This is cryptocurrency for the 99%, not the 1%.**
 
-If you're tired of whales manipulating markets and corporations controlling mining, BTC3 is for you. Everyone is welcome. Everyone starts equal.
+If you're tired of whales manipulating markets and corporations controlling mining, BitMinti is for you. Everyone is welcome. Everyone starts equal.
 
 Check it out: https://github.com/cgebitcoin/btc3
 
@@ -155,9 +155,9 @@ Let's take back financial freedom together.
 
 ### Hacker News
 
-**Title**:## BTC3 – ASIC-Resistant CPU Mining for the People
+**Title**:## BitMinti – ASIC-Resistant CPU Mining for the People
 
-**Description**: BTC3 is a lightweight Bitcoin Core fork with trivial mining difficulty, making it perfect for development, testing, and education. All modern Bitcoin features (SegWit, CSV, etc.) are active from block 1, and it runs on an isolated network with full RPC compatibility.
+**Description**: BitMinti is a lightweight Bitcoin Core fork with trivial mining difficulty, making it perfect for development, testing, and education. All modern Bitcoin features (SegWit, CSV, etc.) are active from block 1, and it runs on an isolated network with full RPC compatibility.
 
 Link: https://github.com/cgebitcoin/btc3
 
@@ -165,15 +165,15 @@ Link: https://github.com/cgebitcoin/btc3
 
 ## Email Template (for Bitcoin mailing lists)
 
-Subject: [ANN] BTC3 – A Developer-Friendly Bitcoin Testnet
+Subject: [ANN] BitMinti – A Developer-Friendly Bitcoin Testnet
 
 Hi everyone,
 
-I'd like to introduce BTC3, a Bitcoin Core fork optimized for development and education.
+I'd like to introduce BitMinti, a Bitcoin Core fork optimized for development and education.
 
-**What makes BTC3 different:**
+**What makes BitMinti different:**
 
-BTC3 uses a trivial proof-of-work difficulty, allowing instant block generation on any CPU. This makes it ideal for:
+BitMinti uses a trivial proof-of-work difficulty, allowing instant block generation on any CPU. This makes it ideal for:
 - Testing Bitcoin-compatible software
 - Teaching blockchain concepts
 - Rapid prototyping
@@ -203,11 +203,11 @@ Thanks,
 
 ## Forum Post Template (BitcoinTalk)
 
-**[ANN] BTC3 – Instant Mining Bitcoin Testnet**
+**[ANN] BitMinti – Instant Mining Bitcoin Testnet**
 
-**What is BTC3?**
+**What is BitMinti?**
 
-BTC3 is a Bitcoin Core fork designed for developers, educators, and researchers. It provides a fully functional blockchain with instant mining, making it perfect for testing and experimentation.
+BitMinti is a Bitcoin Core fork designed for developers, educators, and researchers. It provides a fully functional blockchain with instant mining, making it perfect for testing and experimentation.
 
 **Features:**
 ✓ Instant CPU mining (trivial difficulty)
@@ -227,7 +227,7 @@ BTC3 is a Bitcoin Core fork designed for developers, educators, and researchers.
 • Port: 13337
 • Magic Bytes: 0xfc, 0xc1, 0xb7, 0xdc
 • Address Prefix: btc3
-• Block Reward: 50 BTC3
+• Block Reward: 50 BitMinti
 
 **Links:**
 GitHub: https://github.com/cgebitcoin/btc3

@@ -28,11 +28,11 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.22.1/cmake-3.22.1
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100 --slave /usr/bin/g++ g++ /usr/bin/g++-11
 
 # Create work directory
-WORKDIR /btc5
+WORKDIR /bitminti
 
 # Instructions (to be run when mounting source):
 # 1. cd depends
 # 2. make HOST=x86_64-pc-linux-gnu NO_QT=1 -j$(nproc)
 # 3. cd ..
 # 4. cmake -B build-legacy -DCMAKE_TOOLCHAIN_FILE=depends/x86_64-pc-linux-gnu/toolchain.cmake
-# 5. cmake --build build-legacy -j$(nproc) --target btc3d btc3-cli
+# 5. cmake --build build-legacy -j$(nproc) --target bitmintid bitminti-cli

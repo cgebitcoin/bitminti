@@ -1,6 +1,6 @@
 #!/bin/bash
 # Optimized Miner for AWS EC2 (c5.4xlarge)
-# Uses btc3-cli with EXPLICIT cookie path
+# Uses bitminti-cli with EXPLICIT cookie path
 
 # Dynamically detect threads
 DETECTED_THREADS=$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
@@ -8,7 +8,7 @@ THREADS=$(echo "$DETECTED_THREADS" | tr -dc '0-9')
 if [ -z "$THREADS" ] || [ "$THREADS" -lt 2 ]; then THREADS=4; fi
 
 # Default Data Directory (Proven working path)
-DATADIR="/root/.btc3"
+DATADIR="/root/.bitminti"
 
 # Fallback check (Just in case, but prioritize the proven one)
 if [ ! -d "$DATADIR" ] && [ -d "/root/.bitcoin" ]; then
@@ -41,7 +41,7 @@ echo "Cookie found!"
 # Explicitly pass -rpccookiefile to avoid any guessing
 run_cli() {
     if sudo test -w "$DATADIR"; then PREFIX=""; else PREFIX="sudo"; fi
-    $PREFIX ./build/bin/btc3-cli -datadir="$DATADIR" -rpccookiefile="$COOKIE_FILE" "$@"
+    $PREFIX ./build/bin/bitminti-cli -datadir="$DATADIR" -rpccookiefile="$COOKIE_FILE" "$@"
 }
 
 # 3. Get Address
@@ -54,7 +54,7 @@ get_address() {
 ADDR=$(get_address)
 ADDR=$(echo "$ADDR" | tr -d '\r')
 
-echo "=== BTC3 CLI MINER ==="
+echo "=== BitMinti CLI MINER ==="
 echo "Address: $ADDR"
 
 if [ -z "$ADDR" ] || [[ "$ADDR" == *"error"* ]]; then

@@ -15,7 +15,7 @@ docker run --rm -v $(pwd):/btc5 -w /btc5 btc3-legacy /bin/bash -c "
     echo 'Building project...' &&
     rm -rf build-legacy &&
     cmake -B build-legacy -DCMAKE_TOOLCHAIN_FILE=depends/x86_64-pc-linux-gnu/toolchain.cmake &&
-    cmake --build build-legacy -j\$(nproc) --target btc3d btc3-cli
+    cmake --build build-legacy -j\$(nproc) --target bitmintid bitminti-cli
 "
 
 echo "Build complete! Artifacts are in build-legacy/src/"

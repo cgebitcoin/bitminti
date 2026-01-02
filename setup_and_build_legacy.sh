@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "=== BTC3 Legacy Build System Setup ==="
+echo "=== BitMinti Legacy Build System Setup ==="
 
 # --- Part 1: Install Docker if missing ---
 if ! command -v docker &> /dev/null; then
@@ -64,13 +64,13 @@ do_build() {
         rm -rf build-legacy
         cmake -B build-legacy -DCMAKE_TOOLCHAIN_FILE=depends/x86_64-pc-linux-gnu/toolchain.cmake
         
-        echo '--- Compiling btc3d and btc3-cli ---'
-        cmake --build build-legacy -j\$(nproc) --target btc3d btc3-cli
+        echo '--- Compiling bitmintid and bitminti-cli ---'
+        cmake --build build-legacy -j\$(nproc) --target bitmintid bitminti-cli
     "
     
     echo "=== SUCCESS ==="
     echo "Legacy binaries are located in: build-legacy/src/"
-    ls -lh build-legacy/src/btc3d build-legacy/src/btc3-cli
+    ls -lh build-legacy/src/bitmintid build-legacy/src/bitminti-cli
 }
 
 # --- Part 4: Execution ---

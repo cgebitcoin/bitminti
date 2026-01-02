@@ -1,6 +1,6 @@
-# Deploying BTC3 Website to GoDaddy
+# Deploying BitMinti Website to GoDaddy
 
-This guide will help you deploy your BTC3 website to your GoDaddy domain.
+This guide will help you deploy your BitMinti website to your GoDaddy domain.
 
 ## Option 1: GoDaddy Website Builder / Hosting (Recommended for Beginners)
 
@@ -70,7 +70,7 @@ cd /path/to/btc3
 
 # Add website files to git
 git add website/
-git commit -m "Add BTC3 website"
+git commit -m "Add BitMinti website"
 git push origin main
 ```
 

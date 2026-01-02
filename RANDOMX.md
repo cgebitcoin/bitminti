@@ -1,6 +1,6 @@
 # RandomX Migration Documentation
 
-This document outlines the changes made to migrate the BTC3 Proof-of-Work algorithm from SHA256 to RandomX.
+This document outlines the changes made to migrate the BitMinti Proof-of-Work algorithm from SHA256 to RandomX.
 
 ## 1. Architecture: SHA256 vs RandomX
 

@@ -1,9 +1,9 @@
-# BTC3: The Decentralized Standard
+# BitMinti: The Decentralized Standard
 ## Restoring the "One CPU, One Vote" Vision
 
-**BTC3 Core Development Team**  
+**BitMinti Core Development Team**  
 *January 1, 2026*  
-[mybtc3.com](https://mybtc3.com)
+[bitminti.com](https://bitminti.com)
 
 ---
 
@@ -11,7 +11,7 @@
 
 Cryptocurrency was born from the desire for decentralization—a financial system operated not by banks or potentates, but by the people themselves. Satoshi Nakamoto's original vision for Bitcoin described a network where "one CPU" equaled "one vote." However, the emergence of Application-Specific Integrated Circuits (ASICs) has shattered this equality. Today, Bitcoin mining is an industrial activity dominated by massive facilities, creating a centralized elite that controls the network's security and policy.
 
-**BTC3** is a response to this centralization. It is a sovereign blockchain designed to restore the egalitarian nature of mining. By implementing **RandomX**, a Proof-of-Work algorithm optimized for general-purpose CPUs, and **LWMA**, a rapid-response difficulty adjustment algorithm, BTC3 ensures that anyone with a consumer-grade computer can meaningfully participate in the network. This document details the philosophical motivations, technical architecture, and economic model of BTC3, explaining why a return to CPU-based consensus is critical for the long-term survival of decentralized money.
+**BitMinti** is a response to this centralization. It is a sovereign blockchain designed to restore the egalitarian nature of mining. By implementing **RandomX**, a Proof-of-Work algorithm optimized for general-purpose CPUs, and **LWMA**, a rapid-response difficulty adjustment algorithm, BitMinti ensures that anyone with a consumer-grade computer can meaningfully participate in the network. This document details the philosophical motivations, technical architecture, and economic model of BitMinti, explaining why a return to CPU-based consensus is critical for the long-term survival of decentralized money.
 
 ---
 
@@ -30,9 +30,9 @@ In economics, the Cantillon Effect describes how those closest to the specific s
 
 The average user is excluded from this production process. They are relegated to being passive consumers, forced to buy coins on exchanges. This turns a "Peer-to-Peer" currency into a "Business-to-Consumer" product, undermining the censorship resistance that makes cryptocurrency valuable.
 
-### **1.3 The BTC3 Mission**
+### **1.3 The BitMinti Mission**
 Our mission is simple: **Make Mining Accessible Again.**
-We believe network security should come from millions of individuals running nodes on their laptops and desktops, not from five warehouses in remote regions. By effectively banning ASICs from the network via algorithmic design, BTC3 redistributes power from the industrial few to the retail many.
+We believe network security should come from millions of individuals running nodes on their laptops and desktops, not from five warehouses in remote regions. By effectively banning ASICs from the network via algorithmic design, BitMinti redistributes power from the industrial few to the retail many.
 
 ---
 
@@ -71,14 +71,14 @@ By the time they engineer a chip that does all of this efficiently, they have ef
 In small or medium PoW networks, hashrate can be volatile. Miners often use "profit-switching" software that jumps between coins depending on which is most profitable at that exact second.
 Bitcoin adjusts its difficulty every 2016 blocks (roughly 2 weeks). If 50% of miners leave, the network stalls for weeks. If 500% of miners join (a "flash mine" attack), they mine all the blocks in hours and dump the coins, leaving difficulty sky-high for loyal miners.
 
-### **3.2 The BTC3 Solution: LWMA-2**
-BTC3 implements the **Linearly Weighted Moving Average (LWMA)** Difficulty Adjustment Algorithm.
+### **3.2 The BitMinti Solution: LWMA-2**
+BitMinti implements the **Linearly Weighted Moving Average (LWMA)** Difficulty Adjustment Algorithm.
 -   **Continuous Adjustment**: Difficulty is recalculated **every single block**.
 -   **Responsive Window**: It looks at the past 45 blocks to determine network health.
 -   **Linear Weighting**: Recent blocks count more than older blocks.
 
 ### **3.3 How it Protects Users**
-If a massive botnet or mining farm points its power at BTC3:
+If a massive botnet or mining farm points its power at BitMinti:
 1.  **Block 1**: Mined instantly.
 2.  **Block 2**: Difficulty shoots up immediately.
 3.  **Block 5**: Difficulty is so high that the attack is no longer profitable.
@@ -93,21 +93,21 @@ This ensures that block times stay close to the **10-minute target**, providing 
 ### **4.1 The Importance of Fair Launch**
 Many modern projects (Solana, Ethereum 2.0, various tokens) launch with "Pre-mines." The developers print millions of coins for themselves and their investors before the public even knows the project exists. We consider this unethical and contrary to the spirit of open-source money.
 
-**BTC3 had:**
+**BitMinti had:**
 -   **Zero Premine**: No coins existed before Block 1.
 -   **Zero ICO**: No funding was raised; no tokens were sold.
 -   **Zero Dev Tax**: Block rewards go 100% to the miner.
 
 ### **4.2 Supply Schedule**
-BTC3 mimics the proven scarcity model of Bitcoin:
+BitMinti mimics the proven scarcity model of Bitcoin:
 -   **Max Supply**: 21,000,000 Coins.
--   **Block Reward**: Starts at 50 BTC3 per block.
+-   **Block Reward**: Starts at 50 BitMinti per block.
 -   **Halving**: Every 210,000 blocks (approx 4 years), the reward is cut in half.
 -   **Deflationary**: As adoption grows, the supply issuance shrinks, preserving purchasing power.
 
 ### **4.3 Distribution via Work**
-Because mining is accessible on CPUs, the distribution of BTC3 is naturally wider than Bitcoin's current distribution.
--   A student in a dorm room can mine 5 BTC3.
+Because mining is accessible on CPUs, the distribution of BitMinti is naturally wider than Bitcoin's current distribution.
+-   A student in a dorm room can mine 5 BitMinti.
 -   An office worker can mine on their gaming PC at night.
 -   A developer can mine on a spare server.
 This creates a grassroots community of holders who "earned" their coins through work, rather than buying them from a VC fund.
@@ -139,23 +139,23 @@ This creates a natural immune system against botnets, keeping the hashrate compo
 | **Block Time** | 10 Minutes | Global synchronization, low orphan rate |
 | **Block Size** | 4 MB (Weight) | High throughput capacity |
 | **Difficulty Algorithm** | LWMA (45 blocks) | Rapid response to hashrate volatility |
-| **Symbol** | BTC3 | The third era of Bitcoin technology |
+| **Symbol** | BitMinti | The third era of Bitcoin technology |
 | ** RPC Port** | 8332 | Standard compatibility |
 | ** P2P Port** | 13337 | Custom network port |
 | ** Magic Bytes** | `0xfc 0xc1 0xb7 0xdc` | Unique network identifier |
 
 ---
 
-## **7. Why We Developed BTC3**
+## **7. Why We Developed BitMinti**
 
 We looked at the crypto landscape and saw a divergence from reality.
 "Decentralized Finance" (DeFi) is run on centralized AWS servers.
 "Decentralized Money" (Bitcoin) is mined by centralized corporations.
 
-We developed BTC3 to prove a point: **Technology can enforce democracy.**
+We developed BitMinti to prove a point: **Technology can enforce democracy.**
 By choosing the right algorithms (RandomX + LWMA), we can force the network to remain open. We don't need laws or regulations to stop centralization; we just need code that makes centralization unprofitable.
 
-BTC3 is not a "competitor" to Bitcoin in terms of price or market cap; it is a competitor in terms of **ideology**. It is a lifeboat for the original vision of peer-to-peer electronic cash.
+BitMinti is not a "competitor" to Bitcoin in terms of price or market cap; it is a competitor in terms of **ideology**. It is a lifeboat for the original vision of peer-to-peer electronic cash.
 
 ---
 
@@ -182,10 +182,10 @@ BTC3 is not a "competitor" to Bitcoin in terms of price or market cap; it is a c
 
 The era of CPU mining was thought to be dead. The industry moved on to bigger, faster, more expensive machines. But in doing so, they left the users behind.
 
-BTC3 invites you back.
+BitMinti invites you back.
 It invites you to turn on your computer, run a node, and actually *be* the bank again.
 The mathematics of RandomX prove that your CPU is valuable.
-The economics of BTC3 prove that your participation is rewarded.
+The economics of BitMinti prove that your participation is rewarded.
 
 Welcome to the decentralized renaissance.
 

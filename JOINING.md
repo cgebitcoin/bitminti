@@ -1,10 +1,10 @@
-# Joining the BTC3 Network
+# Joining the BitMinti Network
 
-This guide explains how to connect to the BTC3 network and participate as a full node or miner.
+This guide explains how to connect to the BitMinti network and participate as a full node or miner.
 
 ## Network Overview
 
-BTC3 operates as a peer-to-peer network where nodes:
+BitMinti operates as a peer-to-peer network where nodes:
 - Share blocks and transactions
 - Validate the blockchain
 - Mine new blocks
@@ -12,7 +12,7 @@ BTC3 operates as a peer-to-peer network where nodes:
 
 ## Prerequisites
 
-- BTC3 binaries installed (see [BUILDING.md](BUILDING.md))
+- BitMinti binaries installed (see [BUILDING.md](BUILDING.md))
 - Internet connection
 - Port 13337 accessible (for incoming connections)
 
@@ -22,13 +22,13 @@ BTC3 operates as a peer-to-peer network where nodes:
 
 ```bash
 # Start your daemon
-./bin/btc3d -datadir=./btc3-data -server -rpcuser=admin -rpcpassword=admin -daemon
+./bin/bitmintid -datadir=./btc3-data -server -rpcuser=admin -rpcpassword=admin -daemon
 
 # Add a seed node (replace with actual IP)
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin addnode "seed.btc3.mrio.xyz:13337" "add"
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin addnode "seed.bitminti.mrio.xyz:13337" "add"
 
 # Verify connection
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getpeerinfo
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getpeerinfo
 ```
 
 ### Method 2: Using Configuration File
@@ -46,7 +46,7 @@ port=13337
 listen=1
 
 # Add seed nodes (replace with actual IPs)
-addnode=seed.btc3.mrio.xyz:13337
+addnode=seed.bitminti.mrio.xyz:13337
 
 # Optional: allow external RPC (be careful!)
 # rpcallowip=0.0.0.0/0
@@ -56,7 +56,7 @@ addnode=seed.btc3.mrio.xyz:13337
 Then start the daemon:
 
 ```bash
-./bin/btc3d -datadir=./btc3-data -daemon
+./bin/bitmintid -datadir=./btc3-data -daemon
 ```
 
 ## Firewall Configuration
@@ -73,8 +73,8 @@ sudo ufw reload
 
 ```bash
 # Add firewall rule (requires admin)
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add ./bin/btc3d
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp ./bin/btc3d
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add ./bin/bitmintid
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp ./bin/bitmintid
 ```
 
 ### Router Port Forwarding
@@ -89,7 +89,7 @@ If behind a router, forward port 13337 to your machine's local IP:
 ### Check Peer Count
 
 ```bash
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getconnectioncount
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getconnectioncount
 ```
 
 Should return > 0 if connected.
@@ -97,7 +97,7 @@ Should return > 0 if connected.
 ### View Peer Information
 
 ```bash
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getpeerinfo
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getpeerinfo
 ```
 
 Shows detailed info about each connected peer.
@@ -105,7 +105,7 @@ Shows detailed info about each connected peer.
 ### Check Sync Status
 
 ```bash
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getblockchaininfo
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getblockchaininfo
 ```
 
 Look for:
@@ -119,10 +119,10 @@ When you first connect, your node will download the entire blockchain:
 
 ```bash
 # Monitor sync progress
-watch -n 5 './bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getblockcount'
+watch -n 5 './bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getblockcount'
 ```
 
-BTC3's blockchain is small, so sync should complete in seconds to minutes.
+BitMinti's blockchain is small, so sync should complete in seconds to minutes.
 
 ## Running a Seed Node
 
@@ -152,7 +152,7 @@ listen=1
 ### 3. Start the Daemon
 
 ```bash
-./bin/btc3d -datadir=./btc3-data -daemon
+./bin/bitmintid -datadir=./btc3-data -daemon
 ```
 
 ### 4. Share Your IP
@@ -161,19 +161,19 @@ Share `<YOUR_PUBLIC_IP>:13337` with others so they can connect.
 
 ## Systemd Service (Linux)
 
-For automatic startup, create `/etc/systemd/system/btc3d.service`:
+For automatic startup, create `/etc/systemd/system/bitmintid.service`:
 
 ```ini
 [Unit]
-Description=BTC3 Daemon
+Description=BitMinti Daemon
 After=network.target
 
 [Service]
 Type=forking
 User=btc3
 WorkingDirectory=/home/btc3/btc3/build
-ExecStart=/home/btc3/btc3/build/bin/btc3d -datadir=/home/btc3/btc3-data -daemon
-ExecStop=/home/btc3/btc3/build/bin/btc3-cli -datadir=/home/btc3/btc3-data stop
+ExecStart=/home/btc3/btc3/build/bin/bitmintid -datadir=/home/btc3/btc3-data -daemon
+ExecStop=/home/btc3/btc3/build/bin/bitminti-cli -datadir=/home/btc3/btc3-data stop
 Restart=always
 RestartSec=10
 
@@ -184,9 +184,9 @@ WantedBy=multi-user.target
 Enable and start:
 
 ```bash
-sudo systemctl enable btc3d
-sudo systemctl start btc3d
-sudo systemctl status btc3d
+sudo systemctl enable bitmintid
+sudo systemctl start bitmintid
+sudo systemctl status bitmintid
 ```
 
 ## Docker Deployment
@@ -206,7 +206,7 @@ EXPOSE 13337 8332
 
 VOLUME ["/btc3-data"]
 
-CMD ["btc3d", "-datadir=/btc3-data", "-server", "-rpcuser=admin", "-rpcpassword=admin", "-rpcbind=0.0.0.0", "-rpcallowip=0.0.0.0/0", "-fallbackfee=0.00001"]
+CMD ["bitmintid", "-datadir=/btc3-data", "-server", "-rpcuser=admin", "-rpcpassword=admin", "-rpcbind=0.0.0.0", "-rpcallowip=0.0.0.0/0", "-fallbackfee=0.00001"]
 ```
 
 ### docker-compose.yml
@@ -250,12 +250,12 @@ ssh root@<SERVER_IP>
 apt-get update
 apt-get install -y wget tar
 
-# 4. Download BTC3 binaries
+# 4. Download BitMinti binaries
 wget https://github.com/<your-username>/btc3/releases/download/v0.1.0/btc3-linux-x86_64.tar.gz
 tar xzf btc3-linux-x86_64.tar.gz
 
 # 5. Start daemon
-./btc3/bin/btc3d -datadir=./btc3-data -daemon
+./btc3/bin/bitmintid -datadir=./btc3-data -daemon
 
 # 6. Open firewall
 ufw allow 13337/tcp
@@ -267,23 +267,23 @@ ufw allow 13337/tcp
 
 ```bash
 # Number of peers
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getconnectioncount
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getconnectioncount
 
 # Network info
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getnetworkinfo
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getnetworkinfo
 
 # Peer details
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getpeerinfo | jq '.[] | {addr, version, subver}'
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getpeerinfo | jq '.[] | {addr, version, subver}'
 ```
 
 ### Monitor Mempool
 
 ```bash
 # Mempool info
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getmempoolinfo
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getmempoolinfo
 
 # View pending transactions
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getrawmempool
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getrawmempool
 ```
 
 ## Troubleshooting
@@ -311,9 +311,9 @@ netstat -an | grep 13337
 
 **Solution**: Restart daemon and re-add seed nodes:
 ```bash
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin stop
-./bin/btc3d -datadir=./btc3-data -daemon
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin addnode "seed.btc3.mrio.xyz:13337" "add"
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin stop
+./bin/bitmintid -datadir=./btc3-data -daemon
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin addnode "seed.bitminti.mrio.xyz:13337" "add"
 ```
 
 ### Connection Refused
@@ -321,7 +321,7 @@ netstat -an | grep 13337
 **Problem**: Daemon not running or wrong port  
 **Solution**: Check daemon status and port:
 ```bash
-ps aux | grep btc3d
+ps aux | grep bitmintid
 netstat -an | grep 13337
 ```
 
@@ -332,11 +332,11 @@ netstat -an | grep 13337
 3. **Use systemd/docker** – Ensures automatic restart
 4. **Monitor logs** – Check `btc3-data/debug.log` for issues
 5. **Backup wallet** – Regularly backup wallet files
-6. **Update software** – Keep BTC3 updated to latest version
+6. **Update software** – Keep BitMinti updated to latest version
 
 ## Next Steps
 
-- [Start mining](MINING.md) to earn BTC3
+- [Start mining](MINING.md) to earn BitMinti
 - [Use RPC commands](RPC.md) to interact with the network
 - Share your node IP to help others connect
 

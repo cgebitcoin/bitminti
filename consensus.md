@@ -1,6 +1,6 @@
-# BTC3 Consensus Specification
+# BitMinti Consensus Specification
 
-**Network:** BTC3 Mainnet  
+**Network:** BitMinti Mainnet  
 **Consensus Version:** v1.0.0-randomx-hardened  
 **Status:** 🔒 Consensus Frozen
 
@@ -8,16 +8,16 @@
 
 ## 1. Scope and Authority
 
-This document is the **authoritative specification** of the BTC3 mainnet consensus rules. Any change to the rules described here **requires a hard fork**.
+This document is the **authoritative specification** of the BitMinti mainnet consensus rules. Any change to the rules described here **requires a hard fork**.
 
 ## 0. Network Identity
-- **Network Name:** BTC3 Mainnet
+- **Network Name:** BitMinti Mainnet
 - **Network Port:** 13337 (Default P2P)
 - **RPC Port:** 8332 (Default JSON-RPC)
 - **message_start (Magic Bytes):** `0xfc, 0xc1, 0xb7, 0xdc`
 - **Address Prefix (Bech32):** `btc3`
 
-BTC3 is a Bitcoin-Core–derived blockchain designed for:
+BitMinti is a Bitcoin-Core–derived blockchain designed for:
 - Long-term **CPU mining viability** via RandomX.
 - Strong **ASIC resistance**.
 - Resistance to **instamine**, **difficulty collapse**, and **hashrate shock**.
@@ -27,7 +27,7 @@ BTC3 is a Bitcoin-Core–derived blockchain designed for:
 
 ## 2. Block Structure
 
-BTC3 uses the standard Bitcoin block and transaction structure with a **Dual-Hash Model**.
+BitMinti uses the standard Bitcoin block and transaction structure with a **Dual-Hash Model**.
 
 ### 2.1 Block Header Fields
 
@@ -70,7 +70,7 @@ RandomX requires a deterministic seed derived from block height `H`.
 
 ## 5. Difficulty Adjustment (LWMA)
 
-BTC3 uses **LWMA (Linearly Weighted Moving Average)** for per-block difficulty adjustment.
+BitMinti uses **LWMA (Linearly Weighted Moving Average)** for per-block difficulty adjustment.
 
 | Parameter | Value |
 |----------|-------|
@@ -96,7 +96,7 @@ The network will never allow difficulty easier than this floor, preventing "zero
 
 ## 7. Genesis Block
 
-The BTC3 genesis block is the immutable foundation of the chain.
+The BitMinti genesis block is the immutable foundation of the chain.
 
 | Parameter | Value |
 | :--- | :--- |
@@ -114,4 +114,4 @@ The BTC3 genesis block is the immutable foundation of the chain.
 - **Mining Templates:** PoW checks are skipped for incomplete templates in `TestBlockValidity` but fully enforced upon block submission.
 
 ---
-**End of BTC3 Consensus Specification**
+**End of BitMinti Consensus Specification**

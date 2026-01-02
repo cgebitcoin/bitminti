@@ -2,19 +2,19 @@
 echo "=== HARD RESET & MINE ==="
 
 # 1. Brutal kill
-echo "Killing all BTC3 processes..."
-pkill -9 btc3d || true
-pkill -9 btc3-cli || true
+echo "Killing all BitMinti processes..."
+pkill -9 bitmintid || true
+pkill -9 bitminti-cli || true
 sleep 3
 
 # 2. Check clear
-if pgrep -fl btc3d; then
-    echo "ERROR: Failed to kill btc3d"
+if pgrep -fl bitmintid; then
+    echo "ERROR: Failed to kill bitmintid"
     exit 1
 fi
 
 # 3. Setup Data Dir
-DATADIR="$HOME/.btc3"
+DATADIR="$HOME/.bitminti"
 mkdir -p "$DATADIR"
 rm -f "$DATADIR/.cookie" # Remove old cookie to prevent confusion
 
@@ -30,12 +30,12 @@ EOF
 
 # 5. Start Daemon
 echo "Starting daemon..."
-./build/bin/btc3d -datadir="$DATADIR" -daemon
+./build/bin/bitmintid -datadir="$DATADIR" -daemon
 
 # 6. Wait loop
 echo "Waiting for RPC (30s timeout)..."
 for i in {1..30}; do
-    if ./build/bin/btc3-cli -datadir="$DATADIR" -rpcuser=test -rpcpassword=test getblockchaininfo >/dev/null 2>&1; then
+    if ./build/bin/bitminti-cli -datadir="$DATADIR" -rpcuser=test -rpcpassword=test getblockchaininfo >/dev/null 2>&1; then
         echo "Connected after $i seconds!"
         break
     fi
@@ -44,7 +44,7 @@ for i in {1..30}; do
 done
 
 # 7. Check if failed
-if ! ./build/bin/btc3-cli -datadir="$DATADIR" -rpcuser=test -rpcpassword=test getblockchaininfo >/dev/null 2>&1; then
+if ! ./build/bin/bitminti-cli -datadir="$DATADIR" -rpcuser=test -rpcpassword=test getblockchaininfo >/dev/null 2>&1; then
     echo ""
     echo "FAILED to connect."
     echo "Log tail:"
@@ -55,15 +55,15 @@ fi
 # 8. Mine
 echo ""
 echo "Creating wallet..."
-./build/bin/btc3-cli -datadir="$DATADIR" -rpcuser=test -rpcpassword=test createwallet "miner" >/dev/null 2>&1 || true
+./build/bin/bitminti-cli -datadir="$DATADIR" -rpcuser=test -rpcpassword=test createwallet "miner" >/dev/null 2>&1 || true
 
 echo "Mining 10 blocks..."
-ADDR=$(./build/bin/btc3-cli -datadir="$DATADIR" -rpcuser=test -rpcpassword=test getnewaddress)
+ADDR=$(./build/bin/bitminti-cli -datadir="$DATADIR" -rpcuser=test -rpcpassword=test getnewaddress)
 echo "Address: $ADDR"
 
 for i in {1..10}; do
-   ./build/bin/btc3-cli -datadir="$DATADIR" -rpcuser=test -rpcpassword=test generatetoaddress 1 "$ADDR"
+   ./build/bin/bitminti-cli -datadir="$DATADIR" -rpcuser=test -rpcpassword=test generatetoaddress 1 "$ADDR"
 done
 
 echo "Done! Balance:"
-./build/bin/btc3-cli -datadir="$DATADIR" -rpcuser=test -rpcpassword=test getbalance
+./build/bin/bitminti-cli -datadir="$DATADIR" -rpcuser=test -rpcpassword=test getbalance

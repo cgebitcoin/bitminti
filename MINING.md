@@ -1,29 +1,29 @@
-# Mining BTC3
+# Mining BitMinti
 
-BTC3 uses RandomX, a CPU-optimized Proof-of-Work algorithm, making it efficiently mineable on any modern CPU and resistant to ASICs. This guide covers everything from basic mining to automated strategies.
+BitMinti uses RandomX, a CPU-optimized Proof-of-Work algorithm, making it efficiently mineable on any modern CPU and resistant to ASICs. This guide covers everything from basic mining to automated strategies.
 
 ## Quick Start Mining
 
 ### 1. Start the Daemon
 
 ```bash
-./bin/btc3d -datadir=./btc3-data -server -rpcuser=admin -rpcpassword=admin -fallbackfee=0.00001 -daemon
+./bin/bitmintid -datadir=./btc3-data -server -rpcuser=admin -rpcpassword=admin -fallbackfee=0.00001 -daemon
 ```
 
 ### 2. Create or Load a Wallet
 
 ```bash
 # Create a new wallet
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin createwallet "miner"
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin createwallet "miner"
 
 # Or load an existing wallet
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin loadwallet "miner"
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin loadwallet "miner"
 ```
 
 ### 3. Generate a Mining Address
 
 ```bash
-MINING_ADDR=$(./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getnewaddress "mining")
+MINING_ADDR=$(./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getnewaddress "mining")
 echo "Your mining address: $MINING_ADDR"
 ```
 
@@ -31,16 +31,16 @@ echo "Your mining address: $MINING_ADDR"
 
 ```bash
 # Mine a single block
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin generatetoaddress 1 $MINING_ADDR
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin generatetoaddress 1 $MINING_ADDR
 
 # Mine 101 blocks (100 to mature + 1 to spend)
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin generatetoaddress 101 $MINING_ADDR
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin generatetoaddress 101 $MINING_ADDR
 ```
 
 ### 5. Check Your Balance
 
 ```bash
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getbalance "*"
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getbalance "*"
 ```
 
 ## Understanding Coinbase Maturity
@@ -64,7 +64,7 @@ Create a file `mine.sh`:
 DATADIR=./btc3-data
 RPCUSER=admin
 RPCPASS=admin
-CLI="./bin/btc3-cli -datadir=$DATADIR -rpcuser=$RPCUSER -rpcpassword=$RPCPASS"
+CLI="./bin/bitminti-cli -datadir=$DATADIR -rpcuser=$RPCUSER -rpcpassword=$RPCPASS"
 
 # Get or create mining address
 MINING_ADDR=$($CLI getnewaddress "mining" 2>/dev/null || $CLI getnewaddress)
@@ -82,7 +82,7 @@ while true; do
     # Get balance
     BALANCE=$($CLI getbalance "*")
     
-    echo "[Block $HEIGHT] Hash: $BLOCK_HASH | Balance: $BALANCE BTC3"
+    echo "[Block $HEIGHT] Hash: $BLOCK_HASH | Balance: $BALANCE BitMinti"
     
     # Optional: add delay (remove for maximum speed)
     # sleep 1
@@ -112,7 +112,7 @@ TARGET=$1
 DATADIR=./btc3-data
 RPCUSER=admin
 RPCPASS=admin
-CLI="./bin/btc3-cli -datadir=$DATADIR -rpcuser=$RPCUSER -rpcpassword=$RPCPASS"
+CLI="./bin/bitminti-cli -datadir=$DATADIR -rpcuser=$RPCUSER -rpcpassword=$RPCPASS"
 
 MINING_ADDR=$($CLI getnewaddress "mining" 2>/dev/null || $CLI getnewaddress)
 
@@ -125,7 +125,7 @@ for ((i=1; i<=TARGET; i++)); do
 done
 
 BALANCE=$($CLI getbalance "*")
-echo "Mining complete! Balance: $BALANCE BTC3"
+echo "Mining complete! Balance: $BALANCE BitMinti"
 ```
 
 Usage:
@@ -141,23 +141,23 @@ chmod +x mine-target.sh
 
 ```bash
 # Current block height
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getblockcount
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getblockcount
 
 # Get blockchain info
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getblockchaininfo
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getblockchaininfo
 
 # List recent blocks
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin listsinceblock
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin listsinceblock
 ```
 
 ### View Mining Rewards
 
 ```bash
 # List all transactions (including mining rewards)
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin listtransactions "*" 100
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin listtransactions "*" 100
 
 # List only immature rewards
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin listunspent 0 99
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin listunspent 0 99
 ```
 
 ## Advanced Mining
@@ -166,25 +166,25 @@ chmod +x mine-target.sh
 
 ```bash
 # Create multiple addresses
-ADDR1=$(./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getnewaddress "pool1")
-ADDR2=$(./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getnewaddress "pool2")
+ADDR1=$(./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getnewaddress "pool1")
+ADDR2=$(./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getnewaddress "pool2")
 
 # Alternate between them
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin generatetoaddress 10 $ADDR1
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin generatetoaddress 10 $ADDR2
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin generatetoaddress 10 $ADDR1
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin generatetoaddress 10 $ADDR2
 ```
 
 ### Mining with Transaction Inclusion
 
 ```bash
 # Send a transaction
-TXID=$(./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin sendtoaddress <ADDRESS> 10.0)
+TXID=$(./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin sendtoaddress <ADDRESS> 10.0)
 
 # Mine a block to confirm it
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin generatetoaddress 1 $MINING_ADDR
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin generatetoaddress 1 $MINING_ADDR
 
 # Verify transaction is confirmed
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin gettransaction $TXID
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin gettransaction $TXID
 ```
 
 ## Systemd Service (Linux)
@@ -193,9 +193,9 @@ For continuous mining on a server, create `/etc/systemd/system/btc3-miner.servic
 
 ```ini
 [Unit]
-Description=BTC3 Continuous Miner
-After=btc3d.service
-Requires=btc3d.service
+Description=BitMinti Continuous Miner
+After=bitmintid.service
+Requires=bitmintid.service
 
 [Service]
 Type=simple
@@ -229,7 +229,7 @@ sudo systemctl status btc3-miner
 **Problem**: Wallet not loaded  
 **Solution**: Load wallet first:
 ```bash
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin loadwallet "miner"
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin loadwallet "miner"
 ```
 
 ### Balance Shows 0 After Mining
@@ -242,7 +242,7 @@ sudo systemctl status btc3-miner
 **Problem**: Daemon not running  
 **Solution**: Start daemon:
 ```bash
-./bin/btc3d -datadir=./btc3-data -daemon
+./bin/bitmintid -datadir=./btc3-data -daemon
 ```
 
 ## Mining Best Practices

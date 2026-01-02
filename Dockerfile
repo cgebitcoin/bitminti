@@ -13,17 +13,17 @@ RUN apt-get update && apt-get install -y \
 COPY build/bin/* /usr/local/bin/
 
 # Create data directory
-RUN mkdir -p /btc3-data
+RUN mkdir -p /bitminti-data
 
 # Expose P2P and RPC ports
 EXPOSE 13337 8332
 
 # Use volume for persistent data
-VOLUME ["/btc3-data"]
+VOLUME ["/bitminti-data"]
 
 # Default command
-CMD ["btc3d", \
-     "-datadir=/btc3-data", \
+CMD ["bitmintid", \
+     "-datadir=/bitminti-data", \
      "-server", \
      "-rpcuser=admin", \
      "-rpcpassword=admin", \

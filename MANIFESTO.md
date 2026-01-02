@@ -1,25 +1,25 @@
-# BTC3 Manifesto  
+# BitMinti Manifesto  
 ## Participation Over Concentration
 
 ---
 
-## 1. Why BTC3 Exists
+## 1. Why BitMinti Exists
 
 Bitcoin began as a system that **anyone could run, mine, and understand**.  
 Over time, participation became dominated by capital, scale, and professional infrastructure.
 
-BTC3 exists to explore a simple question:
+BitMinti exists to explore a simple question:
 
 > **What does a Bitcoin-like network look like when participation comes first again?**
 
-BTC3 is not a replacement for Bitcoin.  
+BitMinti is not a replacement for Bitcoin.  
 It is an **experimental Bitcoin fork** focused on early-stage fairness, learning, and open participation.
 
 ---
 
-## 2. What BTC3 Is Not
+## 2. What BitMinti Is Not
 
-BTC3 is **not**:
+BitMinti is **not**:
 
 - an investment product  
 - a token sale  
@@ -29,14 +29,14 @@ BTC3 is **not**:
 
 There is **no premine**, **no insider allocation**, and **no privileged access**.
 
-BTC3 is open-source, experimental, and transparent by design.
+BitMinti is open-source, experimental, and transparent by design.
 
 ---
 
 ## 3. Participation Over Whales
 
-BTC3 does not attempt to “ban” whales — no protocol can do that.  
-Instead, BTC3 removes **structural advantages** that allow capital and scale to dominate participation early.
+BitMinti does not attempt to “ban” whales — no protocol can do that.  
+Instead, BitMinti removes **structural advantages** that allow capital and scale to dominate participation early.
 
 We believe:
 
@@ -44,13 +44,13 @@ We believe:
 - Scale should not determine legitimacy  
 - Early networks should reward **learning and contribution**, not accumulation  
 
-BTC3 is designed so **ordinary people can meaningfully participate from the beginning**.
+BitMinti is designed so **ordinary people can meaningfully participate from the beginning**.
 
 ---
 
 ## 4. Mining for Humans, Not Corporations
 
-BTC3 emphasizes:
+BitMinti emphasizes:
 
 - CPU-accessible mining  
 - Intentional block production  
@@ -65,7 +65,7 @@ Early miners are participants, not extractors.
 
 ## 5. No Insiders, No Shortcuts
 
-BTC3 has:
+BitMinti has:
 
 - No premine  
 - No VC allocation  
@@ -81,7 +81,7 @@ This principle is non-negotiable.
 
 ## 6. Learning Comes First
 
-BTC3 is built for:
+BitMinti is built for:
 
 - developers  
 - students  
@@ -90,27 +90,27 @@ BTC3 is built for:
 
 Running a node, mining a block, and sending a transaction should be **accessible experiences**, not elite activities.
 
-BTC3 values understanding over speculation.
+BitMinti values understanding over speculation.
 
 ---
 
 ## 7. Honest Limits
 
-BTC3 does not claim:
+BitMinti does not claim:
 
 - permanent fairness  
 - immunity from concentration  
 - inevitable success  
 
-BTC3 offers **a fair beginning** and **radical transparency**.  
+BitMinti offers **a fair beginning** and **radical transparency**.  
 History will decide the outcome.
 
 ---
 
 ## 8. An Invitation, Not a Promise
 
-BTC3 does not promise returns.  
-BTC3 invites participation.
+BitMinti does not promise returns.  
+BitMinti invites participation.
 
 If you want to:
 
@@ -125,7 +125,7 @@ You are welcome.
 
 ## 9. The Experiment
 
-BTC3 exists to explore one idea:
+BitMinti exists to explore one idea:
 
 > **Can a Bitcoin-style network begin with people instead of capital?**
 
@@ -134,7 +134,7 @@ Only a commitment to openness.
 
 ---
 
-### BTC3
+### BitMinti
 
 **Participation before profit.**  
 **Learning before speculation.**  

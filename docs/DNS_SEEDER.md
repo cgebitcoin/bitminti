@@ -1,4 +1,4 @@
-# How to Run a DNS Seeder for BTC3
+# How to Run a DNS Seeder for BitMinti
 
 To make `vSeeds` (automatic discovery) work, you must run a special "DNS Crawler" program. This program crawls the P2P network, finds active nodes, and answers DNS queries with their IP addresses.
 

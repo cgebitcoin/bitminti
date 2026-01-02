@@ -1,5 +1,5 @@
 #!/bin/bash
-# BTC3 Continuous Miner for macOS
+# BitMinti Continuous Miner for macOS
 # This script will keep mining to your local wallet automatically.
 
 # Automatically find the build directory
@@ -11,13 +11,13 @@ fi
 
 ADDR="btc31qjlez8j87lz0q8p2hnhy2rp2jvqkes7efn0v97p"
 DATADIR="$BUILD_DIR/btc3_data"
-CLI="$BUILD_DIR/bin/btc3-cli -datadir=$DATADIR"
+CLI="$BUILD_DIR/bin/bitminti-cli -datadir=$DATADIR"
 
 # Number of parallel mining processes (use all logical CPUs)
 THREADS=$(sysctl -n hw.logicalcpu)
 
 echo "--------------------------------------------------"
-echo "🚀 BTC3 Multi-Threaded Mining Started ($THREADS threads)"
+echo "🚀 BitMinti Multi-Threaded Mining Started ($THREADS threads)"
 echo "Target Address: $ADDR"
 echo "Press [Ctrl+C] to stop all threads."
 echo "--------------------------------------------------"

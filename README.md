@@ -1,12 +1,12 @@
-# BTC3 – The Next Generation Cryptocurrency
+# BitMinti – The Next Generation Cryptocurrency
 
 FIRST READ OUR MANIFESTO [MANIFESTO.md](MANIFESTO.md)
 
 SECOND READ OUR CONSENSUS [consensus.md](consensus.md)
 
-**BTC3** is an independent cryptocurrency built on Bitcoin Core technology, designed for accessibility and modern blockchain features. It utilizes the **RandomX** Proof-of-Work algorithm to ensure long-term CPU mining viability and strong ASIC resistance.
+**BitMinti** is an independent cryptocurrency built on Bitcoin Core technology, designed for accessibility and modern blockchain features. It utilizes the **RandomX** Proof-of-Work algorithm to ensure long-term CPU mining viability and strong ASIC resistance.
 
-## 💡 Why BTC3 Exists
+## 💡 Why BitMinti Exists
 
 **Cryptocurrency was meant to empower ordinary people, not enrich the wealthy.**
 
@@ -20,9 +20,9 @@ When Bitcoin launched in 2009, anyone could mine it on a laptop. It was truly de
 
 **The original vision has been lost.** Ordinary people are priced out, squeezed by whales, and left watching from the sidelines while the rich get richer.
 
-### BTC3 Changes This
+### BitMinti Changes This
 
-BTC3 returns to cryptocurrency's roots with a simple principle: **Everyone should have an equal opportunity to participate.**
+BitMinti returns to cryptocurrency's roots with a simple principle: **Everyone should have an equal opportunity to participate.**
 
 **How we're different:**
 
@@ -41,7 +41,7 @@ BTC3 returns to cryptocurrency's roots with a simple principle: **Everyone shoul
 - Early adopters hold massive positions
 - Ordinary people can only buy at inflated prices
 
-**BTC3 today:**
+**BitMinti today:**
 - Mine on any laptop or desktop
 - No specialized hardware needed
 - Everyone starts equal
@@ -49,7 +49,7 @@ BTC3 returns to cryptocurrency's roots with a simple principle: **Everyone shoul
 
 ### Our Mission
 
-**BTC3 exists to give power back to the people.**
+**BitMinti exists to give power back to the people.**
 
 We believe:
 - 🌍 Cryptocurrency should be accessible to everyone, everywhere
@@ -80,7 +80,7 @@ We believe:
 | **PoW Algorithm**| **RandomX** |
 | **Genesis nBits**| `0x1f00ffff` (Hardened) |
 | **Address Prefix** | `btc3` (Bech32) |
-| **Block Reward** | 50 BTC3 |
+| **Block Reward** | 50 BitMinti |
 
 ## 🔧 Quick Start
 
@@ -112,7 +112,7 @@ make -j$(nproc)
 
 For detailed platform-specific instructions, see [BUILDING.md](BUILDING.md).
 
-## Install BTC3 (Linux x86_64)
+## Install BitMinti (Linux x86_64)
 
 Download the prebuilt binaries:
 
@@ -123,34 +123,34 @@ wget https://github.com/cgebitcoin/btc3/releases/download/v30.99.0-4126e133f947/
 
 ```bash
 # Start the daemon
-./bin/btc3d -datadir=./btc3-data -server -rpcuser=admin -rpcpassword=admin -fallbackfee=0.00001 -daemon
+./bin/bitmintid -datadir=./btc3-data -server -rpcuser=admin -rpcpassword=admin -fallbackfee=0.00001 -daemon
 
 # Create a wallet
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin createwallet "miner"
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin createwallet "miner"
 
 # Generate a receiving address
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getnewaddress "mining"
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getnewaddress "mining"
 
 # Mine 101 blocks (first 100 must mature before spending)
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin generatetoaddress 101 <YOUR_ADDRESS>
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin generatetoaddress 101 <YOUR_ADDRESS>
 
 # Check your balance
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getbalance "*"
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin getbalance "*"
 ```
 
 ## ⛏️ Mining
 
-Mining BTC3 utilizes RandomX, meaning it is most efficient on modern CPUs. No specialized ASIC hardware is required. See [MINING.md](MINING.md) for:
+Mining BitMinti utilizes RandomX, meaning it is most efficient on modern CPUs. No specialized ASIC hardware is required. See [MINING.md](MINING.md) for:
 - Continuous mining scripts
 - Solo and Pool mining setup
 - RandomX performance tuning
 
 ## 🌐 Join the Network
 
-To connect to existing BTC3 nodes:
+To connect to existing BitMinti nodes:
 
 ```bash
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin addnode "seed.btc3.mrio.xyz:13337" "add"
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin addnode "seed.bitminti.mrio.xyz:13337" "add"
 ```
 
 For complete network participation guide, see [JOINING.md](JOINING.md).
@@ -160,7 +160,7 @@ For complete network participation guide, see [JOINING.md](JOINING.md).
 - [Consensus Specification](consensus.md) – Authoritative technical rules and parameters
 - [RandomX Guide](RANDOMX.md) – Details on the PoW implementation
 - [Building Guide](BUILDING.md) – Platform-specific build instructions
-- [Mining Guide](MINING.md) – How to mine BTC3
+- [Mining Guide](MINING.md) – How to mine BitMinti
 - [Network Guide](JOINING.md) – Join and participate in the network
 - [RPC Reference](RPC.md) – Common RPC commands and examples
 
@@ -168,14 +168,14 @@ For complete network participation guide, see [JOINING.md](JOINING.md).
 
 - **Digital Currency** – Fast, secure peer-to-peer transactions
 - **Store of Value** – Decentralized cryptocurrency with proven Bitcoin technology
-- **Mining** – Participate in network security and earn BTC3 rewards
-- **Development** – Build applications, wallets, and services on BTC3
+- **Mining** – Participate in network security and earn BitMinti rewards
+- **Development** – Build applications, wallets, and services on BitMinti
 - **Education** – Learn blockchain technology with a real, functioning network
 - **Community Projects** – Create token economies, gaming currencies, or community rewards
 
 ## 🔐 Security
 
-BTC3 uses the same cryptographic security as Bitcoin Core, enhanced with ASIC-resistant PoW:
+BitMinti uses the same cryptographic security as Bitcoin Core, enhanced with ASIC-resistant PoW:
 - **RandomX** proof-of-work (ASIC-resistant, CPU-hard)
 - **LWMA** Per-block difficulty adjustment
 - ECDSA signatures
@@ -186,22 +186,22 @@ The production difficulty baseline is hardened to prevent "instamine" attacks wh
 
 ## ⚖️ Legal Disclaimer
 
-**IMPORTANT**: BTC3 is experimental open-source software with no warranties or guarantees. Cryptocurrency involves significant risk, and you may lose everything. 
+**IMPORTANT**: BitMinti is experimental open-source software with no warranties or guarantees. Cryptocurrency involves significant risk, and you may lose everything. 
 
-**Before using BTC3, please read [LEGAL.md](LEGAL.md) carefully.**
+**Before using BitMinti, please read [LEGAL.md](LEGAL.md) carefully.**
 
 Key points:
-- No intrinsic value - BTC3 may be worth nothing
+- No intrinsic value - BitMinti may be worth nothing
 - Use at your own risk - no liability for losses
 - Comply with your local laws - you are responsible
 - Not financial advice - consult professionals
 - Irreversible transactions - mistakes are permanent
 
-By using BTC3, you acknowledge and accept all risks.
+By using BitMinti, you acknowledge and accept all risks.
 
 ## 📄 License
 
-BTC3 is released under the MIT License, the same as Bitcoin Core. See [COPYING](COPYING) for details.
+BitMinti is released under the MIT License, the same as Bitcoin Core. See [COPYING](COPYING) for details.
 
 ## 🤝 Contributing
 
@@ -214,11 +214,11 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 
 ## 🙏 Acknowledgments
 
-BTC3 is built on the foundation of [Bitcoin Core](https://github.com/bitcoin/bitcoin). We thank all Bitcoin Core contributors for their incredible work.
+BitMinti is built on the foundation of [Bitcoin Core](https://github.com/bitcoin/bitcoin). We thank all Bitcoin Core contributors for their incredible work.
 
 ---
 
-**BTC3: Cryptocurrency for the people, by the people. Join us in taking back financial freedom from the elites.**
+**BitMinti: Cryptocurrency for the people, by the people. Join us in taking back financial freedom from the elites.**
 
 **Mine, transact, and be part of a fairer financial future. Everyone is welcome. Everyone starts equal.**
 

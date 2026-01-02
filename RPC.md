@@ -1,53 +1,53 @@
-# BTC3 RPC Command Reference
+# BitMinti RPC Command Reference
 
-This guide covers the most commonly used RPC commands for interacting with your BTC3 node.
+This guide covers the most commonly used RPC commands for interacting with your BitMinti node.
 
 ## Connection Format
 
 All commands use this format:
 
 ```bash
-./bin/btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin <COMMAND> [PARAMS...]
+./bin/bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin <COMMAND> [PARAMS...]
 ```
 
-For brevity, examples below use `btc3-cli` as shorthand.
+For brevity, examples below use `bitminti-cli` as shorthand.
 
 ## Wallet Commands
 
 ### Create a Wallet
 
 ```bash
-btc3-cli createwallet "wallet_name"
+bitminti-cli createwallet "wallet_name"
 ```
 
 **Example**:
 ```bash
-btc3-cli createwallet "miner"
+bitminti-cli createwallet "miner"
 # Output: {"name": "miner", "warning": ""}
 ```
 
 ### Load a Wallet
 
 ```bash
-btc3-cli loadwallet "wallet_name"
+bitminti-cli loadwallet "wallet_name"
 ```
 
 ### List Wallets
 
 ```bash
-btc3-cli listwallets
+bitminti-cli listwallets
 # Output: ["miner", "savings"]
 ```
 
 ### Get New Address
 
 ```bash
-btc3-cli getnewaddress "label"
+bitminti-cli getnewaddress "label"
 ```
 
 **Example**:
 ```bash
-btc3-cli getnewaddress "mining"
+bitminti-cli getnewaddress "mining"
 # Output: btc31qegfazu3879ywqch9pk9z92azr7sddflaskzry4
 ```
 
@@ -55,70 +55,70 @@ btc3-cli getnewaddress "mining"
 
 ```bash
 # Total balance (all labels)
-btc3-cli getbalance "*"
+bitminti-cli getbalance "*"
 
 # Specific label
-btc3-cli getbalance "mining"
+bitminti-cli getbalance "mining"
 ```
 
 ### List Unspent Outputs (UTXOs)
 
 ```bash
-btc3-cli listunspent [minconf] [maxconf]
+bitminti-cli listunspent [minconf] [maxconf]
 ```
 
 **Examples**:
 ```bash
 # All confirmed UTXOs
-btc3-cli listunspent
+bitminti-cli listunspent
 
 # Include unconfirmed
-btc3-cli listunspent 0
+bitminti-cli listunspent 0
 
 # Only immature coinbase (< 100 confirmations)
-btc3-cli listunspent 0 99
+bitminti-cli listunspent 0 99
 ```
 
 ### Send Coins
 
 ```bash
-btc3-cli sendtoaddress "address" amount
+bitminti-cli sendtoaddress "address" amount
 ```
 
 **Example**:
 ```bash
-btc3-cli sendtoaddress "btc31qjnxf60l7rvrs72p45u8gg5e33vxxt6rt6scp27" 10.5
+bitminti-cli sendtoaddress "btc31qjnxf60l7rvrs72p45u8gg5e33vxxt6rt6scp27" 10.5
 # Output: <transaction_id>
 ```
 
 ### List Transactions
 
 ```bash
-btc3-cli listtransactions "*" [count] [skip]
+bitminti-cli listtransactions "*" [count] [skip]
 ```
 
 **Example**:
 ```bash
 # Last 20 transactions
-btc3-cli listtransactions "*" 20
+bitminti-cli listtransactions "*" 20
 ```
 
 ### Get Transaction Details
 
 ```bash
-btc3-cli gettransaction "txid"
+bitminti-cli gettransaction "txid"
 ```
 
 ### Backup Wallet
 
 ```bash
-btc3-cli backupwallet "/path/to/backup.dat"
+bitminti-cli backupwallet "/path/to/backup.dat"
 ```
 
 ### Dump Private Key
 
 ```bash
-btc3-cli dumpprivkey "address"
+bitminti-cli dumpprivkey "address"
 ```
 
 **⚠️ Warning**: Keep private keys secure!
@@ -126,7 +126,7 @@ btc3-cli dumpprivkey "address"
 ### Import Private Key
 
 ```bash
-btc3-cli importprivkey "private_key_wif" "label" [rescan]
+bitminti-cli importprivkey "private_key_wif" "label" [rescan]
 ```
 
 ## Mining Commands
@@ -134,19 +134,19 @@ btc3-cli importprivkey "private_key_wif" "label" [rescan]
 ### Generate Blocks
 
 ```bash
-btc3-cli generatetoaddress nblocks "address"
+bitminti-cli generatetoaddress nblocks "address"
 ```
 
 **Example**:
 ```bash
 # Mine 10 blocks
-btc3-cli generatetoaddress 10 "btc31qegfazu3879ywqch9pk9z92azr7sddflaskzry4"
+bitminti-cli generatetoaddress 10 "btc31qegfazu3879ywqch9pk9z92azr7sddflaskzry4"
 ```
 
 ### Get Mining Info
 
 ```bash
-btc3-cli getmininginfo
+bitminti-cli getmininginfo
 ```
 
 ## Blockchain Commands
@@ -154,14 +154,14 @@ btc3-cli getmininginfo
 ### Get Block Count
 
 ```bash
-btc3-cli getblockcount
+bitminti-cli getblockcount
 # Output: 1523
 ```
 
 ### Get Blockchain Info
 
 ```bash
-btc3-cli getblockchaininfo
+bitminti-cli getblockchaininfo
 ```
 
 **Output includes**:
@@ -174,19 +174,19 @@ btc3-cli getblockchaininfo
 ### Get Block Hash
 
 ```bash
-btc3-cli getblockhash height
+bitminti-cli getblockhash height
 ```
 
 **Example**:
 ```bash
-btc3-cli getblockhash 100
+bitminti-cli getblockhash 100
 # Output: 624d60ba58fe61f9d85f91f422948b6accc572bb265ce6860581bdaaf9304444
 ```
 
 ### Get Block
 
 ```bash
-btc3-cli getblock "blockhash" [verbosity]
+bitminti-cli getblock "blockhash" [verbosity]
 ```
 
 **Verbosity levels**:
@@ -196,13 +196,13 @@ btc3-cli getblock "blockhash" [verbosity]
 
 **Example**:
 ```bash
-btc3-cli getblock "624d60ba58fe61f9d85f91f422948b6accc572bb265ce6860581bdaaf9304444" 1
+bitminti-cli getblock "624d60ba58fe61f9d85f91f422948b6accc572bb265ce6860581bdaaf9304444" 1
 ```
 
 ### Get Best Block Hash
 
 ```bash
-btc3-cli getbestblockhash
+bitminti-cli getbestblockhash
 ```
 
 ## Network Commands
@@ -210,14 +210,14 @@ btc3-cli getbestblockhash
 ### Get Connection Count
 
 ```bash
-btc3-cli getconnectioncount
+bitminti-cli getconnectioncount
 # Output: 3
 ```
 
 ### Get Peer Info
 
 ```bash
-btc3-cli getpeerinfo
+bitminti-cli getpeerinfo
 ```
 
 **Useful fields**:
@@ -230,31 +230,31 @@ btc3-cli getpeerinfo
 ### Add Node
 
 ```bash
-btc3-cli addnode "ip:port" "add|remove|onetry"
+bitminti-cli addnode "ip:port" "add|remove|onetry"
 ```
 
 **Examples**:
 ```bash
 # Add permanent peer
-btc3-cli addnode "192.168.1.100:13337" "add"
+bitminti-cli addnode "192.168.1.100:13337" "add"
 
 # Remove peer
-btc3-cli addnode "192.168.1.100:13337" "remove"
+bitminti-cli addnode "192.168.1.100:13337" "remove"
 
 # Try connecting once
-btc3-cli addnode "192.168.1.100:13337" "onetry"
+bitminti-cli addnode "192.168.1.100:13337" "onetry"
 ```
 
 ### Get Network Info
 
 ```bash
-btc3-cli getnetworkinfo
+bitminti-cli getnetworkinfo
 ```
 
 ### Get Added Node Info
 
 ```bash
-btc3-cli getaddednodeinfo
+bitminti-cli getaddednodeinfo
 ```
 
 ## Mempool Commands
@@ -262,7 +262,7 @@ btc3-cli getaddednodeinfo
 ### Get Mempool Info
 
 ```bash
-btc3-cli getmempoolinfo
+bitminti-cli getmempoolinfo
 ```
 
 **Output includes**:
@@ -274,16 +274,16 @@ btc3-cli getmempoolinfo
 ### Get Raw Mempool
 
 ```bash
-btc3-cli getrawmempool [verbose]
+bitminti-cli getrawmempool [verbose]
 ```
 
 **Example**:
 ```bash
 # List transaction IDs
-btc3-cli getrawmempool false
+bitminti-cli getrawmempool false
 
 # Detailed info
-btc3-cli getrawmempool true
+bitminti-cli getrawmempool true
 ```
 
 ## Transaction Commands
@@ -291,28 +291,28 @@ btc3-cli getrawmempool true
 ### Get Raw Transaction
 
 ```bash
-btc3-cli getrawtransaction "txid" [verbose]
+bitminti-cli getrawtransaction "txid" [verbose]
 ```
 
 **Example**:
 ```bash
 # Hex format
-btc3-cli getrawtransaction "08b915caef7164260055aed2d3fd84ca72234a03b8588a9a8c1a577ab854c6e1"
+bitminti-cli getrawtransaction "08b915caef7164260055aed2d3fd84ca72234a03b8588a9a8c1a577ab854c6e1"
 
 # JSON format
-btc3-cli getrawtransaction "08b915caef7164260055aed2d3fd84ca72234a03b8588a9a8c1a577ab854c6e1" true
+bitminti-cli getrawtransaction "08b915caef7164260055aed2d3fd84ca72234a03b8588a9a8c1a577ab854c6e1" true
 ```
 
 ### Decode Raw Transaction
 
 ```bash
-btc3-cli decoderawtransaction "hex"
+bitminti-cli decoderawtransaction "hex"
 ```
 
 ### Send Raw Transaction
 
 ```bash
-btc3-cli sendrawtransaction "hex"
+bitminti-cli sendrawtransaction "hex"
 ```
 
 ## Utility Commands
@@ -320,12 +320,12 @@ btc3-cli sendrawtransaction "hex"
 ### Validate Address
 
 ```bash
-btc3-cli validateaddress "address"
+bitminti-cli validateaddress "address"
 ```
 
 **Example**:
 ```bash
-btc3-cli validateaddress "btc31qegfazu3879ywqch9pk9z92azr7sddflaskzry4"
+bitminti-cli validateaddress "btc31qegfazu3879ywqch9pk9z92azr7sddflaskzry4"
 ```
 
 **Output includes**:
@@ -338,18 +338,18 @@ btc3-cli validateaddress "btc31qegfazu3879ywqch9pk9z92azr7sddflaskzry4"
 ### Get Descriptor Info
 
 ```bash
-btc3-cli getdescriptorinfo "descriptor"
+bitminti-cli getdescriptorinfo "descriptor"
 ```
 
 ### Estimate Smart Fee
 
 ```bash
-btc3-cli estimatesmartfee conf_target
+bitminti-cli estimatesmartfee conf_target
 ```
 
 **Example**:
 ```bash
-btc3-cli estimatesmartfee 6
+bitminti-cli estimatesmartfee 6
 ```
 
 ## Control Commands
@@ -357,7 +357,7 @@ btc3-cli estimatesmartfee 6
 ### Get Info
 
 ```bash
-btc3-cli getinfo
+bitminti-cli getinfo
 ```
 
 **Deprecated** – Use specific commands instead:
@@ -368,13 +368,13 @@ btc3-cli getinfo
 ### Stop Daemon
 
 ```bash
-btc3-cli stop
+bitminti-cli stop
 ```
 
 ### Uptime
 
 ```bash
-btc3-cli uptime
+bitminti-cli uptime
 # Output: 86400 (seconds)
 ```
 
@@ -383,31 +383,31 @@ btc3-cli uptime
 ### Rescan Blockchain
 
 ```bash
-btc3-cli rescanblockchain [start_height] [stop_height]
+bitminti-cli rescanblockchain [start_height] [stop_height]
 ```
 
 **Example**:
 ```bash
 # Rescan from block 100 to tip
-btc3-cli rescanblockchain 100
+bitminti-cli rescanblockchain 100
 ```
 
 ### Scan UTXO Set
 
 ```bash
-btc3-cli scantxoutset "start" ["descriptor",...]
+bitminti-cli scantxoutset "start" ["descriptor",...]
 ```
 
 **Example**:
 ```bash
 # Find all UTXOs for an address
-btc3-cli scantxoutset "start" "[\"addr(btc31qjnxf60l7rvrs72p45u8gg5e33vxxt6rt6scp27)\"]"
+bitminti-cli scantxoutset "start" "[\"addr(btc31qjnxf60l7rvrs72p45u8gg5e33vxxt6rt6scp27)\"]"
 ```
 
 ### Get Chain Tips
 
 ```bash
-btc3-cli getchaintips
+bitminti-cli getchaintips
 ```
 
 Shows all known chain tips (useful for detecting forks).
@@ -417,7 +417,7 @@ Shows all known chain tips (useful for detecting forks).
 You can batch multiple commands in one RPC call:
 
 ```bash
-btc3-cli batch '[
+bitminti-cli batch '[
   {"method": "getblockcount"},
   {"method": "getbalance", "params": ["*"]},
   {"method": "getconnectioncount"}
@@ -430,10 +430,10 @@ btc3-cli batch '[
 
 ```bash
 #!/bin/bash
-echo "Block Height: $(btc3-cli getblockcount)"
-echo "Connections: $(btc3-cli getconnectioncount)"
-echo "Balance: $(btc3-cli getbalance '*') BTC3"
-echo "Mempool: $(btc3-cli getmempoolinfo | jq -r '.size') transactions"
+echo "Block Height: $(bitminti-cli getblockcount)"
+echo "Connections: $(bitminti-cli getconnectioncount)"
+echo "Balance: $(bitminti-cli getbalance '*') BitMinti"
+echo "Mempool: $(bitminti-cli getmempoolinfo | jq -r '.size') transactions"
 ```
 
 ### Monitor Mining Progress
@@ -441,9 +441,9 @@ echo "Mempool: $(btc3-cli getmempoolinfo | jq -r '.size') transactions"
 ```bash
 #!/bin/bash
 while true; do
-  HEIGHT=$(btc3-cli getblockcount)
-  BALANCE=$(btc3-cli getbalance "*")
-  echo "[$(date)] Height: $HEIGHT | Balance: $BALANCE BTC3"
+  HEIGHT=$(bitminti-cli getblockcount)
+  BALANCE=$(bitminti-cli getbalance "*")
+  echo "[$(date)] Height: $HEIGHT | Balance: $BALANCE BitMinti"
   sleep 10
 done
 ```
@@ -456,15 +456,15 @@ ADDR="btc31qjnxf60l7rvrs72p45u8gg5e33vxxt6rt6scp27"
 AMOUNT=10.0
 
 # Send transaction
-TXID=$(btc3-cli sendtoaddress "$ADDR" $AMOUNT)
+TXID=$(bitminti-cli sendtoaddress "$ADDR" $AMOUNT)
 echo "Transaction sent: $TXID"
 
 # Mine a block to confirm
-MINING_ADDR=$(btc3-cli getnewaddress)
-btc3-cli generatetoaddress 1 "$MINING_ADDR"
+MINING_ADDR=$(bitminti-cli getnewaddress)
+bitminti-cli generatetoaddress 1 "$MINING_ADDR"
 
 # Verify confirmation
-CONFIRMATIONS=$(btc3-cli gettransaction "$TXID" | jq -r '.confirmations')
+CONFIRMATIONS=$(bitminti-cli gettransaction "$TXID" | jq -r '.confirmations')
 echo "Confirmations: $CONFIRMATIONS"
 ```
 
@@ -473,31 +473,31 @@ echo "Confirmations: $CONFIRMATIONS"
 ### List All Commands
 
 ```bash
-btc3-cli help
+bitminti-cli help
 ```
 
 ### Get Help for Specific Command
 
 ```bash
-btc3-cli help <command>
+bitminti-cli help <command>
 ```
 
 **Example**:
 ```bash
-btc3-cli help sendtoaddress
+bitminti-cli help sendtoaddress
 ```
 
 ## Tips
 
-1. **Use jq for JSON parsing**: `btc3-cli getblockchaininfo | jq '.blocks'`
-2. **Save common commands as aliases**: `alias btc3='btc3-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin'`
-3. **Check command syntax**: Always use `btc3-cli help <command>` if unsure
+1. **Use jq for JSON parsing**: `bitminti-cli getblockchaininfo | jq '.blocks'`
+2. **Save common commands as aliases**: `alias btc3='bitminti-cli -datadir=./btc3-data -rpcuser=admin -rpcpassword=admin'`
+3. **Check command syntax**: Always use `bitminti-cli help <command>` if unsure
 4. **Batch operations**: Use shell loops for repetitive tasks
 5. **Monitor logs**: Check `btc3-data/debug.log` for detailed information
 
 ## Next Steps
 
-- [Start mining](MINING.md) to earn BTC3
+- [Start mining](MINING.md) to earn BitMinti
 - [Join the network](JOINING.md) to connect with other nodes
 - Explore advanced RPC features in Bitcoin Core documentation
 

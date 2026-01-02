@@ -1,25 +1,25 @@
 #!/bin/bash
-# BTC3 Mining Script
+# BitMinti Mining Script
 # Usage: ./mine-blocks.sh [number_of_blocks]
 
 BLOCKS=${1:-10}
 BUILD_DIR="$(cd "$(dirname "$0")" && pwd)/build/bin"
-DATADIR="${DATADIR:-$HOME/.btc3}"
-AUTH="${BTC3_AUTH:--rpcuser=test -rpcpassword=test}"
+DATADIR="${DATADIR:-$HOME/.bitminti}"
+AUTH="${BitMinti_AUTH:--rpcuser=test -rpcpassword=test}"
 
-echo "=== BTC3 Mining Script ==="
+echo "=== BitMinti Mining Script ==="
 echo "Target blocks: $BLOCKS"
 echo ""
 
 # Check if daemon is running
-if ! pgrep -fl btc3d > /dev/null; then
-    echo "Starting btc3d daemon..."
-    $BUILD_DIR/btc3d -datadir="$DATADIR" -addnode=3.146.187.209:13337 -daemon -miningfastmode=1
+if ! pgrep -fl bitmintid > /dev/null; then
+    echo "Starting bitmintid daemon..."
+    $BUILD_DIR/bitmintid -datadir="$DATADIR" -addnode=3.146.187.209:13337 -daemon -miningfastmode=1
     sleep 10
 fi
 
 # Verify daemon is responsive
-if ! $BUILD_DIR/btc3-cli -datadir="$DATADIR" $AUTH getblockcount &>/dev/null; then
+if ! $BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH getblockcount &>/dev/null; then
     echo "ERROR: Daemon not responding."
     echo "Try running ./start-node.sh first"
     exit 1
@@ -27,17 +27,17 @@ fi
 
 # Get or create mining address
 # First try to load the wallet, ignore error if it creates a duplicate load error
-$BUILD_DIR/btc3-cli -datadir="$DATADIR" $AUTH loadwallet "miner" >/dev/null 2>&1
+$BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH loadwallet "miner" >/dev/null 2>&1
 
-ADDR=$($BUILD_DIR/btc3-cli -datadir="$DATADIR" $AUTH getnewaddress 2>/dev/null)
+ADDR=$($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH getnewaddress 2>/dev/null)
 if [ -z "$ADDR" ]; then
     echo "Creating wallet..."
-    $BUILD_DIR/btc3-cli -datadir="$DATADIR" $AUTH createwallet "miner" >/dev/null 2>&1
-    ADDR=$($BUILD_DIR/btc3-cli -datadir="$DATADIR" $AUTH getnewaddress)
+    $BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH createwallet "miner" >/dev/null 2>&1
+    ADDR=$($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH getnewaddress)
 fi
 
 echo "Mining address: $ADDR"
-echo "Starting height: $($BUILD_DIR/btc3-cli -datadir="$DATADIR" $AUTH getblockcount)"
+echo "Starting height: $($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH getblockcount)"
 echo ""
 
 # Mine blocks
@@ -47,11 +47,11 @@ for i in $(seq 1 $BLOCKS); do
     
     while true; do
         # Try 10000 hashes at a time (keep RPC responsive)
-        RESULT=$($BUILD_DIR/btc3-cli -datadir="$DATADIR" $AUTH generatetoaddress 1 "$ADDR" 10000 2>&1)
+        RESULT=$($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH generatetoaddress 1 "$ADDR" 10000 2>&1)
         
         # Check if we found a block (result is a JSON array with a hash)
         if [[ "$RESULT" == *"["* && "$RESULT" != "[]" ]]; then
-            HEIGHT=$($BUILD_DIR/btc3-cli -datadir="$DATADIR" $AUTH getblockcount)
+            HEIGHT=$($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH getblockcount)
             echo " ✓ (height: $HEIGHT)"
             break
         elif [[ "$RESULT" == "[]" ]]; then
@@ -69,5 +69,5 @@ done
 
 echo ""
 echo "=== Mining Complete ==="
-echo "Final height: $($BUILD_DIR/btc3-cli -datadir="$DATADIR" $AUTH getblockcount)"
-echo "Balance: $($BUILD_DIR/btc3-cli -datadir="$DATADIR" $AUTH getbalance) BTC3"
+echo "Final height: $($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH getblockcount)"
+echo "Balance: $($BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH getbalance) BitMinti"
