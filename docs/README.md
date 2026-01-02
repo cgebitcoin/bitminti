@@ -1,6 +1,6 @@
-# BTC3 Website
+# BitMinti Website
 
-Modern, responsive one-page website for BTC3 cryptocurrency.
+Modern, responsive one-page website for BitMinti cryptocurrency.
 
 ## Features
 
@@ -70,4 +70,4 @@ Simply open `index.html` in a browser. No build step required!
 
 ## License
 
-MIT License - same as BTC3
+MIT License - same as BitMinti
