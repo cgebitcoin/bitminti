@@ -63,6 +63,7 @@ uint256 CBlockHeader::GetPoWHash(const uint256 &seed) const {
         randomx_init_cache(rx_cache, seed.begin(), 32);
 
         if (gArgs.GetBoolArg("-miningfastmode", false)) {
+          flags |= RANDOMX_FLAG_LARGE_PAGES;
           rx_dataset = randomx_alloc_dataset(flags);
           uint32_t count = randomx_dataset_item_count();
           randomx_init_dataset(rx_dataset, rx_cache, 0, count);
@@ -90,8 +91,10 @@ uint256 CBlockHeader::GetPoWHash(const uint256 &seed) const {
         randomx_destroy_vm(rx_vm);
       if (current_cache_ptr != nullptr) {
         randomx_flags flags = randomx_get_flags();
-        if (current_dataset_ptr != nullptr)
+        if (current_dataset_ptr != nullptr) {
           flags |= RANDOMX_FLAG_FULL_MEM;
+          flags |= RANDOMX_FLAG_LARGE_PAGES;
+        }
         fprintf(stderr, "RandomX: creating VM with flags 0x%x\n",
                 (unsigned int)flags);
         rx_vm =
