@@ -54,8 +54,10 @@ echo "Step 2: Configuring CMake for Windows build..."
 echo ""
 
 # Clean previous build
-rm -rf "$PROJECT_ROOT/build-windows"
-mkdir -p "$PROJECT_ROOT/build-windows"
+# Incremental build - only create dir if missing
+if [ ! -d "$PROJECT_ROOT/build-windows" ]; then
+    mkdir -p "$PROJECT_ROOT/build-windows"
+fi
 
 cmake -B "$PROJECT_ROOT/build-windows" \
     -DCMAKE_TOOLCHAIN_FILE="$PROJECT_ROOT/depends/x86_64-w64-mingw32/toolchain.cmake" \

@@ -50,8 +50,10 @@ echo "Step 2: Configuring CMake for Windows GUI build..."
 echo ""
 
 # Clean previous build
-rm -rf "$PROJECT_ROOT/build-windows-gui"
-mkdir -p "$PROJECT_ROOT/build-windows-gui"
+# Incremental build - only create dir if missing
+if [ ! -d "$PROJECT_ROOT/build-windows-gui" ]; then
+    mkdir -p "$PROJECT_ROOT/build-windows-gui"
+fi
 
 cmake -B "$PROJECT_ROOT/build-windows-gui" \
     -DCMAKE_TOOLCHAIN_FILE="$PROJECT_ROOT/depends/x86_64-w64-mingw32/toolchain.cmake" \
