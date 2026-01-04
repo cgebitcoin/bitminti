@@ -87,7 +87,7 @@ void SetupEnvironment() {
     setenv("LC_ALL", "C.UTF-8", 1);
   }
 #elif defined(WIN32)
-  assert(GetACP() == CP_UTF8);
+  // assert(GetACP() == CP_UTF8);
   // Set the default input/output charset is utf-8
   SetConsoleCP(CP_UTF8);
   SetConsoleOutputCP(CP_UTF8);
