@@ -1,0 +1,54 @@
+{
+    "id": "bitminti",
+    "name": "BitMinti",
+    "canonicalName": "BitMinti",
+    "family": "bitcoin",
+    "algorithm": "randomx",
+    "coinbaseTx": {
+        "txVersion": 2,
+        "txInputScript": "",
+        "txOutputScript": ""
+    },
+    "daemons": [
+        {
+            "host": "127.0.0.1",
+            "port": 18332,
+            "user": "pooluser",
+            "password": "change_this_password_securely_123"
+        }
+    ],
+    "ports": {
+        "3032": {
+            "listenAddress": "0.0.0.0",
+            "name": "Low Diff",
+            "difficulty": 0.1,
+            "varDiff": {
+                "minDiff": 0.01,
+                "maxDiff": 100,
+                "targetTime": 15,
+                "retargetTime": 90,
+                "variancePercent": 30
+            }
+        },
+        "3033": {
+            "listenAddress": "0.0.0.0",
+            "name": "High Diff",
+            "difficulty": 1.0,
+            "varDiff": {
+                "minDiff": 0.1,
+                "maxDiff": 500,
+                "targetTime": 15,
+                "retargetTime": 90,
+                "variancePercent": 30
+            }
+        }
+    },
+    "paymentProcessing": {
+        "enabled": true,
+        "minimumPayment": 1.0,
+        "payoutScheme": "PPLNS",
+        "payoutSchemeConfig": {
+            "factor": 2.0
+        }
+    }
+}

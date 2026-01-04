@@ -259,6 +259,11 @@ add_executable(bitcoin-qt
   main.cpp
   ../init/bitcoin-qt.cpp
 )
+set_target_properties(bitcoin-qt PROPERTIES 
+    OUTPUT_NAME "bitminti-qt"
+    MACOSX_BUNDLE_BUNDLE_NAME "BitMinti-Qt"
+    MACOSX_BUNDLE_GUI_IDENTIFIER "org.bitminti.qt"
+)
 
 add_windows_resources(bitcoin-qt res/bitcoin-qt-res.rc)
 add_windows_application_manifest(bitcoin-qt)

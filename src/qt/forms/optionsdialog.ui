@@ -779,8 +779,8 @@
          <item>
           <widget class="QLabel" name="moneyFont_preview">
            <property name="text">
-            <string notr="true">111.11111111 BTC
-909.09090909 BTC</string>
+            <string notr="true">111.11111111 BITMINTI
+909.09090909 BITMINTI</string>
            </property>
           </widget>
          </item>

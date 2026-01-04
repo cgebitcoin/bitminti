@@ -1,0 +1,99 @@
+{
+    "logging": {
+        "level": "info",
+        "enableConsoleLog": true,
+        "enableConsoleColors": true,
+        "logFile": "miningcore.log",
+        "apiLogFile": "miningcore-api.log",
+        "logBaseDirectory": "logs"
+    },
+    "persistence": {
+        "postgres": {
+            "host": "postgres",
+            "port": 5432,
+            "user": "miningcore",
+            "password": "miningcore_password",
+            "database": "miningcore"
+        }
+    },
+    "paymentProcessing": {
+        "enabled": true,
+        "interval": 600,
+        "shareRecoveryFile": "recovered-shares.txt"
+    },
+    "banning": {
+        "manager": "Integrated",
+        "banOnJunkShare": true,
+        "banOnInvalidShare": false,
+        "banOnAutoBan": false,
+        "integrated": {
+            "duration": 600,
+            "banThreshold": 50,
+            "percentage": 10
+        }
+    },
+    "api": {
+        "enabled": true,
+        "listenAddress": "0.0.0.0",
+        "port": 4000
+    },
+    "clusterName": "BitMinti Official Pool",
+    "coins": [
+        {
+            "id": "bitminti",
+            "name": "BitMinti",
+            "canonicalName": "BitMinti",
+            "family": "bitcoin",
+            "algorithm": "randomx",
+            "coinbaseTx": {
+                "txVersion": 2,
+                "nVersion": 2,
+                "txInputScript": "",
+                "txOutputScript": ""
+            },
+            "daemons": [
+                {
+                    "host": "bitminti-node",
+                    "port": 18332,
+                    "user": "pooluser",
+                    "password": "poolpass"
+                }
+            ],
+            "ports": {
+                "3032": {
+                    "listenAddress": "0.0.0.0",
+                    "name": "Low Diff (CPU)",
+                    "difficulty": 0.1,
+                    "varDiff": {
+                        "minDiff": 0.01,
+                        "maxDiff": 100,
+                        "targetTime": 15,
+                        "retargetTime": 90,
+                        "variancePercent": 30
+                    }
+                },
+                "3033": {
+                    "listenAddress": "0.0.0.0",
+                    "name": "High Diff (Rigs)",
+                    "difficulty": 1.0,
+                    "varDiff": {
+                        "minDiff": 0.1,
+                        "maxDiff": 500,
+                        "targetTime": 15,
+                        "retargetTime": 90,
+                        "variancePercent": 30
+                    }
+                }
+            },
+            "paymentProcessing": {
+                "enabled": true,
+                "minimumPayment": 1.0,
+                "payoutScheme": "PPLNS",
+                "payoutSchemeConfig": {
+                    "factor": 2.0
+                },
+                "address": "YOUR_POOL_WALLET_ADDRESS_HERE"
+            }
+        }
+    ]
+}

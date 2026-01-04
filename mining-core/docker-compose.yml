@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # 1. The Coin Daemon (BitMinti)
+  bitminti-node:
+    image: ubuntu:22.04
+    container_name: bitminti-pool-node
+    volumes:
+      # Map the local binary build to the container
+      - ../build/bin/bitmintid:/usr/local/bin/bitmintid
+      - ./bitminti-data:/root/.bitminti
+    command:
+      - /bin/bash
+      - -c
+      - |
+        echo "Auto-configuring Huge Pages..."
+        sysctl -w vm.nr_hugepages=1500 || echo "Failed to set hugepages (Needs privileged: true)"
+        exec bitmintid -miningfastmode=1 -printtoconsole -server -rpcuser=pooluser -rpcpassword=poolpass -rpcport=18332 -rpcallowip=0.0.0.0/0 -rpcbind=0.0.0.0:18332 -zmqpubhashblock=tcp://0.0.0.0:28332 -zmqpubrawtx=tcp://0.0.0.0:28332
+    # Huge Pages Support (Required for Fast Mode)
+    privileged: true
+    ulimits:
+      memlock: -1
+    ports:
+      - "13337:13337" # P2P
+    restart: unless-stopped
+
+  # 2. Database (PostgreSQL)
+  postgres:
+    image: postgres:15-alpine
+    container_name: miningcore-db
+    environment:
+      POSTGRES_DB: miningcore
+      POSTGRES_USER: miningcore
+      POSTGRES_PASSWORD: miningcore_password
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  # 3. The Pool Software (Miningcore)
+  miningcore:
+    image: miningcore/miningcore:latest
+    container_name: miningcore
+    depends_on:
+      - bitminti-node
+      - postgres
+    volumes:
+      - ./config.json:/app/config.json
+    ports:
+      - "3032:3032" # Stratum Port (Low Diff)
+      - "3033:3033" # Stratum Port (High Diff)
+      - "4000:4000" # API Port
+    command: -c /app/config.json
+    restart: unless-stopped
+
+  # 4. Web UI (Dashboard)
+  # Using a simple generic dashboard container or Nginx hosting the static files
+  # For now, we expose the API (port 4000) so you can use web-miningcore-ui locally

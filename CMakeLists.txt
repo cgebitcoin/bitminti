@@ -26,13 +26,13 @@ get_directory_property(precious_variables CACHE_VARIABLES)
 #=============================
 # Project / Package metadata
 #=============================
-set(CLIENT_NAME "BTC3")
-set(CLIENT_VERSION_MAJOR 30)
-set(CLIENT_VERSION_MINOR 99)
-set(CLIENT_VERSION_BUILD 0)
+set(CLIENT_NAME "BitMinti")
+set(CLIENT_VERSION_MAJOR 1)
+set(CLIENT_VERSION_MINOR 0)
+set(CLIENT_VERSION_BUILD 3)
 set(CLIENT_VERSION_RC 0)
-set(CLIENT_VERSION_IS_RELEASE "false")
-set(COPYRIGHT_YEAR "2025")
+set(CLIENT_VERSION_IS_RELEASE "true")
+set(COPYRIGHT_YEAR "2026")
 
 # During the enabling of the CXX and CXXOBJ languages, we modify
 # CMake's compiler/linker invocation strings by appending the content
@@ -50,10 +50,10 @@ set(CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
   CMAKE_CXX_LINK_EXECUTABLE
 )
 
-project(BTC3
+project(BitMinti
   VERSION ${CLIENT_VERSION_MAJOR}.${CLIENT_VERSION_MINOR}.${CLIENT_VERSION_BUILD}
-  DESCRIPTION "Bitcoin client software"
-  HOMEPAGE_URL "https://bitcoincore.org/"
+  DESCRIPTION "BitMinti client software"
+  HOMEPAGE_URL "https://bitminti.com/"
   LANGUAGES NONE
 )
 
@@ -64,7 +64,7 @@ endif()
 
 set(COPYRIGHT_HOLDERS "The %s developers")
 set(COPYRIGHT_HOLDERS_FINAL "The ${CLIENT_NAME} developers")
-set(CLIENT_BUGREPORT "https://github.com/bitcoin/bitcoin/issues")
+set(CLIENT_BUGREPORT "https://github.com/cgebitcoin/bitminti/issues")
 
 #=============================
 # Language setup

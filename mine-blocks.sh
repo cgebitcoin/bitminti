@@ -4,7 +4,7 @@
 # 1. Setup Variables
 BLOCKS=${1:-10}
 BUILD_DIR="$(cd "$(dirname "$0")" && pwd)/build/bin"
-DATADIR="${DATADIR:-$HOME/.bitminti}"
+DATADIR="${DATADIR:-$HOME/.btc3}"
 AUTH="${BitMinti_AUTH:--rpcuser=test -rpcpassword=test}"
 WALLET_NAME="miner"
 
