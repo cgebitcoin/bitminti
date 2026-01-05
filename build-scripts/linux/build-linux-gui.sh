@@ -129,38 +129,59 @@ echo "Configuring from root: $PROJECT_ROOT"
 cmake -B build-gui -S "$PROJECT_ROOT" -DBUILD_GUI=ON -DBUILD_TESTS=OFF -DBUILD_BENCH=OFF -DWITH_QRENCODE=ON
 
 echo ""
-echo "Step 3: Building GUI wallet..."
-echo "This may take 10-20 minutes..."
-echo ""
-
-cmake --build build-gui --target bitcoin-qt -j$(nproc 2>/dev/null || sysctl -n hw.ncpu)
-
-echo ""
 echo "========================================"
-echo "✅ GUI Wallet Build Complete!"
+echo "Step 4: Packaging for Release (AppImage)"
 echo "========================================"
-echo ""
+echo "Creating standalone executable that requires no installation..."
 
-if [[ "$OS" == "macos" ]]; then
-    if [ -d "build-gui/src/qt/BitMinti-Qt.app" ]; then
-        echo "macOS Application Bundle:"
-        echo "  build-gui/src/qt/BitMinti-Qt.app"
-        echo ""
-        echo "To run:"
-        echo "  open build-gui/src/qt/BitMinti-Qt.app"
-        echo ""
-        echo "To create DMG installer:"
-        echo "  ./create-dmg.sh"
-    fi
-elif [[ "$OS" == "linux" ]]; then
-    if [ -f "build-gui/src/qt/bitminti-qt" ]; then
-        echo "Linux Binary:"
-        echo "  build-gui/src/qt/bitminti-qt"
-        echo ""
-        echo "To run:"
-        echo "  ./build-gui/src/qt/bitminti-qt"
-        echo ""
-        echo "To create AppImage:"
-        echo "  ./create-appimage.sh"
-    fi
+# Create AppDir structure
+APPDIR="build-gui/BitMinti.AppDir"
+rm -rf "$APPDIR"
+mkdir -p "$APPDIR/usr/bin"
+mkdir -p "$APPDIR/usr/share/applications"
+mkdir -p "$APPDIR/usr/share/icons/hicolor/128x128/apps"
+
+# Copy binary
+cp "build-gui/src/qt/bitminti-qt" "$APPDIR/usr/bin/"
+
+# Create Desktop File
+cat > "$APPDIR/usr/share/applications/bitminti.desktop" <<EOF
+[Desktop Entry]
+Type=Application
+Name=BitMinti
+Exec=bitminti-qt %u
+Icon=bitminti
+Categories=Office;Finance;
+EOF
+
+# Copy Icon (Placeholder or real)
+ICON_SRC="src/qt/res/icons/bitcoin.png"
+if [ -f "$ICON_SRC" ]; then
+    cp "$ICON_SRC" "$APPDIR/usr/share/icons/hicolor/128x128/apps/bitminti.png"
+    cp "$ICON_SRC" "$APPDIR/bitminti.png"
+else
+    touch "$APPDIR/bitminti.png"
 fi
+
+# Download bundling tool (linuxdeployqt) if missing
+if [ ! -f "linuxdeployqt-x86_64.AppImage" ]; then
+    echo "  Downloading linuxdeployqt..."
+    wget -q -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+    chmod +x linuxdeployqt-continuous-x86_64.AppImage
+fi
+
+# Run the bundler
+echo "  Bundling libraries into AppImage..."
+# -unsupported-allow-new-glibc is needed because we are building on a modern OS
+# This means the resulting file works on this OS and newer, but might not work on very old ones.
+export VERSION="1.0.0" # Prevents prompts
+./linuxdeployqt-continuous-x86_64.AppImage "$APPDIR/usr/share/applications/bitminti.desktop" -appimage -unsupported-allow-new-glibc -no-translations
+
+echo ""
+echo "========================================"
+echo "✅ BUILD COMPLETE!"
+echo "========================================"
+echo "Your standalone wallet file is here:"
+ls -lh BitMinti-*.AppImage
+echo ""
+echo "Users can download this file, make it executable, and run it directly."
