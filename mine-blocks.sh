@@ -13,11 +13,34 @@ echo "Target blocks: $BLOCKS"
 echo "----------------------------------------"
 
 # 2. Start Daemon if not running
+# 2. Start Daemon if not running
+mkdir -p "$DATADIR"
+
 if ! pgrep -x bitmintid > /dev/null; then
     echo "Starting bitmintid daemon..."
     $BUILD_DIR/bitmintid -datadir="$DATADIR" -daemon -miningfastmode=1
-    sleep 10
+    echo "Waiting for daemon to initialize..."
+else
+    echo "Daemon already running."
 fi
+
+# Wait for cookie file
+COOKIE_FILE="$DATADIR/.cookie"
+MAX_RETRIES=30
+COUNT=0
+
+while [ ! -f "$COOKIE_FILE" ]; do
+    if [ $COUNT -ge $MAX_RETRIES ]; then
+        echo "Error: Timed out waiting for RPC cookie file at $COOKIE_FILE"
+        echo "Check debug.log in $DATADIR for errors."
+        exit 1
+    fi
+    echo "Waiting for RPC cookie... ($COUNT/$MAX_RETRIES)"
+    sleep 1
+    ((COUNT++))
+done
+
+echo "Daemon RPC is ready."
 
 # 3. Ensure Wallet is Loaded & Address is Valid
 $BUILD_DIR/bitminti-cli -datadir="$DATADIR" $AUTH loadwallet "$WALLET_NAME" >/dev/null 2>&1
