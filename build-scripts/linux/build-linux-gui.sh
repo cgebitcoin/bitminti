@@ -117,11 +117,15 @@ fi
 echo ""
 echo "Step 2: Configuring CMake for GUI build..."
 
+# Determine Project Root
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+
 # Clean previous build (Disabled for incremental builds)
 # rm -rf build-gui
 mkdir -p build-gui
 
-cmake -B build-gui -DBUILD_GUI=ON -DBUILD_TESTS=OFF -DBUILD_BENCH=OFF -DWITH_QRENCODE=ON
+echo "Configuring from root: $PROJECT_ROOT"
+cmake -B build-gui -S "$PROJECT_ROOT" -DBUILD_GUI=ON -DBUILD_TESTS=OFF -DBUILD_BENCH=OFF -DWITH_QRENCODE=ON
 
 echo ""
 echo "Step 3: Building GUI wallet..."
