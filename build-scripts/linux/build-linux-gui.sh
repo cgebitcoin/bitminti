@@ -38,16 +38,27 @@ echo "Step 1: Building Static Dependencies (this takes a while)..."
 echo "Target: x86_64-pc-linux-gnu"
 
 cd "$DEPENDS_DIR"
-# Fix for some modern make issues: set -j to standard count
-make HOST=x86_64-pc-linux-gnu -j$(nproc)
 
-# --- IMMEDIATE CLEANUP TO SAVE SPACE ---
-echo "Cleaning intermediate depends artifacts to free space..."
-rm -rf "$DEPENDS_DIR/work"
-rm -rf "$DEPENDS_DIR/sources"
-# We keep only the built libs in x86_64-pc-linux-gnu/
-echo "Intermediate files removed."
-# ---------------------------------------
+# DISK SPACE SAVER MODE: Build dependencies one by one and clean up
+# This prevents the "work" directory from growing to 20GB+.
+
+# 1. Base dependencies (Non-Qt)
+echo "   [1/3] Building Base Dependencies..."
+make HOST=x86_64-pc-linux-gnu -j$(nproc) NO_QT=1
+echo "   -> Cleaning base artifacts..."
+rm -rf work sources
+
+# 2. Qt (The biggest one)
+echo "   [2/3] Building Qt (this is huge)..."
+make HOST=x86_64-pc-linux-gnu -j$(nproc) qt
+echo "   -> Cleaning Qt artifacts..."
+rm -rf work sources
+
+# 3. Everything else (Final pass to catch anything missed)
+echo "   [3/3] Finalizing Dependencies..."
+make HOST=x86_64-pc-linux-gnu -j$(nproc)
+echo "   -> Final cleanup..."
+rm -rf work sources
 
 cd "$PROJECT_ROOT"
 
