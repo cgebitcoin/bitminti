@@ -118,7 +118,8 @@ echo ""
 echo "Step 2: Configuring CMake for GUI build..."
 
 # Determine Project Root
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+# Script is in build-scripts/linux/ -> Root is ../../
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 # Clean previous build (Disabled for incremental builds)
 # rm -rf build-gui
