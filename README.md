@@ -76,7 +76,7 @@ We believe:
 | Parameter | Value |
 |-----------|-------|
 | **Network Port** | 13337 |
-| **RPC Port** | 8332 (default) |
+| **RPC Port** | 13336 (default) |
 | **Magic Bytes** | `0xfc, 0xc1, 0xb7, 0xdc` |
 | **Genesis Hash** | `0d2c382326321b1004eb676d1a8ff1a93e92bb0da7be6043a058a6edb361b89e` |
 | **PoW Algorithm**| **RandomX** |

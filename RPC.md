@@ -4,6 +4,8 @@ This guide covers the most commonly used RPC commands for interacting with your 
 
 ## Connection Format
 
+Default RPC Port: **13336**
+
 All commands use this format:
 
 ```bash
