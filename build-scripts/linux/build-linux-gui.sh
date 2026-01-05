@@ -129,6 +129,17 @@ echo "Configuring from root: $PROJECT_ROOT"
 cmake -B build-linux-gui -S "$PROJECT_ROOT" -DBUILD_GUI=ON -DBUILD_TESTS=OFF -DBUILD_BENCH=OFF -DWITH_QRENCODE=ON
 
 echo ""
+echo "Step 3: Building GUI wallet..."
+echo "This may take 10-20 minutes..."
+echo ""
+
+cmake --build build-linux-gui --target bitcoin-qt -j$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+
+echo ""
+echo "========================================"
+echo "✅ GUI Wallet Build Complete!"
+echo "========================================"
+echo ""
 echo "========================================"
 echo "Step 4: Packaging for Release (AppImage)"
 echo "========================================"
