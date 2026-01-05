@@ -1,0 +1,18 @@
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libtool \
+    autotools-dev \
+    automake \
+    pkg-config \
+    bsdmainutils \
+    python3 \
+    cmake \
+    git \
+    rsync \
+    curl \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
