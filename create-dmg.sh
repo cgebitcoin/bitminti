@@ -10,6 +10,7 @@ VOL_NAME="BitMinti"
 # 1. Handle Naming Quirk
 if [ -d "build-gui/Bitcoin-Qt.app" ]; then
     echo "Renaming Bitcoin-Qt.app to BitMinti-Qt.app..."
+    rm -rf "$APP_PATH"
     mv "build-gui/Bitcoin-Qt.app" "$APP_PATH"
 fi
 
