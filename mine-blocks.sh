@@ -5,7 +5,7 @@
 BLOCKS=${1:-10}
 BUILD_DIR="$(cd "$(dirname "$0")" && pwd)/build/bin"
 DATADIR="${DATADIR:-$HOME/.btc3}"
-AUTH="${BitMinti_AUTH:--rpcuser=test -rpcpassword=test}"
+AUTH="${BitMinti_AUTH:-}"
 WALLET_NAME="miner"
 
 echo "=== BitMinti Mining Script ==="
