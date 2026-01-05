@@ -122,11 +122,11 @@ echo "Step 2: Configuring CMake for GUI build..."
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 # Clean previous build (Disabled for incremental builds)
-# rm -rf build-gui
-mkdir -p build-gui
+# rm -rf build-linux-gui
+mkdir -p build-linux-gui
 
 echo "Configuring from root: $PROJECT_ROOT"
-cmake -B build-gui -S "$PROJECT_ROOT" -DBUILD_GUI=ON -DBUILD_TESTS=OFF -DBUILD_BENCH=OFF -DWITH_QRENCODE=ON
+cmake -B build-linux-gui -S "$PROJECT_ROOT" -DBUILD_GUI=ON -DBUILD_TESTS=OFF -DBUILD_BENCH=OFF -DWITH_QRENCODE=ON
 
 echo ""
 echo "========================================"
@@ -135,14 +135,14 @@ echo "========================================"
 echo "Creating standalone executable that requires no installation..."
 
 # Create AppDir structure
-APPDIR="build-gui/BitMinti.AppDir"
+APPDIR="build-linux-gui/BitMinti.AppDir"
 rm -rf "$APPDIR"
 mkdir -p "$APPDIR/usr/bin"
 mkdir -p "$APPDIR/usr/share/applications"
 mkdir -p "$APPDIR/usr/share/icons/hicolor/128x128/apps"
 
 # Copy binary
-cp "build-gui/src/qt/bitminti-qt" "$APPDIR/usr/bin/"
+cp "build-linux-gui/src/qt/bitminti-qt" "$APPDIR/usr/bin/"
 
 # Create Desktop File
 cat > "$APPDIR/usr/share/applications/bitminti.desktop" <<EOF
