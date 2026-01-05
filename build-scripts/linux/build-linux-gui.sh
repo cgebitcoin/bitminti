@@ -44,14 +44,22 @@ cd "$DEPENDS_DIR"
 
 # 1. Base dependencies (Non-Qt)
 echo "   [1/3] Building Base Dependencies..."
+# Disable ccache to save ~5GB of disk space
+export CCACHE_DISABLE=1
 make HOST=x86_64-pc-linux-gnu -j$(nproc) NO_QT=1 NO_QR=1 NO_ZMQ=1 NO_WALLET_TOOL=1 NO_TEST=1
 echo "   -> Cleaning base artifacts..."
 rm -rf work sources
 
 # 2. Qt (The biggest one)
-echo "   [2/3] Building Qt (this is huge)..."
-# We disable Qt Test module and other heavy unused parts
-make HOST=x86_64-pc-linux-gnu -j$(nproc) qt NO_QT_TEST=1
+echo "   [2/3] Building Qt (Minimal Mode)..."
+# We disable Qt Test, Examples, Demos, Docs, Translations to save disk space
+make HOST=x86_64-pc-linux-gnu -j$(nproc) qt \
+    NO_QT_TEST=1 \
+    NO_QT_EXAMPLES=1 \
+    NO_QT_DEMOS=1 \
+    NO_QT_DOCS=1 \
+    NO_QT_TRANSLATIONS=1
+
 echo "   -> Cleaning Qt artifacts..."
 rm -rf work sources
 
