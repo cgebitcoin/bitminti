@@ -40,6 +40,15 @@ echo "Target: x86_64-pc-linux-gnu"
 cd "$DEPENDS_DIR"
 # Fix for some modern make issues: set -j to standard count
 make HOST=x86_64-pc-linux-gnu -j$(nproc)
+
+# --- IMMEDIATE CLEANUP TO SAVE SPACE ---
+echo "Cleaning intermediate depends artifacts to free space..."
+rm -rf "$DEPENDS_DIR/work"
+rm -rf "$DEPENDS_DIR/sources"
+# We keep only the built libs in x86_64-pc-linux-gnu/
+echo "Intermediate files removed."
+# ---------------------------------------
+
 cd "$PROJECT_ROOT"
 
 # 2. Configure with Static Libs
@@ -76,10 +85,34 @@ echo ""
 echo "========================================"
 echo "✅ STATIC BUILD COMPLETE!"
 echo "========================================"
-echo "Your portable binary is located at:"
-echo "  build-linux-gui/src/qt/bitminti-qt"
+
+# 4. Cleanup and Output
+echo "Step 4: Cleanup & Output..."
+
+# Move binary to root
+OUTPUT_BIN="./bitminti-qt-linux"
+if [ -f "build-linux-gui/src/qt/bitminti-qt" ]; then
+    cp build-linux-gui/src/qt/bitminti-qt "$OUTPUT_BIN"
+    strip "$OUTPUT_BIN"
+    echo "✅ Binary moved to: $OUTPUT_BIN"
+else
+    echo "❌ Error: Binary not found at build-linux-gui/src/qt/bitminti-qt"
+    exit 1
+fi
+
+echo "Cleaning up build directories to save disk space (as requested)..."
+rm -rf build-linux-gui
+echo "  - Removed build-linux-gui/"
+
+if [ -d "$DEPENDS_DIR/sources" ]; then
+    rm -rf "$DEPENDS_DIR/sources"
+    echo "  - Removed depends/sources/"
+fi
+
+if [ -d "$DEPENDS_DIR/work" ]; then
+    rm -rf "$DEPENDS_DIR/work"
+    echo "  - Removed depends/work/"
+fi
+
 echo ""
-echo "You can strip it to make it smaller:"
-echo "  strip build-linux-gui/src/qt/bitminti-qt"
-echo ""
-echo "This binary will run on ANY Linux distribution without installing Qt."
+echo "Space saved. Your wallet is ready: $OUTPUT_BIN"
