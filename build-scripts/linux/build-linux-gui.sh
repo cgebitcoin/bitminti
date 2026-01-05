@@ -153,7 +153,30 @@ mkdir -p "$APPDIR/usr/share/applications"
 mkdir -p "$APPDIR/usr/share/icons/hicolor/128x128/apps"
 
 # Copy binary
-cp "build-linux-gui/src/qt/bitminti-qt" "$APPDIR/usr/bin/"
+# Copy binary
+# Priority 1: bin/ directory (standard CMake install/output location)
+BIN_SOURCE="build-linux-gui/bin/bitminti-qt"
+
+if [ ! -f "$BIN_SOURCE" ]; then
+    # Priority 2: src/qt/ directory (legacy/dev location)
+    BIN_SOURCE="build-linux-gui/src/qt/bitminti-qt"
+fi
+
+if [ ! -f "$BIN_SOURCE" ]; then
+    # Priority 3: Fallback to 'bitcoin-qt' naming
+    BIN_SOURCE="build-linux-gui/src/qt/bitcoin-qt"
+fi
+
+if [ ! -f "$BIN_SOURCE" ]; then
+    echo "ERROR: Could not find compiled binary. Checked:"
+    echo "  - build-linux-gui/bin/bitminti-qt"
+    echo "  - build-linux-gui/src/qt/bitminti-qt"
+    echo "  - build-linux-gui/src/qt/bitcoin-qt"
+    exit 1
+fi
+
+echo "  Found binary: $BIN_SOURCE"
+cp "$BIN_SOURCE" "$APPDIR/usr/bin/bitminti-qt"
 
 # Create Desktop File
 cat > "$APPDIR/usr/share/applications/bitminti.desktop" <<EOF
