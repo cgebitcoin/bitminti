@@ -44,19 +44,20 @@ cd "$DEPENDS_DIR"
 
 # 1. Base dependencies (Non-Qt)
 echo "   [1/3] Building Base Dependencies..."
-make HOST=x86_64-pc-linux-gnu -j$(nproc) NO_QT=1
+make HOST=x86_64-pc-linux-gnu -j$(nproc) NO_QT=1 NO_QR=1 NO_ZMQ=1 NO_WALLET_TOOL=1 NO_TEST=1
 echo "   -> Cleaning base artifacts..."
 rm -rf work sources
 
 # 2. Qt (The biggest one)
 echo "   [2/3] Building Qt (this is huge)..."
-make HOST=x86_64-pc-linux-gnu -j$(nproc) qt
+# We disable Qt Test module and other heavy unused parts
+make HOST=x86_64-pc-linux-gnu -j$(nproc) qt NO_QT_TEST=1
 echo "   -> Cleaning Qt artifacts..."
 rm -rf work sources
 
 # 3. Everything else (Final pass to catch anything missed)
 echo "   [3/3] Finalizing Dependencies..."
-make HOST=x86_64-pc-linux-gnu -j$(nproc)
+make HOST=x86_64-pc-linux-gnu -j$(nproc) NO_QT_TEST=1 NO_TEST=1
 echo "   -> Final cleanup..."
 rm -rf work sources
 
