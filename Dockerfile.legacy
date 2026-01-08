@@ -1,18 +1,38 @@
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get update && apt-get install -y \
+# Install build dependencies
+RUN apt-get update && apt-get install -y software-properties-common && \
+    add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
+    apt-get update && apt-get install -y \
     build-essential \
+    gcc-11 g++-11 \
     libtool \
     autotools-dev \
     automake \
     pkg-config \
     bsdmainutils \
     python3 \
-    cmake \
-    git \
     rsync \
+    git \
     curl \
     wget \
-    && rm -rf /var/lib/apt/lists/*
+    vim
+
+# Install specific CMake version (3.10 is too old)
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.22.1/cmake-3.22.1-linux-x86_64.sh \
+    && chmod +x cmake-3.22.1-linux-x86_64.sh \
+    && ./cmake-3.22.1-linux-x86_64.sh --skip-license --prefix=/usr/local \
+    && rm cmake-3.22.1-linux-x86_64.sh
+
+# Set GCC 11 as default
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100 --slave /usr/bin/g++ g++ /usr/bin/g++-11
+
+# Create work directory
+WORKDIR /bitminti
+
+# Instructions (to be run when mounting source):
+# 1. cd depends
+# 2. make HOST=x86_64-pc-linux-gnu NO_QT=1 -j$(nproc)
+# 3. cd ..
+# 4. cmake -B build-legacy -DCMAKE_TOOLCHAIN_FILE=depends/x86_64-pc-linux-gnu/toolchain.cmake
+# 5. cmake --build build-legacy -j$(nproc) --target bitmintid bitminti-cli

@@ -35,12 +35,23 @@
     "api": {
         "enabled": true,
         "listenAddress": "0.0.0.0",
-        "port": 4000
+        "port": 4000,
+	"rateLimiting": {
+            "disabled": true,
+            "rules": [],
+            "metricsIpWhitelist": []
+        }
+    },
+    "notifications": {
+        "enabled": false
     },
     "clusterName": "BitMinti Official Pool",
-    "coins": [
+    "pools": [
         {
             "id": "bitminti",
+            "coin": "bitcoin",
+	    "address": "19G9qBLDrzXxF7eSnCweJnYwr15ETeVbZF",
+            "enabled": true,
             "name": "BitMinti",
             "canonicalName": "BitMinti",
             "family": "bitcoin",
@@ -63,9 +74,9 @@
                 "3032": {
                     "listenAddress": "0.0.0.0",
                     "name": "Low Diff (CPU)",
-                    "difficulty": 0.1,
+                    "difficulty": 0.0001,
                     "varDiff": {
-                        "minDiff": 0.01,
+                        "minDiff": 0.0001,
                         "maxDiff": 100,
                         "targetTime": 15,
                         "retargetTime": 90,
@@ -92,7 +103,7 @@
                 "payoutSchemeConfig": {
                     "factor": 2.0
                 },
-                "address": "YOUR_POOL_WALLET_ADDRESS_HERE"
+                "address": "btc31qw95y5r79lgh5fhrkn7kz7mec34x488sj9xxlhz"
             }
         }
     ]

@@ -3,25 +3,26 @@ version: '3.8'
 services:
   # 1. The Coin Daemon (BitMinti)
   bitminti-node:
-    image: ubuntu:22.04
+    image: ubuntu:24.04
     container_name: bitminti-pool-node
     volumes:
       # Map the local binary build to the container
-      - ../build/bin/bitmintid:/usr/local/bin/bitmintid
-      - ./bitminti-data:/root/.bitminti
+      - ../build-linux/bin/bitmintid:/usr/local/bin/bitmintid
+      - ./bitminti-data:/root/.btc3
     command:
       - /bin/bash
       - -c
       - |
         echo "Auto-configuring Huge Pages..."
         sysctl -w vm.nr_hugepages=1500 || echo "Failed to set hugepages (Needs privileged: true)"
-        exec bitmintid -miningfastmode=1 -printtoconsole -server -rpcuser=pooluser -rpcpassword=poolpass -rpcport=18332 -rpcallowip=0.0.0.0/0 -rpcbind=0.0.0.0:18332 -zmqpubhashblock=tcp://0.0.0.0:28332 -zmqpubrawtx=tcp://0.0.0.0:28332
+        exec bitmintid -printtoconsole -server -rpcuser=pooluser -rpcpassword=poolpass -rpcport=18332 -rpcallowip=0.0.0.0/0 -rpcbind=0.0.0.0:18332 -zmqpubhashblock=tcp://0.0.0.0:28332 -zmqpubrawtx=tcp://0.0.0.0:28332
     # Huge Pages Support (Required for Fast Mode)
     privileged: true
     ulimits:
       memlock: -1
     ports:
       - "13337:13337" # P2P
+      - "18332:18332" # RPC
     restart: unless-stopped
 
   # 2. Database (PostgreSQL)
@@ -40,8 +41,7 @@ services:
 
   # 3. The Pool Software (Miningcore)
   miningcore:
-    image: miningcore/miningcore:latest
-    container_name: miningcore
+    build: ../../miningcore
     depends_on:
       - bitminti-node
       - postgres
@@ -51,7 +51,11 @@ services:
       - "3032:3032" # Stratum Port (Low Diff)
       - "3033:3033" # Stratum Port (High Diff)
       - "4000:4000" # API Port
-    command: -c /app/config.json
+    entrypoint:
+      - dotnet
+      - Miningcore.dll
+      - -c
+      - /app/config.json
     restart: unless-stopped
 
   # 4. Web UI (Dashboard)
