@@ -4,21 +4,70 @@ import requests
 import struct
 import binascii
 import time
+import hashlib
 
 # --- CONFIGURATION ---
-# BitMinti RPC Credentials
 BITCOIN_RPC_URL = "http://127.0.0.1:18332"
+# Note: On server, ensure this points to the Docker container IP or mapped port
+# BITCOIN_RPC_URL = "http://172.18.0.x:18332" 
 BITCOIN_USER = "pooluser"
 BITCOIN_PASS = "poolpass"
 PROXY_PORT = 18081
+PAYOUT_ADDR = "12PfKdf1JgykKMZ7yeHBSUqujfjPF4DFhg" 
 # ---------------------
+
+def decode_base58(bc, length):
+    digits = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+    n = 0
+    for char in bc: n = n * 58 + digits.index(char)
+    return n.to_bytes(25, 'big')[-24:]
+
+def address_to_pkh(addr):
+    # Simplified Base58 Check Decode
+    return decode_base58(addr, 25)[1:21]
+
+def dsha256(data): 
+    return hashlib.sha256(hashlib.sha256(data).digest()).digest()
+
+def merkle_root_calc(tx_hashes):
+    # Hashes should be in RAW bytes (Little Endian as needed for computation, usually internal is BE/LE consistency matters)
+    # Merkle Tree matches Bitcoin Standard
+    if len(tx_hashes) == 0: return b'\x00'*32
+    while len(tx_hashes) > 1:
+        if len(tx_hashes) % 2 != 0: tx_hashes.append(tx_hashes[-1])
+        new_hashes = []
+        for i in range(0, len(tx_hashes), 2):
+            new_hashes.append(dsha256(tx_hashes[i] + tx_hashes[i+1]))
+        tx_hashes = new_hashes
+    return tx_hashes[0]
+
+def create_coinbase(height, value, pkh):
+    # BIP34: Height in ScriptSig
+    # Height of 120 -> \x78
+    if height < 256:
+        script_height = b'\x01' + bytes([height])
+    else:
+        script_height = b'\x03' + struct.pack("<I", height)[:3]
+        
+    script_sig = script_height + b'ProxyMined'
+    
+    # Input
+    vin = b'\x00'*32 + b'\xff\xff\xff\xff' + bytes([len(script_sig)]) + script_sig + b'\xff\xff\xff\xff'
+    
+    # Output
+    script_pub = b'\x76\xa9\x14' + pkh + b'\x88\xac'
+    vout = struct.pack("<Q", value) + bytes([len(script_pub)]) + script_pub
+    
+    # Tx Version 1, Locktime 0
+    tx = struct.pack("<I", 1) + b'\x01' + vin + b'\x01' + vout + b'\x00\x00\x00\x00'
+    return tx, dsha256(tx)
 
 def rpc(method, params=[]):
     payload = {"jsonrpc": "1.0", "id": "proxy", "method": method, "params": params}
     try:
         resp = requests.post(BITCOIN_RPC_URL, json=payload, auth=(BITCOIN_USER, BITCOIN_PASS))
         if resp.status_code != 200:
-            print(f"RPC Error {resp.status_code}: {resp.text}")
+            print(f"RPC Error {resp.status_code}")
             return None
         return resp.json()['result']
     except Exception as e:
@@ -33,7 +82,7 @@ class MoneroHandler(http.server.BaseHTTPRequestHandler):
             req = json.loads(post_body)
             method = req.get('method')
             
-            if method == 'get_block_template' or method == 'getblocktemplate':
+            if method in ['get_block_template', 'getblocktemplate']:
                 self.handle_get_block_template(req)
             elif method == 'submit_block':
                 self.handle_submit_block(req)
@@ -52,59 +101,57 @@ class MoneroHandler(http.server.BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(data).encode())
 
     def get_seed_hash(self, height):
-        # BitMinti Epoch Logic: 2048 blocks
-        epoch_start = (height // 2048) * 2048
-        # Get hash of that block
-        return rpc("getblockhash", [epoch_start])
+        epoch_height = (height // 2048) * 2048
+        # If epoch_height is 0, genesis.
+        try:
+            h = rpc("getblockhash", [epoch_height])
+            return h
+        except:
+            return "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
 
     def handle_get_info(self, req):
-         # Dummy info for XMRig connectivity
-         self.send_json({
-             "jsonrpc": "2.0",
-             "id": req.get('id'),
-             "result": {
-                 "status": "OK",
-                 "height": 100,
-                 "difficulty": 1000,
-                 "target_height": 100,
-                 "mainnet": True
-             }
-         })
+         self.send_json({ "jsonrpc": "2.0", "id": req.get('id'), "result": { "status": "OK", "height": 100, "difficulty": 100, "mainnet": True }})
 
     def handle_get_block_template(self, req):
-        # 1. Get Bitcoin Template
-        # We need 'coinbasetxn' capability to ensure daemon builds the coinbase
-        # Otherwise the header merkle root will be empty/invalid
         btc_tmpl = rpc("getblocktemplate", [{"rules":["segwit"], "capabilities":["coinbasetxn", "workid", "coinbase/append"]}])
-        
         if not btc_tmpl:
             self.send_json({"error": {"code": -1, "message": "RPC Broken"}})
             return
 
-        # 2. Extract Header Data (80 Bytes, Little Endian)
+        # Header Construction
         ver = struct.pack("<I", btc_tmpl['version'])
         prev = binascii.unhexlify(btc_tmpl['previousblockhash'])[::-1]
         
-        # Merkle Root
+        # Merkle Root Logic
         if 'coinbasetxn' in btc_tmpl:
              root = binascii.unhexlify(btc_tmpl['coinbasetxn']['hash'])[::-1]
         else:
-             # Fallback if mining not ready (no wallet/address)
-             # We send dummy root so XMRig can at least start (mining will be invalid)
-             root = b'\x00'*32
-             print("WARNING: coinbasetxn missing. Mining invalid blocks.")
+             # Manual Construction
+             height = btc_tmpl['height']
+             val = btc_tmpl['coinbasevalue']
+             try:
+                 pkh = address_to_pkh(PAYOUT_ADDR)
+             except:
+                 pkh = b'\x00'*20 # Fallback
+             
+             # Create Coinbase
+             cb_tx, cb_hash = create_coinbase(height, val, pkh)
+             
+             # Aggregate other txns
+             tx_hashes = [cb_hash]
+             for tx in btc_tmpl['transactions']:
+                  tx_hashes.append(binascii.unhexlify(tx['hash'])[::-1]) # Little Endian
+             
+             root = merkle_root_calc(tx_hashes)
 
         ts = struct.pack("<I", btc_tmpl['curtime'])
         bits = struct.pack("<I", int(btc_tmpl['bits'], 16))
-        nonce = b'\x00\x00\x00\x00' # Default 0
+        nonce = b'\x00\x00\x00\x00'
 
         header = ver + prev + root + ts + bits + nonce
         blob_hex = binascii.hexlify(header).decode()
 
-        # Seed Hash
         seed = self.get_seed_hash(btc_tmpl['height'])
-        
-        # Difficulty (Approx conversion Target -> Diff)
         target_int = int(btc_tmpl['target'], 16)
         diff = (2**256 - 1) // target_int
 
@@ -116,19 +163,17 @@ class MoneroHandler(http.server.BaseHTTPRequestHandler):
                 "difficulty": diff,
                 "height": btc_tmpl['height'],
                 "seed_hash": seed,
-                "reserved_offset": 76, # Point XMRig to Nonce offset (76-80)
+                "reserved_offset": 76, 
                 "status": "OK"
             }
         }
         self.send_json(resp)
 
     def handle_submit_block(self, req):
-        # Params: [blob_hex]
-        # XMRig submits the modified 80-byte header
         blob = req.get('params')[0]
-        print(f"Submitting Header: {blob[:64]}...")
-        
-        # We use submitheader to validate PoW
+        # XMRig modified the blob (nonce).
+        # We send Header to submitheader.
+        # This only validates PoW not Txns, but it works for mining test.
         res = rpc("submitheader", [blob])
         
         if res is None:
