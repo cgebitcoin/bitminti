@@ -13,25 +13,30 @@ BITCOIN_RPC_URL = "http://127.0.0.1:18332"
 BITCOIN_USER = "pooluser"
 BITCOIN_PASS = "poolpass"
 PROXY_PORT = 18081
-PAYOUT_ADDR = "12PfKdf1JgykKMZ7yeHBSUqujfjPF4DFhg" 
+DEFAULT_PAYOUT = "12PfKdf1JgykKMZ7yeHBSUqujfjPF4DFhg" 
 # ---------------------
 
 def decode_base58(bc, length):
     digits = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
     n = 0
     for char in bc: n = n * 58 + digits.index(char)
-    return n.to_bytes(25, 'big')[-24:]
+    try:
+        return n.to_bytes(25, 'big')[-24:]
+    except:
+        return None
 
 def address_to_pkh(addr):
     # Simplified Base58 Check Decode
-    return decode_base58(addr, 25)[1:21]
+    # Expects Legacy Address (starts with 1...)
+    decoded = decode_base58(addr, 25)
+    if decoded:
+        return decoded[1:21]
+    return None
 
 def dsha256(data): 
     return hashlib.sha256(hashlib.sha256(data).digest()).digest()
 
 def merkle_root_calc(tx_hashes):
-    # Hashes should be in RAW bytes (Little Endian as needed for computation, usually internal is BE/LE consistency matters)
-    # Merkle Tree matches Bitcoin Standard
     if len(tx_hashes) == 0: return b'\x00'*32
     while len(tx_hashes) > 1:
         if len(tx_hashes) % 2 != 0: tx_hashes.append(tx_hashes[-1])
@@ -43,7 +48,6 @@ def merkle_root_calc(tx_hashes):
 
 def create_coinbase(height, value, pkh):
     # BIP34: Height in ScriptSig
-    # Height of 120 -> \x78
     if height < 256:
         script_height = b'\x01' + bytes([height])
     else:
@@ -54,7 +58,7 @@ def create_coinbase(height, value, pkh):
     # Input
     vin = b'\x00'*32 + b'\xff\xff\xff\xff' + bytes([len(script_sig)]) + script_sig + b'\xff\xff\xff\xff'
     
-    # Output
+    # Output (P2PKH)
     script_pub = b'\x76\xa9\x14' + pkh + b'\x88\xac'
     vout = struct.pack("<Q", value) + bytes([len(script_pub)]) + script_pub
     
@@ -102,7 +106,6 @@ class MoneroHandler(http.server.BaseHTTPRequestHandler):
 
     def get_seed_hash(self, height):
         epoch_height = (height // 2048) * 2048
-        # If epoch_height is 0, genesis.
         try:
             h = rpc("getblockhash", [epoch_height])
             return h
@@ -118,29 +121,40 @@ class MoneroHandler(http.server.BaseHTTPRequestHandler):
             self.send_json({"error": {"code": -1, "message": "RPC Broken"}})
             return
 
+        # Determine Payout Address from Request
+        payout_pkh = None
+        user_addr = req.get('params', {}).get('wallet_address')
+        if user_addr:
+             # Try to decode user address
+             payout_pkh = address_to_pkh(user_addr)
+             if payout_pkh:
+                  print(f"Mining to User: {user_addr}")
+        
+        if not payout_pkh:
+             # Fallback
+             print(f"Mining to Default: {DEFAULT_PAYOUT}")
+             payout_pkh = address_to_pkh(DEFAULT_PAYOUT)
+
         # Header Construction
         ver = struct.pack("<I", btc_tmpl['version'])
         prev = binascii.unhexlify(btc_tmpl['previousblockhash'])[::-1]
         
         # Merkle Root Logic
-        if 'coinbasetxn' in btc_tmpl:
+        if 'coinbasetxn' in btc_tmpl and not payout_pkh:
+             # If daemon provides coinbase AND we failed to parse user addr, use daemon's
              root = binascii.unhexlify(btc_tmpl['coinbasetxn']['hash'])[::-1]
         else:
-             # Manual Construction
+             # Manual Construction (Preferred so we control payout)
              height = btc_tmpl['height']
              val = btc_tmpl['coinbasevalue']
-             try:
-                 pkh = address_to_pkh(PAYOUT_ADDR)
-             except:
-                 pkh = b'\x00'*20 # Fallback
              
              # Create Coinbase
-             cb_tx, cb_hash = create_coinbase(height, val, pkh)
+             cb_tx, cb_hash = create_coinbase(height, val, payout_pkh)
              
              # Aggregate other txns
              tx_hashes = [cb_hash]
              for tx in btc_tmpl['transactions']:
-                  tx_hashes.append(binascii.unhexlify(tx['hash'])[::-1]) # Little Endian
+                  tx_hashes.append(binascii.unhexlify(tx['hash'])[::-1]) 
              
              root = merkle_root_calc(tx_hashes)
 
@@ -171,11 +185,8 @@ class MoneroHandler(http.server.BaseHTTPRequestHandler):
 
     def handle_submit_block(self, req):
         blob = req.get('params')[0]
-        # XMRig modified the blob (nonce).
-        # We send Header to submitheader.
-        # This only validates PoW not Txns, but it works for mining test.
+        # Validates PoW header
         res = rpc("submitheader", [blob])
-        
         if res is None:
              print("Header Accepted!")
              self.send_json({"jsonrpc": "2.0", "id": req.get('id'), "result": {"status": "OK"}})
