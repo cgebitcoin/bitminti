@@ -24,7 +24,8 @@ if [ -d "build" ]; then
 fi
 mkdir build
 cd build
-cmake .. -DXMRIG_DEPS=ON
+# Disable TLS since we are mining locally and OpenSSL is finicky.
+cmake .. -DXMRIG_DEPS=OFF -DWITH_TLS=OFF
 make -j$(nproc)
 
 echo "[+] Build Complete!"
