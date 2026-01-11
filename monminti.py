@@ -377,6 +377,7 @@ class StratumHandler(socketserver.BaseRequestHandler):
             seed_hash_bin = binascii.unhexlify(seed_hash)
             # No reversal here.
             seed_hash = binascii.hexlify(seed_hash_bin).decode()
+            print(f"DEBUG: Proxy Sending Seed (BE): {seed_hash}")
             
             # Send STANDARD blob here.
             stratum_blob = blob_hex
