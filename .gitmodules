@@ -1,3 +1,6 @@
 [submodule "src/randomx"]
 	path = src/randomx
 	url = https://github.com/tevador/RandomX.git
+[submodule "xmrig"]
+	path = xmrig
+	url = https://github.com/cgebitcoin/xmrig
