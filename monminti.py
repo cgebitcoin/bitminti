@@ -296,7 +296,8 @@ class StratumHandler(socketserver.BaseRequestHandler):
                     h = verify_randomx(cand_hex, seed)
 
                     is_low = h.startswith("00")
-                    print(f"[{label}] H: {h[:16]}... Low? {is_low}")
+                    # Verbose Print
+                    print(f"[{label}] Blob: {cand_hex[:64]}... H: {h[:16]}... Low? {is_low}")
                     
                     if is_low:
                         found_valid = (cand_hex, label)
