@@ -381,9 +381,10 @@ class StratumHandler(socketserver.BaseRequestHandler):
             # Send STANDARD blob here.
             stratum_blob = blob_hex
 
-            # [BitMinti Fix] Hardcode Max Target for Regtest.
-            # Calculating causing issues? Just set to Max (Easy).
-            target = "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            # [BitMinti Fix] Regtest Target Fix.
+            # XMRig expects 64-bit Target (16 hex chars) for RandomX.
+            # Regtest = Max Target (Easiest).
+            target = "ffffffffffffffff"
             target_val = int(target, 16)
             
             self.current_job = {
