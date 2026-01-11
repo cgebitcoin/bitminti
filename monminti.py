@@ -294,10 +294,13 @@ class StratumHandler(socketserver.BaseRequestHandler):
 
                     # Verify
                     h = verify_randomx(cand_hex, seed)
-
-                    is_low = h.startswith("00")
+                    h_val = int(h, 16)
+                    target_val = self.current_job.get('target_val', 0)
+                    
+                    is_low = h_val <= target_val
+                    
                     # Verbose Print
-                    print(f"[{label}] Blob: {cand_hex[:64]}... H: {h[:16]}... Low? {is_low}")
+                    print(f"[{label}] Blob: {cand_hex[:64]}... H: {h[:16]}... Val: {h_val} <= {target_val}? {is_low}")
                     
                     if is_low:
                         found_valid = (cand_hex, label)
@@ -379,13 +382,23 @@ class StratumHandler(socketserver.BaseRequestHandler):
             # Send STANDARD blob here.
             stratum_blob = blob_hex
 
-            # Strict Target to stop flooding and find BLOCKS.
-            target = "000000ff"
+            # [BitMinti Fix] Calculate Target from Bits (Handle Regtest)
+            nBits = int(tmpl['bits'], 16)
+            coeff = nBits & 0xffffff
+            size = nBits >> 24
+            if size <= 3:
+                target_val = coeff >> (8 * (3 - size))
+            else:
+                target_val = coeff << (8 * (size - 3))
+            
+            # Format as 64-char hex
+            target = f"{target_val:064x}"
             
             self.current_job = {
                 "blob": blob_hex,
                 "job_id": job_id,
                 "target": target,
+                "target_val": target_val, # Store for verify
                 "height": tmpl['height'],
                 "seed_hash": seed_hash,
                 "algo": "rx/0",
