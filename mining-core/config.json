@@ -36,7 +36,7 @@
         "enabled": true,
         "listenAddress": "0.0.0.0",
         "port": 4000,
-	"rateLimiting": {
+        "rateLimiting": {
             "disabled": true,
             "rules": [],
             "metricsIpWhitelist": []
@@ -49,8 +49,8 @@
     "pools": [
         {
             "id": "bitminti",
-            "coin": "bitcoin",
-	    "address": "19G9qBLDrzXxF7eSnCweJnYwr15ETeVbZF",
+            "coin": "bitminti",
+            "address": "19G9qBLDrzXxF7eSnCweJnYwr15ETeVbZF",
             "enabled": true,
             "name": "BitMinti",
             "canonicalName": "BitMinti",
@@ -74,9 +74,9 @@
                 "3032": {
                     "listenAddress": "0.0.0.0",
                     "name": "Low Diff (CPU)",
-                    "difficulty": 0.0001,
+                    "difficulty": 0.00001,
                     "varDiff": {
-                        "minDiff": 0.0001,
+                        "minDiff": 0.00001,
                         "maxDiff": 100,
                         "targetTime": 15,
                         "retargetTime": 90,
@@ -86,7 +86,7 @@
                 "3033": {
                     "listenAddress": "0.0.0.0",
                     "name": "High Diff (Rigs)",
-                    "difficulty": 1.0,
+                    "difficulty": 0.1,
                     "varDiff": {
                         "minDiff": 0.1,
                         "maxDiff": 500,
@@ -103,7 +103,13 @@
                 "payoutSchemeConfig": {
                     "factor": 2.0
                 },
-                "address": "btc31qw95y5r79lgh5fhrkn7kz7mec34x488sj9xxlhz"
+                "address": "19G9qBLDrzXxF7eSnCweJnYwr15ETeVbZF"
+            },
+            "banning": {
+                "enabled": true,
+                "time": 600,
+                "invalidPercent": 50,
+                "checkThreshold": 50
             }
         }
     ]

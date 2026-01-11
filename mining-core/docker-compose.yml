@@ -8,7 +8,8 @@ services:
     volumes:
       # Map the local binary build to the container
       - ../build-linux/bin/bitmintid:/usr/local/bin/bitmintid
-      - ./bitminti-data:/root/.btc3
+      - ../build-linux/bin/bitminti-cli:/usr/local/bin/bitminti-cli
+      - ./bitminti-data:/root/.bitminti
     command:
       - /bin/bash
       - -c
@@ -42,6 +43,7 @@ services:
   # 3. The Pool Software (Miningcore)
   miningcore:
     build: ../../miningcore
+    container_name: miningcore
     depends_on:
       - bitminti-node
       - postgres

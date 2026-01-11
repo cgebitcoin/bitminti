@@ -53,6 +53,38 @@ if [ ! -d "$APP_PATH/Contents/MacOS" ]; then
     xattr -cr "$APP_PATH"
 fi
 
+# 2.5. Deploy Qt Frameworks (Critical for running on other machines)
+# This bundles QtWidgets, QtCore, etc. inside the app.
+echo "Deploying Qt Frameworks..."
+
+# Find macdeployqt
+if command -v macdeployqt >/dev/null 2>&1; then
+    MACDEPLOYQT=$(type -p macdeployqt) # Get full path
+elif [ -f "/usr/local/opt/qt/bin/macdeployqt" ]; then
+    MACDEPLOYQT="/usr/local/opt/qt/bin/macdeployqt" # Intel Homebrew
+elif [ -f "/opt/homebrew/opt/qt/bin/macdeployqt" ]; then
+    MACDEPLOYQT="/opt/homebrew/opt/qt/bin/macdeployqt" # Apple Silicon Homebrew
+else
+    echo "Warning: macdeployqt not found. App will crash on other machines."
+    MACDEPLOYQT=""
+fi
+
+if [ -n "$MACDEPLOYQT" ]; then
+    # Derive QT_LIB_DIR from macdeployqt path (../bin/macdeployqt -> ../lib)
+    QT_BIN_DIR=$(dirname "$MACDEPLOYQT")
+    QT_LIB_DIR=$(dirname "$QT_BIN_DIR")/lib
+
+    echo "Using macdeployqt: $MACDEPLOYQT"
+    echo "Using Qt Lib Dir: $QT_LIB_DIR"
+
+    "$MACDEPLOYQT" "$APP_PATH" -libpath="$QT_LIB_DIR" -always-overwrite -verbose=1
+    if [ $? -ne 0 ]; then
+        echo "Error: macdeployqt failed."
+        exit 1
+    fi
+    echo "Qt Deployment Complete."
+fi
+
 # 3. Sign App Bundle (Ad-Hoc)
 echo "Signing App Bundle (Ad-Hoc)..."
 codesign --force --deep --sign - "$APP_PATH"
