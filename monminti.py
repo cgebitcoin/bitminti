@@ -303,6 +303,12 @@ class StratumHandler(socketserver.BaseRequestHandler):
                         found_valid = (cand_hex, label)
                         print(f"\n!!! FOUND VALID CANDIDATE !!! Using {label}")
                         
+                        # [BitMinti Fix] If Word-Swapped matched, Submit STANDARD.
+                        if label == "Word-Swapped Blob":
+                             print("DEBUG: Word-Swapped match. Submitting STANDARD BLOB.")
+                             # Reconstruct Standard (Direct)
+                             std_hex = prefix + time_direct + old_bits + nonce_direct
+                             found_valid = (std_hex, "Word-Swapped (Submitting Standard)")
                         break
                 
                 block_hex = None
@@ -364,9 +370,11 @@ class StratumHandler(socketserver.BaseRequestHandler):
             job_id = binascii.hexlify(struct.pack(">I", int(time.time()))).decode()
             seed_hash = get_seed_hash(tmpl['height'])
             
-            # [BITMINTI FIX] Reverted Seed Reversal.
-            # We assume Daemon uses RPC seed (BE) as is.
-            # And we use correct implicit swap in XMRig now.
+            # [BitMinti] Re-Enable Seed Reversal.
+            # Rationale: RPC sends BE. Daemon uses LE internally.
+            # XMRig needs LE bytes. So we Reverse BE -> LE.
+            seed_hash_bin = binascii.unhexlify(seed_hash)
+            seed_hash = binascii.hexlify(seed_hash_bin[::-1]).decode()
             
             # Send STANDARD blob here.
             stratum_blob = blob_hex
