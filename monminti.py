@@ -379,8 +379,8 @@ class StratumHandler(socketserver.BaseRequestHandler):
             # Send STANDARD blob here.
             stratum_blob = blob_hex
 
-            # Relax Target to allow XMRig to submit more shares (Diff 1)
-            target = "0000ffff"
+            # Strict Target to stop flooding and find BLOCKS.
+            target = "000000ff"
             
             self.current_job = {
                 "blob": blob_hex,
