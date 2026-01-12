@@ -312,6 +312,13 @@ class StratumHandler(socketserver.BaseRequestHandler):
                              # Reconstruct Standard (Direct)
                              std_hex = prefix + time_direct + old_bits + nonce_direct
                              found_valid = (std_hex, "Word-Swapped (Submitting Standard)")
+                             
+                             print("\n" + "="*60)
+                             print("      >>> HEADER AND HASH COMPARISON <<<")
+                             print(f"XMRig Header (Swapped): {cand_hex}")
+                             print(f"Daemon Header (Standard): {std_hex}")
+                             print(f"Calculated Hash:          {h}")
+                             print("="*60 + "\n")
                         break
                 
                 block_hex = None
