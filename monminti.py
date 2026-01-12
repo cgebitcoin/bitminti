@@ -339,10 +339,16 @@ class StratumHandler(socketserver.BaseRequestHandler):
                     print("\nSubmitting Block!")
                     res = rpc("submitblock", [block_hex])
                     print(f"Submit result: {res}")
-                
-                self.send_json({"jsonrpc": "2.0", "id": msg_id, "result": {"status": "OK"}})
-            else:
-                self.send_json({"jsonrpc":"2.0", "id": msg_id, "error": {"code": -1, "message": "Invalid Job"}})
+                    # If submit succeeded (returned None), valid block.
+                    # Send OK.
+                    self.send_json({"jsonrpc": "2.0", "id": msg_id, "result": {"status": "OK"}})
+                elif found_valid:
+                    # Valid share but not block? (Shouldn't happen with our logic, unless submit failed)
+                    self.send_json({"jsonrpc": "2.0", "id": msg_id, "result": {"status": "OK"}})
+                else: 
+                     # Already sent Error in the 'else' block above.
+                     # Do NOT send OK.
+                     pass
         
         elif method == 'keepalived':
              self.send_json({"jsonrpc":"2.0", "id": msg_id, "result": {"status": "OK"}})
