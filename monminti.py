@@ -390,11 +390,10 @@ class StratumHandler(socketserver.BaseRequestHandler):
             stratum_blob = blob_hex
 
             # [BitMinti Fix] Regtest Target Fix.
-            # Strict Target. Value: 0x000000ffffffffff.
-            # XMRig reads as LE uint64.
-            # To get 0x...ff, we must send bytes: ff ff ... 00
-            # Hex: ffffffffff000000.
-            target_val = 0x000000ffffffffff
+            # [BitMinti Fix] Regtest Target Fix.
+            # Relaxed Target: 0x00ffff... (1 in 256).
+            # Fast enough for instant block, filters enough to stop crash (2 shares/sec).
+            target_val = 0x00ffffffffffffff
             # Convert to LE Hex string
             target_bytes = target_val.to_bytes(8, 'little')
             target = binascii.hexlify(target_bytes).decode()
