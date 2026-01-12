@@ -1,6 +1,7 @@
 import socketserver
 import json
-import requests
+import urllib.request
+import urllib.error
 import struct
 import binascii
 import time
@@ -9,7 +10,7 @@ import threading
 import subprocess
 
 # --- CONFIGURATION ---
-BITCOIN_RPC_URL = "http://127.0.0.1:18443"
+BITCOIN_RPC_URL = "http://127.0.0.1:13336"
 BITCOIN_USER = "admin"
 BITCOIN_PASS = "admin"
 STRATUM_PORT = 3333 
@@ -45,10 +46,21 @@ def merkle_root_calc(tx_hashes):
     return tx_hashes[0]
 
 def create_coinbase(height, value, pkh, extra_nonce=None, witness_commitment=None):
-    if height < 256:
-        script_height = b'\x01' + bytes([height])
+    # BIP34: Height must be pushed strictly properly (CScript)
+    if height == 0:
+        script_height = b'\x00' # OP_0
+    elif height <= 16:
+        script_height = bytes([0x50 + height]) # OP_1 .. OP_16
     else:
-        script_height = b'\x03' + struct.pack("<I", height)[:3]
+        # Minimal encoding for > 16
+        b = b''
+        n = height
+        while n > 0:
+            b += bytes([n & 0xFF])
+            n >>= 8
+        if b[-1] & 0x80:
+            b += b'\x00'
+        script_height = bytes([len(b)]) + b
         
     script_sig = script_height + b'ProxyMined'
     if extra_nonce:
@@ -82,13 +94,22 @@ def encode_varint(i):
     else: return b'\xff' + struct.pack("<Q", i)
 
 def rpc(method, params=[]):
-    payload = {"jsonrpc": "1.0", "id": "proxy", "method": method, "params": params}
+    payload = json.dumps({"jsonrpc": "1.0", "id": "proxy", "method": method, "params": params}).encode('utf-8')
+    req = urllib.request.Request(BITCOIN_RPC_URL, data=payload, headers={'Content-Type': 'application/json'})
+    
+    # Basic Auth
+    import base64
+    auth_str = f"{BITCOIN_USER}:{BITCOIN_PASS}"
+    auth_b64 = base64.b64encode(auth_str.encode('utf-8')).decode('utf-8')
+    req.add_header("Authorization", f"Basic {auth_b64}")
+
     try:
-        resp = requests.post(BITCOIN_RPC_URL, json=payload, auth=(BITCOIN_USER, BITCOIN_PASS), timeout=30)
-        if resp.status_code != 200:
-            print(f"RPC Error {resp.status_code}")
-            return None
-        return resp.json()['result']
+        with urllib.request.urlopen(req, timeout=30) as f:
+            resp_data = f.read().decode('utf-8')
+            return json.loads(resp_data)['result']
+    except urllib.error.HTTPError as e:
+        print(f"RPC HTTP Error {e.code}: {e.read().decode()}")
+        return None
     except Exception as e:
         print(f"Error calling Bitcoin RPC: {e}")
         return None
@@ -296,35 +317,46 @@ class StratumHandler(socketserver.BaseRequestHandler):
                     h = verify_randomx(cand_hex, seed)
                     h_bytes = binascii.unhexlify(h)
                     # RandomX Hash is Little Endian.
-                    # We must interpret as LE Integer to compare with Target (also Scalar).
+                    # RandomX produces a 256-bit hash, just like SHA256
+                    # Compare the full 256-bit hash against the 256-bit target
                     h_val = int.from_bytes(h_bytes, byteorder='little')
-                    
-                    # h_val = int(h, 16) # OLD incorrect BE interpret
                     
                     target_val = self.current_job.get('target_val', 0)
                     
                     is_low = h_val <= target_val
                     
                     # Verbose Print
-                    print(f"[{label}] Blob: {cand_hex[:64]}... H: {h[:16]}... Val: {h_val} <= {target_val}? {is_low}")
+                    print(f"[{label}] Blob: {cand_hex[:64]}... H: {h[:16]}... Valid: {is_low}")
                     
                     if is_low:
-                        found_valid = (cand_hex, label)
                         print(f"\n!!! FOUND VALID CANDIDATE !!! Using {label}")
                         
-                        # [BitMinti Fix] If Word-Swapped matched, Submit STANDARD.
+                        # Prepare FULL BLOCK for Submission
+                        final_header_hex = cand_hex
                         if label == "Word-Swapped Blob":
-                             print("DEBUG: Word-Swapped match. Submitting STANDARD BLOB.")
-                             # Reconstruct Standard (Direct)
-                             std_hex = prefix + time_direct + old_bits + nonce_direct
-                             found_valid = (std_hex, "Word-Swapped (Submitting Standard)")
-                             
-                             print("\n" + "="*60)
-                             print("      >>> HEADER AND HASH COMPARISON <<<")
-                             print(f"XMRig Header (Swapped): {cand_hex}")
-                             print(f"Daemon Header (Standard): {std_hex}")
-                             print(f"Calculated Hash:          {h}")
-                             print("="*60 + "\n")
+                            print("DEBUG: Word-Swapped match. Using Standard Header.")
+                            final_header_hex = prefix + t + old_bits + n
+                        
+                        # Construct Full Block
+                        # 1. Header (80 bytes = 160 hex)
+                        full_block = final_header_hex
+                        
+                        # 2. Tx Count: 1 (Coinbase) + len(other_txs)
+                        tx_count = 1 + len(self.current_job['other_txs'])
+                        full_block += binascii.hexlify(encode_varint(tx_count)).decode()
+                        
+                        # 3. Coinbase
+                        full_block += binascii.hexlify(self.current_job['coinbase_tx_bin']).decode()
+                        
+                        # 4. Other Txs
+                        for tx_struct in self.current_job['other_txs']:
+                            if 'data' in tx_struct:
+                                full_block += tx_struct['data']
+                                
+                        print(f"DEBUG: Constructing Block. Header: {final_header_hex[:64]}...")
+                        # print(f"DEBUG: Full Block: {full_block}")
+                        
+                        found_valid = (full_block, label)
                         break
                 
                 block_hex = None
@@ -404,17 +436,17 @@ class StratumHandler(socketserver.BaseRequestHandler):
             # [BitMinti Fix] Regtest Target Fix.
             # [BitMinti Fix] Regtest Target Fix.
             # Switch to Numeric Difficulty to avoid Endianness mismatch.
-            # Diff 256 -> Target ~ 0x00ffff... (1 in 256).
+            # Diff 1 is standard high difficulty (Target ~00000000FFFF...)
             # This is robust.
-            difficulty = 256
+            difficulty = 1
             target_val = 0xffffffffffffffff // difficulty
             
             # target_val needed for verify logic later
             self.current_job = {
                 "blob": blob_hex,
                 "job_id": job_id,
-                # "target": target, # REMOVE Target Hex
-                "difficulty": difficulty, # Send Diff
+                "target": binascii.hexlify(target_val.to_bytes(8, 'big')).decode(), # Restore Target (BE Hex)
+                "difficulty": difficulty, 
                 "target_val": target_val, # Use numeric for verify
                 "height": tmpl['height'],
                 "seed_hash": seed_hash,
@@ -427,7 +459,7 @@ class StratumHandler(socketserver.BaseRequestHandler):
             return {
                 "blob": stratum_blob,
                 "job_id": job_id,
-                # "target": target, # REMOVED
+                "target": self.current_job['target'], # Restored
                 "difficulty": difficulty, # Added
                 "height": tmpl['height'],
                 "seed_hash": seed_hash
@@ -438,6 +470,7 @@ class StratumHandler(socketserver.BaseRequestHandler):
             traceback.print_exc()
             return None
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    allow_reuse_address = True
     pass
 
 if __name__ == "__main__":
