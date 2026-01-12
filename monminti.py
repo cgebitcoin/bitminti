@@ -383,10 +383,9 @@ class StratumHandler(socketserver.BaseRequestHandler):
             stratum_blob = blob_hex
 
             # [BitMinti Fix] Regtest Target Fix.
-            # Max Target (ffff...) floods socket (every hash is share).
-            # We set slightly harder target (00ff...) to filter ~1/256 hashes.
-            # This is ~2 shares/sec at 500 H/s.
-            target = "00ffffffffffffff"
+            # Set Strict Target to prevent flood.
+            # 000000... ensures shares are rare (1 per minute?).
+            target = "000000ffffffffff"
             target_val = int(target, 16)
             
             self.current_job = {
