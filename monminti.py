@@ -397,18 +397,18 @@ class StratumHandler(socketserver.BaseRequestHandler):
 
             # [BitMinti Fix] Regtest Target Fix.
             # [BitMinti Fix] Regtest Target Fix.
-            # Relaxed Target: 0x00ffff... (1 in 256).
-            # Fast enough for instant block, filters enough to stop crash (2 shares/sec).
-            target_val = 0x00ffffffffffffff
-            # Convert to LE Hex string
-            target_bytes = target_val.to_bytes(8, 'little')
-            target = binascii.hexlify(target_bytes).decode()
+            # Switch to Numeric Difficulty to avoid Endianness mismatch.
+            # Diff 256 -> Target ~ 0x00ffff... (1 in 256).
+            # This is robust.
+            difficulty = 256
+            target_val = 0xffffffffffffffff // difficulty
             
             # target_val needed for verify logic later
             self.current_job = {
                 "blob": blob_hex,
                 "job_id": job_id,
-                "target": target,
+                # "target": target, # REMOVE Target Hex
+                "difficulty": difficulty, # Send Diff
                 "target_val": target_val, # Use numeric for verify
                 "height": tmpl['height'],
                 "seed_hash": seed_hash,
