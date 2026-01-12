@@ -294,7 +294,13 @@ class StratumHandler(socketserver.BaseRequestHandler):
 
                     # Verify
                     h = verify_randomx(cand_hex, seed)
-                    h_val = int(h, 16)
+                    h_bytes = binascii.unhexlify(h)
+                    # RandomX Hash is Little Endian.
+                    # We must interpret as LE Integer to compare with Target (also Scalar).
+                    h_val = int.from_bytes(h_bytes, byteorder='little')
+                    
+                    # h_val = int(h, 16) # OLD incorrect BE interpret
+                    
                     target_val = self.current_job.get('target_val', 0)
                     
                     is_low = h_val <= target_val
