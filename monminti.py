@@ -383,16 +383,21 @@ class StratumHandler(socketserver.BaseRequestHandler):
             stratum_blob = blob_hex
 
             # [BitMinti Fix] Regtest Target Fix.
-            # Set Strict Target to prevent flood.
-            # 000000... ensures shares are rare (1 per minute?).
-            target = "000000ffffffffff"
-            target_val = int(target, 16)
+            # Strict Target. Value: 0x000000ffffffffff.
+            # XMRig reads as LE uint64.
+            # To get 0x...ff, we must send bytes: ff ff ... 00
+            # Hex: ffffffffff000000.
+            target_val = 0x000000ffffffffff
+            # Convert to LE Hex string
+            target_bytes = target_val.to_bytes(8, 'little')
+            target = binascii.hexlify(target_bytes).decode()
             
+            # target_val needed for verify logic later
             self.current_job = {
                 "blob": blob_hex,
                 "job_id": job_id,
                 "target": target,
-                "target_val": target_val, # Store for verify
+                "target_val": target_val, # Use numeric for verify
                 "height": tmpl['height'],
                 "seed_hash": seed_hash,
                 "algo": "rx/0",
