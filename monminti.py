@@ -383,9 +383,10 @@ class StratumHandler(socketserver.BaseRequestHandler):
             stratum_blob = blob_hex
 
             # [BitMinti Fix] Regtest Target Fix.
-            # XMRig expects 64-bit Target (16 hex chars) for RandomX.
-            # Regtest = Max Target (Easiest).
-            target = "ffffffffffffffff"
+            # Max Target (ffff...) floods socket (every hash is share).
+            # We set slightly harder target (00ff...) to filter ~1/256 hashes.
+            # This is ~2 shares/sec at 500 H/s.
+            target = "00ffffffffffffff"
             target_val = int(target, 16)
             
             self.current_job = {
