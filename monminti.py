@@ -427,7 +427,8 @@ class StratumHandler(socketserver.BaseRequestHandler):
             return {
                 "blob": stratum_blob,
                 "job_id": job_id,
-                "target": target,
+                # "target": target, # REMOVED
+                "difficulty": difficulty, # Added
                 "height": tmpl['height'],
                 "seed_hash": seed_hash
             }
