@@ -120,7 +120,7 @@ public:
     consensus.SegwitHeight = 1;
     consensus.MinBIP9WarningHeight = 0;
     consensus.powLimit = uint256{
-        "000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
+        "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
     consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
     consensus.nPowTargetSpacing = 10 * 60;
     consensus.fPowAllowMinDifficultyBlocks = false;

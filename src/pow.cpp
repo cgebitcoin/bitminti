@@ -17,9 +17,10 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast,
   assert(pindexLast != nullptr);
   unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
 
-  // BTC3: Linearly Weighted Moving Average (LWMA)
-  // N=45 is standard for ~10 min block time
-  const int64_t N = 45;
+  // BTC5: N=90 for RandomX CPU mining stability.
+  // Reduced from 500 to better reflect CPU network realities while keeping fair
+  // launch logic.
+  const int64_t N = 90;
 
   // Default to powLimit if chain is too short
   if (pindexLast->nHeight < N) {
@@ -46,9 +47,20 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast,
       solvetime = pindex->GetBlockTime() - pindex->pprev->GetBlockTime();
     }
 
-    // Clamp solvetime (MTP safety and preventing negative times)
-    if (solvetime < 1)
-      solvetime = 1;
+    // BTC5 Smooth Takeoff & Solvetime Floor:
+    // 1. If in grace period (< N), fake perfect timing to prevent history
+    // poisoning.
+    // 2. Otherwise, enforce a minimum solvetime of TargetSpacing/4 (150s) to
+    // prevent oscillations.
+    if (pindex->nHeight < N) {
+      solvetime = params.nPowTargetSpacing;
+    } else {
+      int64_t minSolve = params.nPowTargetSpacing / 4;
+      if (solvetime < minSolve)
+        solvetime = minSolve;
+    }
+
+    // Max clamp 6x
     if (solvetime > 6 * params.nPowTargetSpacing)
       solvetime = 6 * params.nPowTargetSpacing;
 
@@ -71,14 +83,15 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast,
   // Cast the denominator product to arith_uint256
   bnNew /= arith_uint256((uint64_t)(nWeightSum * params.nPowTargetSpacing));
 
-  // Per-block difficulty clamp
+  // Per-block difficulty clamp (Tightened for CPU Stability)
   arith_uint256 prev;
   prev.SetCompact(pindexLast->nBits);
 
-  // Max 2x harder (Target / 2)
-  arith_uint256 maxUp = prev / arith_uint256((uint64_t)2);
-  // Max 2x easier (Target * 2)
-  arith_uint256 maxDown = prev * arith_uint256((uint64_t)2);
+  // Harder (Target smaller): Max +11% difficulty change
+  arith_uint256 maxUp = prev * arith_uint256(90) / arith_uint256(100);
+
+  // Easier (Target larger): Max -10% difficulty change
+  arith_uint256 maxDown = prev * arith_uint256(110) / arith_uint256(100);
 
   if (bnNew < maxUp)
     bnNew = maxUp;

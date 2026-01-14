@@ -136,8 +136,10 @@ def get_seed_hash(height):
         # Unless XMRig treats "0000" specially?
         
         return h
-    except:
-        return "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
+    except Exception as e:
+        print(f"WARNING: Failed to get seed hash for height {height}: {e}")
+        # BitMinti mainnet genesis hash
+        return "0d2c382326321b1004eb676d1a8ff1a93e92bb0da7be6043a058a6edb361b89e"
 
 def verify_randomx(blob_hex, seed_hex):
     try:
@@ -397,7 +399,8 @@ class StratumHandler(socketserver.BaseRequestHandler):
             if not tmpl: return None
             
             # 1. Transactions & Merkle
-            txs = [binascii.unhexlify(t['hash']) for t in tmpl['transactions']]
+            # IMPORTANT: RPC returns hashes in BE, but merkle tree needs LE
+            txs = [binascii.unhexlify(t['hash'])[::-1] for t in tmpl['transactions']]
             
             # Coinbase
             cb, cb_hash = create_coinbase(tmpl['height'], tmpl['coinbasevalue'], self.miner_pkh, self.extra_nonce, tmpl.get('default_witness_commitment'))
@@ -413,9 +416,8 @@ class StratumHandler(socketserver.BaseRequestHandler):
             mr = merkle_root # Already LE
             # Time (4)
             ntime = struct.pack("<I", tmpl['curtime'])
-            # Bits (4) - Hex string in tmpl['bits'] is usually BE hex.
-            # Need to parse.
-            bits = bytes.fromhex(tmpl['bits'])[::-1] # Check this? bits usually hex string.
+            # Bits (4) - Parse compact representation correctly
+            bits = struct.pack("<I", int(tmpl['bits'], 16))
             
             # Blob = Ver + Prev + MR + Time + Bits + Nonce(0)
             blob_bin = ver + prev + mr + ntime + bits + b'\x00\x00\x00\x00'
@@ -433,19 +435,16 @@ class StratumHandler(socketserver.BaseRequestHandler):
             # Send STANDARD blob here.
             stratum_blob = blob_hex
 
-            # [BitMinti Fix] Regtest Target Fix.
-            # [BitMinti Fix] Regtest Target Fix.
-            # Switch to Numeric Difficulty to avoid Endianness mismatch.
-            # Diff 1 is standard high difficulty (Target ~00000000FFFF...)
-            # This is robust.
+            # [BitMinti Fix] Correct target calculation
+            # Use full 256-bit target, not just 64-bit
             difficulty = 1
-            target_val = 0xffffffffffffffff // difficulty
+            target_val = (2**256 - 1) // difficulty
             
             # target_val needed for verify logic later
             self.current_job = {
                 "blob": blob_hex,
                 "job_id": job_id,
-                "target": binascii.hexlify(target_val.to_bytes(8, 'big')).decode(), # Restore Target (BE Hex)
+                "target": binascii.hexlify(target_val.to_bytes(32, 'little')).decode(),  # 32-byte LE target
                 "difficulty": difficulty, 
                 "target_val": target_val, # Use numeric for verify
                 "height": tmpl['height'],
